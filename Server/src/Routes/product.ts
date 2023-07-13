@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express'
 
 const router = express.Router()
+const { list } = require('../Controller/product')
 
-router.get('/product',(req:Request, res:Response) => {
-    res.json('product').status(200)
-})
+router.get('/product', list)
 
-module.exports =router
+module.exports = router
