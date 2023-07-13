@@ -6,7 +6,7 @@ export class Experience{
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column('text')
     experience: string;
 
     @CreateDateColumn({
