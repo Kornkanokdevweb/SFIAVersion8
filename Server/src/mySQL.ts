@@ -1,11 +1,13 @@
-import { createConnection } from "typeorm"
+import { DataSource } from "typeorm"
+import "reflect-metadata"
+
 import dotenv from "dotenv"
 
 dotenv.config()
 
 export const connectDB = async () => {
     try{
-        await createConnection({
+        await new DataSource({
             type: "mysql",
             host: process.env.DB_HOST,
             port: Number(process.env.DB_PORT),
@@ -16,8 +18,11 @@ export const connectDB = async () => {
             // logging: true,
             synchronize: true,
         })
-        console.log('- Connected to MySQL Database enjoy!')
-    }catch(err){
-        console.log('Unable to connect to MySQL Database :(', err)
+        .initialize()
+        .then(() => {
+            console.log('- Connected to mySQL Database :)')
+        })
+    }catch(error){
+        console.log('Error during Data Source initialization:', error)
     }
 }
