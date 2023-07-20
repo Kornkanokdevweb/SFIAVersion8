@@ -5,11 +5,18 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { readdirSync } from "fs";
 
-import { connectDB } from "./mySQL";
+import { mySQLDataSource } from "./app-data-source";
 
 dotenv.config()
 
-connectDB()
+mySQLDataSource
+    .initialize()
+    .then(() => {
+        console.log("- Data Source has been initialized")
+    })
+    .catch((err) => {
+        console.log("Error during Data Source initialization:", err)
+    })
 
 const app = express()
 const port = process.env.PORT || 3000

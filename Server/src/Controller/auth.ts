@@ -1,4 +1,4 @@
-import { Register } from "../Entity/User";
+import { Register } from "../Entity/user";
 
 exports.register =async (req, res) => {
     try{
