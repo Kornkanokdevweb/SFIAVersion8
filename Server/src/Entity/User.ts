@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, OneToMany } from "typeorm";
 import { Profile } from "./profile";
 import { Portfolio } from "./portfolio";
+import { Information } from "./information";
 
 @Entity()
 export class User {
@@ -23,4 +24,7 @@ export class User {
 
     @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
     portfolio: Portfolio[]
+
+    @OneToMany(() => Information, (information) => information.user)
+    informations: Information[]
 }
