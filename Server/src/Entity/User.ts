@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToOne, JoinColumn } from "typeorm";
+import { Profile } from "./profile";
 
 @Entity()
 export class User {
-    [x: string]: any;
     @PrimaryGeneratedColumn("uuid")
-    user_id: string
+    id: string
 
     @Column()
     email: string
@@ -12,29 +12,11 @@ export class User {
     @Column()
     password: string
 
-    @Column()
-    fname_th: string
-
-    @Column()
-    lname_th: string
-
-    @Column()
-    fname_en: string
-
-    @Column()
-    lname_en: string
-
-    @Column()
-    phone: number
-
-    @Column()
-    line: string
-
-    @Column()
-    address: string
-
     @CreateDateColumn({
         type: "timestamp"
     })
-    date: Date
+    create_Date: Date
+
+    @OneToOne(() => Profile, profile => profile.user)
+    profile: Profile;
 }
