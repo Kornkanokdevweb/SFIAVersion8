@@ -1,10 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany} from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToOne, JoinColumn, ManyToOne, OneToMany} from 'typeorm';
 import { Levels } from './levels';
 
 
 @Entity()
 export class Description {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   description_id: string;
 
   @Column('text')

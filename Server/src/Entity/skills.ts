@@ -11,6 +11,9 @@ export class Skills {
   skill_name: string;
 
   @Column('text')
+  overall: string;
+
+  @Column('text')
   note: string;
 
   @OneToOne(() => Category)

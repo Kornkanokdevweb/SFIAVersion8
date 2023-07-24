@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne,JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToOne,JoinColumn } from 'typeorm';
 import { Category } from './category';
 
 @Entity()
 export class Subcategory {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: string;
 
   @Column('text')
