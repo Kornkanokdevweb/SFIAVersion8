@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne,JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToOne,JoinColumn } from 'typeorm';
 
 @Entity()
 export class Category {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   category_id: string;
 
   @Column('text')
