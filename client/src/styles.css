@@ -17,3 +17,6 @@ body{
     color: var(--body-text-color);
 }
 
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';

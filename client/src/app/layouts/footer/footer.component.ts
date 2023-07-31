@@ -8,6 +8,7 @@ import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
 })
+
 export class FooterComponent {
   faCoffee = faCoffee;
   faFacebook = faFacebook;
