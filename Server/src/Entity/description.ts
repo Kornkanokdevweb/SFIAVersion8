@@ -8,7 +8,7 @@ export class Description {
   description_id: string;
 
   @Column('text')
-  category_text: string;
+  description_text: string;
 
   @ManyToOne(() => Levels, (level) => level.descriptions)
   level: Levels

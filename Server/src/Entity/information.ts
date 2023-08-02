@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable, ManyToOne}from 'typeorm';
-import { Description } from './description';
 import { Skills } from './skills';
 import { User } from './user';
+import { Levels } from './levels';
+import { Description } from './description';
 
 
 @Entity()
@@ -11,6 +12,10 @@ export class Information{
 
     @Column()
     info_text: string;
+
+    @OneToOne(() => Levels)
+    @JoinColumn()
+    level: Levels;
 
     @OneToOne(() => Description)
     @JoinColumn()
