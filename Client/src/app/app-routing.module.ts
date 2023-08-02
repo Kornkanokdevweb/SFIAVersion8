@@ -12,6 +12,7 @@ import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DownloadComponent } from './pages/download/download.component';
+import { HistoryComponent } from './pages/history/history.component';
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path:'login', component: LoginComponent},
   {path:'register', component: RegisterComponent},
   {path:'download', component: DownloadComponent},
+  {path:'history', component: HistoryComponent},
 ];
 
 @NgModule({

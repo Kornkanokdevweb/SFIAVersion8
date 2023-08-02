@@ -20,6 +20,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { DownloadComponent } from './pages/download/download.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CarouselModule } from './carousel/carousel.module';
+import { HistoryComponent } from './pages/history/history.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { CarouselModule } from './carousel/carousel.module';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    DownloadComponent
+    DownloadComponent,
+    HistoryComponent
   ],
   imports: [
     BrowserModule,
