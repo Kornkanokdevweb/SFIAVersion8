@@ -21,6 +21,7 @@ import { DownloadComponent } from './pages/download/download.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CarouselModule } from './carousel/carousel.module';
 import { HistoryComponent } from './pages/history/history.component';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { HistoryComponent } from './pages/history/history.component';
     BrowserModule,
     AppRoutingModule,
     FontAwesomeModule,
-    CarouselModule
+    CarouselModule,
+    MaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent]
