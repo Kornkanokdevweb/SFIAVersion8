@@ -1,12 +1,5 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    Unique,
-    CreateDateColumn
-  } from "typeorm";
-  
-  
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn } from "typeorm";
+    
   @Entity()
   @Unique("my_unique_constraint", ["email"])
   export class User {
