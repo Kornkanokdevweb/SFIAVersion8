@@ -13,6 +13,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { DownloadComponent } from './pages/download/download.component';
 import { HistoryComponent } from './pages/history/history.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component'
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -27,6 +28,7 @@ const routes: Routes = [
   {path:'register', component: RegisterComponent},
   {path:'download', component: DownloadComponent},
   {path:'history', component: HistoryComponent},
+  {path:'reset-password', component: ResetPasswordComponent},
 ];
 
 @NgModule({

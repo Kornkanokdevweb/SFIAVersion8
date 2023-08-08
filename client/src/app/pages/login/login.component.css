@@ -1,0 +1,38 @@
+/* กำหนดความกว้างและความสูงของพื้นที่สำหรับ p-password */
+div .p-password {
+    width: 100%; /* ปรับความกว้างตามที่คุณต้องการ */
+    height: 40px; /* ปรับความสูงตามที่คุณต้องการ */
+    position: relative; /* ต้องมี position เพื่อให้กำหนดเงาได้ */
+}
+
+/* กำหนดสีพื้นหลังของ p-password */
+div .p-password .p-password-input {
+    background-color: #ffffff; /* ปรับสีตามที่คุณต้องการ */
+    width: 100%;
+    border: 1px solid #ccc; /* ปรับสีขอบตามที่คุณต้องการ */
+    border-radius: 5px; /* ปรับรูปร่างของพื้นที่ */
+    padding: 8px; /* ปรับการเว้นระยะห่างภายในพื้นที่ */
+}
+
+/* กำหนดเงาให้กับ p-password */
+div .p-password .p-password-input::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* ปรับเงาตามที่คุณต้องการ */
+    border-radius: 5px; /* ต้องมี border-radius เพื่อให้เงามีรูปร่าง */
+}
+
+/* กำหนดเส้นขอบให้กับ p-password */
+div .p-password .p-password-input {
+    outline: none; /* ไม่แสดงเส้นขอบ focus กรณีที่มีการคลิกเลือก */
+}
+
+/* กำหนดเส้นขอบเมื่อมีการ hover หรือ focus */
+div .p-password .p-password-input:hover,
+div .p-password .p-password-input:focus {
+    border: 1px solid #aaa; /* ปรับสีขอบเมื่อ hover หรือ focus ตามที่คุณต้องการ */
+}
