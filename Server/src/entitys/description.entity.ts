@@ -1,14 +1,16 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, ManyToOne, Column } from 'typeorm';
+import { Levels } from './levels.entity';
+
 
 @Entity()
 export class Description {
   @PrimaryColumn()
-  description_id: string;
+  id: string;
 
   @Column('text')
   description_text: string;
 
-  @Column()
-  level_id: string;
+  @ManyToOne(() => Levels, (level) => level.descriptions)
+  level: Levels;
   
 }

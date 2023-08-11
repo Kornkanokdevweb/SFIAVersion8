@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Portfolio } from './portfolio.entity';
 
 @Entity()
 export class Experience{
@@ -8,12 +9,11 @@ export class Experience{
     @Column('text')
     exp_text: string;
 
-    @Column()
-    portfolio_id: string;
-
     @CreateDateColumn({
         type: "timestamp"
     })
     date: Date;
 
+    @ManyToOne(() => Portfolio, portfolio => portfolio.experience,{onDelete: 'SET NULL'})
+    portfolio: Portfolio;
 }

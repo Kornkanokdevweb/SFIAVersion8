@@ -1,28 +1,30 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn }from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable, ManyToOne}from 'typeorm';
+import { Skills } from './skills.entity';
+import { User } from './user.entity';
+import { Levels } from './levels.entity';
+import { Description } from './description.entity';
+
 
 @Entity()
 export class Information{
     @PrimaryGeneratedColumn()
-    info_id: string;
+    id: string;
 
-    @Column('text')
+    @Column()
     info_text: string;
 
-    @Column()
-    user_id: string;
+    @OneToOne(() => Levels)
+    @JoinColumn()
+    level: Levels;
 
-    @Column()
-    description_id: string;
+    @OneToOne(() => Description)
+    @JoinColumn()
+    description: Description;
 
-    @Column()
-    level_id: string;
+    @ManyToMany(() => Skills)
+    @JoinTable()
+    skill: Skills[];
 
-    @Column()
-    codeskill: string;
-
-    @CreateDateColumn({
-        type: "timestamp"
-    })
-    created_at: Date;
-
+    @ManyToOne(() => User, (user) => user.informations)
+    user: User;
 }

@@ -1,14 +1,18 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, OneToMany, JoinColumn, ManyToOne } from 'typeorm';
+import { Subcategory } from './subcategory.entity';
+import { Skills } from './skills.entity';
 
 @Entity()
 export class Category {
   @PrimaryColumn()
-  category_id: string;
+  id: string;
 
   @Column('text')
   category_text: string;
 
-  @Column()
-  subcategory_id: string;
-  
+  @OneToMany(() => Skills, (skill) => skill.category)
+  skill: Skills[];
+
+  @ManyToOne(() => Subcategory, (subcategory) => subcategory.category)
+  subcategory: Subcategory;
 }
