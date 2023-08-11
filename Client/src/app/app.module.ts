@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,7 +23,19 @@ import { DownloadComponent } from './pages/download/download.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CarouselModule } from './carousel/carousel.module';
 import { HistoryComponent } from './pages/history/history.component';
-import { MaterialModule } from './material/material.module';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component'
+
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { ToastModule } from 'primeng/toast';
+import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { PasswordModule } from 'primeng/password';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PaginatorModule } from 'primeng/paginator';
+
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -41,14 +55,25 @@ import { MaterialModule } from './material/material.module';
     RegisterComponent,
     ProfileComponent,
     DownloadComponent,
-    HistoryComponent
+    HistoryComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     FontAwesomeModule,
     CarouselModule,
-    MaterialModule
+    ButtonModule,
+    DropdownModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    ToastModule,
+    CardModule,
+    DialogModule,
+    PasswordModule,
+    ConfirmDialogModule,
+    PaginatorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
