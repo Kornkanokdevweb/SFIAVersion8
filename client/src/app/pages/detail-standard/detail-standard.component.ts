@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./detail-standard.component.css']
 })
 export class DetailStandardComponent {
+  visible: boolean = false;
 
+      showDialog() {
+          this.visible = true;
+      }
 }
