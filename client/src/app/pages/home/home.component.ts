@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SearchComponent } from '../search/search.component';
+
 
 @Component({
   selector: 'app-home',
