@@ -34,6 +34,7 @@ import { PasswordModule } from 'primeng/password';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PaginatorModule } from 'primeng/paginator';
 import { ChartModule } from 'primeng/chart';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { HttpClientModule } from '@angular/common/http';
 
@@ -76,6 +77,7 @@ import { HttpClientModule } from '@angular/common/http';
     ConfirmDialogModule,
     PaginatorModule,
     ChartModule,
+    InputTextModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,31 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { SearchComponent } from '../search/search.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-  images = [
-    {
-      imageSrc:
-        'https://images.unsplash.com/photo-1460627390041-532a28402358?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-      imageAlt: 'nature1',
-    },
-    {
-      imageSrc:
-        'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-      imageAlt: 'nature2',
-    },
-    {
-      imageSrc:
-        'https://images.unsplash.com/photo-1640844444545-66e19eb6f549?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80',
-      imageAlt: 'person1',
-    },
-    {
-      imageSrc:
-        'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-      imageAlt: 'person2',
-    },
-  ]
+export class HomeComponent implements OnInit {
+  
+  searchSkill: string = '';
+  searchResults: any[] = [];
+  originalData: any[] = [
+    { id: 1, name: 'John Doe', age: 30, city: 'New York' },
+    { id: 2, name: 'Jane Smith', age: 28, city: 'Los Angeles' },
+    { id: 3, name: 'Bob Johnson', age: 35, city: 'Chicago' },
+    { id: 4, name: 'Alice Williams', age: 32, city: 'Houston' }
+  ];
+
+  constructor(){}
+
+  ngOnInit(): void {
+    
+  }
+
+  search() {
+    // ดำเนินการค้นหาและรับผลลัพธ์
+    this.searchResults = this.originalData.filter(result =>
+      result.name.toLowerCase().includes(this.searchSkill.toLowerCase())
+    );
+  }
+  
+  
+  
 }
