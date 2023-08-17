@@ -10,10 +10,10 @@ router.post('/register', register); // register user
 // router.post('/registerMail'); // send the email
 router.post('/login', login); // login in app
 router.post('/logout', logout); // logout in app 
-router.post('/refreshToken', refreshToken); // refresh token
+router.post('/refresh', refreshToken); // refresh token
 
 //**GET Methods */
-router.get('/authenticateUser', authenticateUser); //authenticate user
+router.get('/user', authenticateUser); //authenticate user
 router.get('/generateOTP', verifyUser, localVariables, generateOTPHandler); // generate random OTP
 router.get('/verifyOTP', verifyOTPHandler); // verify generate OTP
 router.get('/createResetSession', createResetSession)

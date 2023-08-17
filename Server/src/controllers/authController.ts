@@ -86,9 +86,7 @@ exports.login = async (req: Request, res: Response) => {
 
     const refreshToken = jwt.sign(
       {
-        user: {
           id: user.id,
-        },
       },
       process.env.JWT_REFRESH_SECRET_KEY,
       { expiresIn: "1w" }
@@ -126,11 +124,11 @@ exports.login = async (req: Request, res: Response) => {
 
 /**POST http://localhost:8080/api/logout  --> Under Test*/
 exports.logout = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies["refreshToken"];
+  const refreshToken = req.cookies['refreshToken'];
 
   await myDataSource.getRepository(Token).delete({ token: refreshToken });
 
-  res.cookie("refreshToken", "", { maxAge: 0 });
+  res.cookie('refreshToken', '', { maxAge: 0 });
 
   res.send({
     success: true,
@@ -141,44 +139,54 @@ exports.logout = async (req: Request, res: Response) => {
 /**GET http://localhost:8080/api/authenticate&&getuserData  --> Under Test*/
 exports.authenticateUser = async (req: Request, res: Response) => {
   try {
-    const accessToken = req.headers.authorization?.startsWith("Bearer")
-      ? req.headers.authorization.split(" ")[1]
-      : undefined;
+    const authorizationHeader = req.headers.authorization;
 
-    if (!accessToken) {
+    if (!authorizationHeader || !authorizationHeader.startsWith("Bearer")) {
       return res.status(401).send({
         success: false,
         message: "Unauthenticated",
       });
     }
 
-    const verifyToken: any = jwt.verify(
-      accessToken,
-      process.env.JWT_ACCESS_SECRET_KEY
-    );
-    if (!verifyToken) {
+    const accessToken = authorizationHeader.split(" ")[1];
+
+    try {
+      const verifyToken: any = jwt.verify(
+        accessToken,
+        process.env.JWT_ACCESS_SECRET_KEY
+      );
+
+      if (!verifyToken) {
+        return res.status(401).send({
+          success: false,
+          message: "Unauthenticated",
+        });
+      }
+
+      const user = await myDataSource
+        .getRepository(User)
+        .findOne({ where: { id: verifyToken.id } });
+
+      if (!user) {
+        return res.status(401).send({
+          success: false,
+          message: "Unauthenticated",
+        });
+      }
+
+      const { password, ...data } = user;
+      return res.send(data);
+    } catch (err) {
       return res.status(401).send({
         success: false,
         message: "Unauthenticated",
       });
     }
-
-    const user = await myDataSource
-      .getRepository(User)
-      .findOne({ where: { id: verifyToken.id } });
-    if (!user) {
-      return res.status(401).send({
-        success: false,
-        message: "Unauthenticated",
-      });
-    }
-
-    const { password, ...data } = user;
-    return res.send(data);
   } catch (err) {
-    return res.status(401).send({
+    console.error("Error:", err);
+    return res.status(500).send({
       success: false,
-      message: "Unauthenticated",
+      message: "Internal Server Error",
     });
   }
 };
@@ -186,13 +194,13 @@ exports.authenticateUser = async (req: Request, res: Response) => {
 /**POST http://localhost:8080/api/refreshToken  --> Under Test*/
 exports.refreshToken = async (req: Request, res: Response) => {
   try {
-    const refreshToken = req.cookies["refreshToken"];
+    const refreshToken = req.cookies['refreshToken'];
 
-    const verifyToken: any = jwt.verify(
+    const payload: any = jwt.verify(
       refreshToken,
       process.env.JWT_REFRESH_SECRET_KEY
     );
-    if (!verifyToken) {
+    if (!payload) {
       return res.status(401).send({
         success: false,
         message: "Unauthenticated",
@@ -201,7 +209,7 @@ exports.refreshToken = async (req: Request, res: Response) => {
 
     const tokenStore = await myDataSource.getRepository(Token).findOne({
       where: {
-        user_id: verifyToken.id,
+        user_id: payload.id,
         expired_at: MoreThanOrEqual(new Date()),
       },
     });
@@ -215,7 +223,7 @@ exports.refreshToken = async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       {
-        id: verifyToken.id,
+        id: payload.id,
       },
       process.env.JWT_ACCESS_SECRET_KEY,
       { expiresIn: "30s" }

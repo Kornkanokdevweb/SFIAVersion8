@@ -32,7 +32,7 @@
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
+    "mysql2": "^3.6.0",
     "otp-generator": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.17"

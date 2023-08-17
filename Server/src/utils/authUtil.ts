@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import exp from "constants";
 import otpGenerator from "otp-generator";
 
 export const hashedPassword = async (password: string) => {
