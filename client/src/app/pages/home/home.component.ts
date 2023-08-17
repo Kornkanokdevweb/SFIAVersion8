@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Emitter } from 'src/app/emitters/emitter';
 
 
 @Component({
@@ -8,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+
+  message = ''
   
   searchSkill: string = '';
   searchResults: any[] = [];
@@ -18,10 +21,25 @@ export class HomeComponent implements OnInit {
     { id: 4, name: 'Alice Williams', age: 32, city: 'Houston' }
   ];
 
-  constructor(){}
+  constructor(
+    private http: HttpClient,
+  ){}
 
   ngOnInit(): void {
-    
+    this.http.get('http://localhost:8080/api/user')
+      .subscribe({
+        next: (res: any) => {
+          console.log(res)
+          this.message = `Hi ${res.id}`
+          Emitter.authEmitter.emit(true)
+        },
+        error: () => {
+          //handle error
+          // this.router.navigate(['/login'])
+          console.log(`You are not logged in`)
+          Emitter.authEmitter.emit(false)
+        }
+      });
   }
 
   search() {
