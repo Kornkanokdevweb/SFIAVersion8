@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -34,9 +34,9 @@ import { PasswordModule } from 'primeng/password';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PaginatorModule } from 'primeng/paginator';
 import { ChartModule } from 'primeng/chart';
+import { InputTextModule } from 'primeng/inputtext';
 
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -77,15 +77,9 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ConfirmDialogModule,
     PaginatorModule,
     ChartModule,
-    ReactiveFormsModule
+    InputTextModule
   ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

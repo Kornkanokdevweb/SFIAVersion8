@@ -1,0 +1,64 @@
+<div class="container">
+    <h5 class="text-center pb-3 text-xl font-semibold">Personal info</h5>
+<div class=" grid justify-items-center">
+    <div class="grid grid-cols-2 gap-6">
+        <div class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <div class="flex flex-col items-center pb-10">
+                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/docs/images/people/profile-picture-3.jpg" alt="Bonnie image"/>
+                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bonnie Green</h5>
+                <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
+            </div>
+            <div>
+                <div class="mb-6 space-y-4">
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
+                        <input type="email" id="email" aria-label="disabled input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-not-allowed" placeholder="john.doe@company.com" disabled>
+                    </div>  
+                    <div>
+                        <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                        <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="•••••••••" required>
+                    </div>
+                    <div>
+                        <label for="line" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Line ID</label>
+                        <input type="url" id="website" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="flowbite.com" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <div class="flex flex-col pb-10">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="thai_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thai name</label>
+                        <input type="text" id="thai_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required>
+                    </div>
+                    <div>
+                        <label for="thai_surname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thai Surname</label>
+                        <input type="text" id="thai_surname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Doe" required>
+                    </div>
+                    <div>
+                        <label for="english_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">English name</label>
+                        <input type="text" id="english_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required>
+                    </div>
+                    <div>
+                        <label for="english_surname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">English Surname</label>
+                        <input type="text" id="english_surname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Doe" required>
+                    </div>  
+                    <div>
+                        <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone number</label>
+                        <input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="123-45-678" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required>
+                    </div>
+                </div>
+                <div>              
+                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
+                    <textarea id="message" rows="2" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write your Address here...">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+        </div>
+</div>
+    <div class="grid justify-items-center pt-4">
+        <button type="button" class="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-font-medium rounded-full text-base px-5 py-2.5 text-center mr-2 mb-2 dark:focus:ring-yellow-900">Save</button>
+    </div>
+</div>

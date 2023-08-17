@@ -18,6 +18,11 @@ import { Information } from "./information.entity";
       nullable: false
     })
     password: string;
+
+    @Column({
+      nullable: true
+    })
+    profileImage: Buffer;
   
     @Column({
       nullable: true,
@@ -58,7 +63,7 @@ import { Information } from "./information.entity";
     portfolio: Portfolio[];
 
     @OneToMany(() => Information, (information) => information.user)
-    informations: Information[]
+    informations: Information[];
   
     @CreateDateColumn({
       type: "timestamp",
