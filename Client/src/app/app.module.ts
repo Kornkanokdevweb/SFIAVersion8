@@ -35,6 +35,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PaginatorModule } from 'primeng/paginator';
 import { ChartModule } from 'primeng/chart';
 import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
@@ -78,7 +79,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     PaginatorModule,
     ChartModule,
     ReactiveFormsModule,
-    InputTextModule
+    InputTextModule,
+    CalendarModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

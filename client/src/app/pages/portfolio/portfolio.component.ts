@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+
 
 interface City {
   name: string;
@@ -12,9 +14,8 @@ interface City {
   styleUrls: ['./portfolio.component.css'],
   providers: [MessageService]
 })
-export class PortfolioComponent  {
-  cities: City[] | undefined;
-
+export class PortfolioComponent implements OnInit{
+    cities: City[] | undefined;
     selectedJob: City | undefined;
 
     // fix it
@@ -37,4 +38,12 @@ export class PortfolioComponent  {
     showAdd() {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Add data successfully' });
   }
+
+    visible: boolean = false;
+
+    showDialog() {
+        this.visible = true;
+    }
+
+    date: Date[] | undefined;
 }
