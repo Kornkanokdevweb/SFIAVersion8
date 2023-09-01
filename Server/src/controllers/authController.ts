@@ -40,7 +40,7 @@ exports.register = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: newUser,
+      message: 'Registration successful. Please log in.',
     });
   } catch (err) {
     // ตรวจสอบว่ามี email นี้ในระบบแล้วหรือไม่
@@ -294,7 +294,7 @@ exports.updateUser = async (req: Request, res: Response) => {
     user.firstNameTH = firstNameTH;
     user.lastNameTH = lastNameTH;
     user.firstNameEN = firstNameEN;
-    user.lastNameTH = lastNameEN;
+    user.lastNameEN = lastNameEN;
     user.phone = phone;
     user.line = line;
     user.address = address;

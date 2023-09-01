@@ -1,0 +1,13 @@
+
+
+:host ::ng-deep .p-button-success {
+    background-color:#22c55e;
+    color:aliceblue;
+}
+
+
+:host ::ng-deep .p-button-secondary {
+    background-color:#a8a29e;
+    color:aliceblue;
+}
+

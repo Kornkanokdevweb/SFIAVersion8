@@ -47,7 +47,7 @@ import { Information } from "./information.entity";
     @Column({
       nullable: true,
     })
-    phone: number;
+    phone: string;
   
     @Column({
       nullable: true,

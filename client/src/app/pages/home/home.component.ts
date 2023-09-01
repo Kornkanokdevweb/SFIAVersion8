@@ -1,6 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Emitter } from 'src/app/emitters/emitter';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { Emitter } from 'src/app/emitters/emitter';
 export class HomeComponent implements OnInit {
 
   message = ''
-  
+
   searchSkill: string = '';
   searchResults: any[] = [];
   originalData: any[] = [
@@ -23,19 +24,19 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-  ){}
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.http.get('http://localhost:8080/api/user')
       .subscribe({
         next: (res: any) => {
-          console.log(res)
           this.message = `Hi ${res.id}`
           Emitter.authEmitter.emit(true)
         },
         error: () => {
           //handle error
-          // this.router.navigate(['/login'])
+          this.router.navigate(['/'])
           console.log(`You are not logged in`)
           Emitter.authEmitter.emit(false)
         }
@@ -48,7 +49,7 @@ export class HomeComponent implements OnInit {
       result.name.toLowerCase().includes(this.searchSkill.toLowerCase())
     );
   }
-  
-  
-  
+
+
+
 }

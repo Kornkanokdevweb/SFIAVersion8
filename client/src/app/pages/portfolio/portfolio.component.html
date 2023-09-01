@@ -14,8 +14,8 @@
               >1998- 2002 ปริญญาตรี มหาวิทยาลัยนเรศวร คณะวิศวกรรมศาสตร์
               สาขาวิศวกรรมคอมพิวเตอร์</span
             >
-            <div class="flex md:order-2 space-x-4">
-              <button>
+            <div class="flex md:order-2 space-x-2">
+              <button (click)="showEditEducation()">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="1.2em"
@@ -31,44 +31,144 @@
                   />
                 </svg>
               </button>
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1.2em"
-                  viewBox="0 0 448 512"
-                >
-                  <style>
-                    svg {
-                      fill: #4b5563;
-                    }
-                  </style>
-                  <path
-                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
-                  />
-                </svg>
-              </button>
+              <p-dialog
+                header="Edit Education"
+                [(visible)]="displayEditEducation"
+                [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }"
+              >
+                <form>
+                  <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                      <label
+                        for="start_year"
+                        class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                        >Start Year</label
+                      >
+                      <input
+                        type="number"
+                        id="start_year"
+                        min="2000"
+                        max="2100"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="กรอกปีที่เข้าการศึกษา"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        for="end_year"
+                        class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                        >End year</label
+                      >
+                      <input
+                        type="number"
+                        id="start_year"
+                        min="2000"
+                        max="2100"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="กรอกปีที่จบการศึกษา"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label
+                        for="company"
+                        class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                        >Level of education</label
+                      >
+                      <select
+                        id="education"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required
+                      >
+                        <option value="" disabled selected>
+                          เลือกวุฒิการศึกษา
+                        </option>
+                        <option value="ปริญญาตรี">ปริญญาตรี</option>
+                        <option value="ปริญญาโท">ปริญญาโท</option>
+                        <option value="ปริญญาเอก">ปริญญาเอก</option>
+                        <!-- Add more options as needed -->
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="University"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >University</label
+                    >
+                    <input
+                      type="text"
+                      id="university"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="กรอกมหาวิทยาลัย"
+                      required
+                    />
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="password"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Faculty</label
+                    >
+                    <input
+                      type="text"
+                      id="faculty"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="กรอกคณะ"
+                      required
+                    />
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="branch"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Branch of</label
+                    >
+                    <input
+                      type="text"
+                      id="branch"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="กรอกสาขา"
+                      required
+                    />
+                  </div>
+                  <div class="grid justify-items-center">
+                    <button
+                      (click)="saveEditEducation()"
+                      type="submit"
+                      class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </p-dialog>
+              <div>
+                <app-confirm-dialog></app-confirm-dialog>
+              </div>
             </div>
           </div>
           <div class="grid justify-items-center pt-3">
             <p-toast></p-toast>
             <button
-              (click)="showDialog()"
+              (click)="showAddEducation()"
               type="button"
               class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-dashed border-2 border-gray-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
               Add Data
             </button>
             <p-dialog
-              header="Edit Education"
-              [(visible)]="visible"
-              [style]="{ width: '50vw' }"
+              header="Add Education"
+              [(visible)]="displayAddEducation"
+              [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }"
             >
               <form>
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                   <div>
                     <label
                       for="start_year"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                       >Start Year</label
                     >
                     <input
@@ -84,7 +184,7 @@
                   <div>
                     <label
                       for="end_year"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                       >End year</label
                     >
                     <input
@@ -100,7 +200,7 @@
                   <div>
                     <label
                       for="company"
-                      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                       >Level of education</label
                     >
                     <select
@@ -121,7 +221,7 @@
                 <div class="mb-6">
                   <label
                     for="University"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                     >University</label
                   >
                   <input
@@ -135,7 +235,7 @@
                 <div class="mb-6">
                   <label
                     for="password"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                     >Faculty</label
                   >
                   <input
@@ -149,7 +249,7 @@
                 <div class="mb-6">
                   <label
                     for="branch"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                     >Branch of</label
                   >
                   <input
@@ -162,10 +262,11 @@
                 </div>
                 <div class="grid justify-items-center">
                   <button
+                    (click)="saveAddEducation()"
                     type="submit"
-                    class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900"
+                    class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
                   >
-                    Submit
+                    Save
                   </button>
                 </div>
               </form>
@@ -182,8 +283,8 @@
               class="bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"
               >2019 ฝึกงานนักทดสอบระบบซอฟแวร์</span
             >
-            <div class="flex md:order-2 space-x-4">
-              <button>
+            <div class="flex md:order-2 space-x-2">
+              <button (click)="showEditExperience()">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="1.2em"
@@ -199,31 +300,112 @@
                   />
                 </svg>
               </button>
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1.2em"
-                  viewBox="0 0 448 512"
-                >
-                  <style>
-                    svg {
-                      fill: #4b5563;
-                    }
-                  </style>
-                  <path
-                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
-                  />
-                </svg>
-              </button>
+              <p-dialog
+                header="Edit Experience"
+                [(visible)]="displayEditExperience"
+                [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }"
+              >
+                <form>
+                  <div class="grid gap-6 mb-6 md:grid-cols-2"></div>
+                  <div class="mb-6">
+                    <label
+                      for="University"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Experience Name</label
+                    >
+                    <input
+                      type="text"
+                      id="university"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder=""
+                      required
+                    />
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="password"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Experience details</label
+                    >
+                    <input
+                      type="text"
+                      id="faculty"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder=""
+                      required
+                    />
+                  </div>
+                  <div class="grid justify-items-center">
+                    <button
+                      (click)="saveEditExperience()"
+                      type="submit"
+                      class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </p-dialog>
+
+              <div>
+                <app-confirm-dialog></app-confirm-dialog>
+              </div>
             </div>
           </div>
           <div class="grid justify-items-center pt-3">
             <button
+              (click)="showAddExperience()"
               type="button"
               class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-dashed border-2 border-gray-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
               Add Data
             </button>
+            <p-dialog
+              header="Add Experience"
+              [(visible)]="displayAddExperience"
+              [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }"
+            >
+              <form>
+                <div class="grid gap-6 mb-6 md:grid-cols-2"></div>
+                <div class="mb-6">
+                  <label
+                    for="University"
+                    class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                    >Experience Name</label
+                  >
+                  <input
+                    type="text"
+                    id="university"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="mb-6">
+                  <label
+                    for="password"
+                    class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                    >Experience details</label
+                  >
+                  <input
+                    type="text"
+                    id="faculty"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="grid justify-items-center">
+                  <button
+                  (click)="saveAddExperience()"
+                    type="submit"
+                    class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </p-dialog>
           </div>
         </div>
 
@@ -236,8 +418,8 @@
               class="bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"
               >Link</span
             >
-            <div class="flex md:order-2 space-x-4">
-              <button>
+            <div class="flex md:order-2 space-x-2">
+              <button (click)="showEditLink()">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="1.2em"
@@ -253,31 +435,111 @@
                   />
                 </svg>
               </button>
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1.2em"
-                  viewBox="0 0 448 512"
-                >
-                  <style>
-                    svg {
-                      fill: #4b5563;
-                    }
-                  </style>
-                  <path
-                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"
-                  />
-                </svg>
-              </button>
+              <p-dialog
+                header="Edit Link"
+                [(visible)]="displayEditLink"
+                [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }"
+              >
+                <form>
+                  <div class="grid gap-6 mb-6 md:grid-cols-2"></div>
+                  <div class="mb-6">
+                    <label
+                      for="University"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >Link Name</label
+                    >
+                    <input
+                      type="text"
+                      id="university"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder=""
+                      required
+                    />
+                  </div>
+                  <div class="mb-6">
+                    <label
+                      for="password"
+                      class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                      >URL link</label
+                    >
+                    <input
+                      type="text"
+                      id="faculty"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder=""
+                      required
+                    />
+                  </div>
+                  <div class="grid justify-items-center">
+                    <button
+                      (click)="saveAddLink()"
+                      type="submit"
+                      class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </p-dialog>
+              <div>
+                <app-confirm-dialog></app-confirm-dialog>
+              </div>
             </div>
           </div>
           <div class="grid justify-items-center pt-3">
             <button
+              (click)="showAddLink()"
               type="button"
               class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-dashed border-2 border-gray-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
               Add Data
             </button>
+            <p-dialog
+              header="Add Link"
+              [(visible)]="displayAddLink"
+              [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }"
+            >
+              <form>
+                <div class="grid gap-6 mb-6 md:grid-cols-2"></div>
+                <div class="mb-6">
+                  <label
+                    for="University"
+                    class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                    >Link Name</label
+                  >
+                  <input
+                    type="text"
+                    id="university"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="mb-6">
+                  <label
+                    for="password"
+                    class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
+                    >URL link</label
+                  >
+                  <input
+                    type="text"
+                    id="faculty"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div class="grid justify-items-center">
+                  <button
+                    (click)="saveAddLink()"
+                    type="submit"
+                    class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+                  >
+                    Save
+                  </button>
+                </div>
+              </form>
+            </p-dialog>
           </div>
         </div>
 
@@ -286,64 +548,39 @@
           <!-- Content for the first column -->
           <p class="text-center text-base font-semibold">Job</p>
           <div class="flex flex-wrap items-center justify-between pt-3">
-            <button
-              id="dropdownDefaultButton"
-              data-dropdown-toggle="dropdown"
-              class="w-full text-gray-800 bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500"
-              type="button"
+            <select
+              id="education"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required
             >
-              All Job
+              <option value="" disabled selected>เลือกอาชีพที่ต้องการ</option>
+              <option value="ปริญญาตรี">ปริญญาตรี</option>
+              <option value="ปริญญาโท">ปริญญาโท</option>
+              <option value="ปริญญาเอก">ปริญญาเอก</option>
+              <!-- Add more options as needed -->
+            </select>
+          </div>
+          <div class="pt-3 space-x-3">
+            <div
+              class="flex items-center p-3 pt-3 mb-3 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
+              role="alert"
+            >
               <svg
-                class="w-2.5 h-2.5 ml-2.5"
+                class="flex-shrink-0 inline w-4 h-4 mr-3"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 10 6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
               >
                 <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m1 1 4 4 4-4"
+                  d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
                 />
               </svg>
-            </button>
-            <!-- Dropdown menu -->
-            <div
-              id="dropdown"
-              class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-            >
-              <ul
-                class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                aria-labelledby="dropdownDefaultButton"
-              >
-                <li>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >Dashboard</a
-                  >
-                </li>
-              </ul>
+              <span class="sr-only">Info</span>
+              <div>
+                <span class="font-medium">โปรดเลือกอาชีพของคุณ!</span>
+              </div>
             </div>
-          </div>
-          <div class="flex flex-row pt-3 space-x-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1em"
-              viewBox="0 0 512 512"
-            >
-              <style>
-                svg {
-                  fill: #95989d;
-                }
-              </style>
-              <path
-                d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"
-              />
-            </svg>
-            <p class="text-gray-700 text-xs">โปรดเลือกอาชีพของคุณ</p>
           </div>
         </div>
       </div>

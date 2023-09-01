@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from './pages/home/home.component';
-import { SearchComponent } from './pages/search/search.component';
 import { SkillComponent } from './pages/skill/skill.component';
 import { AddInformationComponent } from './pages/add-information/add-information.component';
 import { AboutComponent } from './pages/about/about.component';
@@ -18,7 +17,6 @@ import { DetailStandardComponent } from './pages/detail-standard/detail-standard
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
-  {path:'search', component: SearchComponent},
   {path:'skill', component: SkillComponent},
   {path:'add-information', component: AddInformationComponent},
   {path:'about', component: AboutComponent},

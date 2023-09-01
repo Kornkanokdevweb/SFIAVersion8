@@ -24,10 +24,10 @@ body{
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 
+@import "primeicons/primeicons.css";
+
 .background{
     background-color: #ffffff;
     background-image: radial-gradient(#94edff 1.1500000000000001px, #ffffff 1.1500000000000001px);
     background-size: 23px 23px;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
