@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Request, Response } from "express";
 const { register, login, logout, updateUser, generateOTPHandler, verifyOTPHandler, createResetSession, resetPassword, authenticateUser, refreshToken } = require('../controllers/authController')
-const { verifyUser ,requireAuth, localVariables } = require('../middlewares/authMiddleware.ts')
+const { verifyUser ,requireAuth, localVariables, upload } = require('../middlewares/authMiddleware.ts')
 
 const router = Router();
 
@@ -19,7 +19,7 @@ router.get('/verifyOTP', verifyOTPHandler); // verify generate OTP
 router.get('/createResetSession', createResetSession)
 
 //**PUT Methods *
-router.put('/updateUser', updateUser); // is use to update the user profile
+router.put('/updateUser', upload, updateUser); // is use to update the user profile
 router.put('/resetPassword', verifyUser ,resetPassword); // use to reset password
 
 //**Test Protecting Routes */

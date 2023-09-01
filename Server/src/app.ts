@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import morgan from "morgan";
 import { readdirSync } from "fs";
+import path from "path";
 import cookieParser from "cookie-parser";
 
 dotenv.config()
@@ -30,6 +31,7 @@ app.use(cors({
   credentials: true
 }))
 app.use(morgan('dev'))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //routes
 readdirSync('./src/routes').map((r) => app.use('/api', require('./routes/'+r)))

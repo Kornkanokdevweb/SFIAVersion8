@@ -3,11 +3,13 @@
 <div class=" grid justify-items-center">
     <div class="grid grid-cols-2 gap-6">
         <div class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-            <div class="flex flex-col items-center pb-10">
-                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="/docs/images/people/profile-picture-3.jpg" alt="Bonnie image"/>
-                <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Bonnie Green</h5>
-                <span class="text-sm text-gray-500 dark:text-gray-400">Visual Designer</span>
-            </div>
+            <form class="flex flex-col items-center pb-10">
+                <label for="image" class="cursor-pointer">
+                    <img class="w-24 h-24 mb-3 rounded-full shadow-lg" [src]="selectedImageURL ? selectedImageURL :'http://localhost:8080/uploads/' + user.profileImage" alt="Profile Image" *ngIf="user.profileImage"/>
+                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Your profile image</h5>
+                </label>
+                <input id="image" class="hidden" type="file" name="image" (change)="selectImage($event)">
+            </form>
             <div>
                 <div class="mb-6 space-y-4">
                     <div>

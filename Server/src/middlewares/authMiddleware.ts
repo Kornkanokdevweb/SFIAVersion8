@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { myDataSource } from "../configs/connectDatabase";
 import { User } from "../entitys/user.entity";
+import multer from "multer";
 
 dotenv.config()
 
@@ -43,3 +44,24 @@ exports.localVariables = (req: Request, res: Response, next: NextFunction) => {
     }
     next()
 }
+
+const storage = multer.diskStorage({
+    destination: function(req: Request, file, cb) {
+        cb(null, '../Server/src/uploads')
+    },
+    filename: function(req: Request, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+        cb(null, 'profileImage-' + uniqueSuffix + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    // ตรวจสอบว่าไฟล์ที่อัปโหลดเป็นรูปภาพหรือไม่
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
+    }
+  };
+
+exports.upload = multer({storage: storage, fileFilter: fileFilter}).single('file')

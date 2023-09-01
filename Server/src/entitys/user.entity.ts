@@ -20,9 +20,10 @@ import { Information } from "./information.entity";
     password: string;
 
     @Column({
+      default: 'noimage.jpg',
       nullable: true
     })
-    profileImage: Buffer;
+    profileImage: string;
   
     @Column({
       nullable: true,

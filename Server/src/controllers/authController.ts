@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Token } from "../entitys/token.entity";
 import { MoreThanOrEqual } from "typeorm";
+import fs from "fs";
 
 dotenv.config();
 
@@ -281,6 +282,23 @@ exports.updateUser = async (req: Request, res: Response) => {
     }
 
     //if user has pass authenticated
+    if (req.file) {
+      if (user.profileImage && user.profileImage !== 'noimage.jpg') { // เพิ่มเงื่อนไขในการตรวจสอบว่าไม่ใช่ 'noimage.jpg'
+        try {
+          fs.unlink('../Server/src/uploads/' + user.profileImage, (err) => {
+            if (err) {
+              console.log('Error deleting old profile image:', err);
+            } else {
+              console.log('Old profile image deleted');
+            }
+          });
+        } catch (err) {
+          console.error('Error deleting old profile image:', err);
+        }
+      }
+      user.profileImage = req.file.filename;
+    }
+    
     const {
       firstNameTH,
       lastNameTH,
@@ -298,6 +316,7 @@ exports.updateUser = async (req: Request, res: Response) => {
     user.phone = phone;
     user.line = line;
     user.address = address;
+
     await myDataSource.getRepository(User).save(user);
     return res.status(200).send({
       success: true,
@@ -305,6 +324,7 @@ exports.updateUser = async (req: Request, res: Response) => {
       user: user,
     });
   } catch (err) {
+    console.error(err);
     return res.status(500).send({
       success: false,
       message: "Server error",
