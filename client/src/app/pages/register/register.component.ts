@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // เพิ่ม Validators เข้ามา
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { matchPassword } from './matchPassword.validator';
 import { MessageService } from 'primeng/api';
@@ -12,34 +12,63 @@ import { MessageService } from 'primeng/api';
   providers: [MessageService]
 })
 export class RegisterComponent implements OnInit {
-
-  registerForm!: FormGroup;
+  registerForm!: FormGroup; // ไม่ต้องใช้ ! สำหรับ registerForm และเพิ่ม Validators เข้ามา
 
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private messageService: MessageService,
-  ) {
-
-  }
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
-      email: '',
-      password: '',
-      ConfirmPassword: '',
-      AcceptTerms: ''
-    }, {
-      validators: matchPassword
-    });
+    this.registerForm = this.formBuilder.group(
+      {
+        email: ['', Validators.required], // เพิ่ม Validators.required เพื่อตรวจสอบว่า email ไม่เป็นค่าว่าง
+        password: ['', Validators.required], // เพิ่ม Validators.required เพื่อตรวจสอบว่า password ไม่เป็นค่าว่าง
+        ConfirmPassword: ['', Validators.required], // เพิ่ม Validators.required เพื่อตรวจสอบว่า ConfirmPassword ไม่เป็นค่าว่าง
+        AcceptTerms: '' // เพิ่ม Validators.requiredTrue เพื่อตรวจสอบว่า AcceptTerms เป็น true
+      },
+      {
+        validators: matchPassword
+      }
+    );
   }
 
   register() {
-    this.http.post('http://localhost:8080/api/register', this.registerForm.getRawValue())
-      .subscribe(
-        () => {
+    if (this.registerForm.valid) { // ตรวจสอบว่าฟอร์มถูกต้อง
+      this.http.post('http://localhost:8080/api/register', this.registerForm.getRawValue(), {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+        }),
+        observe: 'response'
+      }).subscribe(
+        (response) => {
+          if (response.status === 200) {
+            const emailData = {
+              email: this.registerForm.get('email')?.value,
+              text: '',
+              subject: ''
+            };
+
+            // Call your API router.post('/registerMail', registerMail) here with emailData
+            this.http.post('http://localhost:8080/api/registerMail', emailData, {
+              headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+              }),
+              observe: 'response'
+            }).subscribe(
+              () => {
+                // Handle success for the registerMail API
+              },
+              (error) => {
+                // Handle error for the registerMail API
+              }
+            );
+          }
+
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Registration successful. Please log in.' });
+
           // Delay navigation to login by 2 seconds
           setTimeout(() => {
             this.router.navigate(['/login']);
@@ -53,5 +82,6 @@ export class RegisterComponent implements OnInit {
           }
         }
       );
+    }
   }
 }

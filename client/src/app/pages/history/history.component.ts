@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Emitter } from 'src/app/emitters/emitter';
 
 @Component({
   selector: 'app-history',
@@ -14,6 +15,7 @@ export class HistoryComponent implements OnInit{
   options: any;
 
     ngOnInit() {
+        Emitter.authEmitter.emit(true)
         const documentStyle = getComputedStyle(document.documentElement);
         const textColor = documentStyle.getPropertyValue('--text-color');
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');

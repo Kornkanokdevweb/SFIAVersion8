@@ -42,6 +42,8 @@ import { SlideMenuModule } from 'primeng/slidemenu';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ConfirmDialogComponent } from './layouts/confirm-dialog/confirm-dialog.component';
+import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
+import { ResetComponent } from './pages/reset/reset.component';
 
 
 @NgModule({
@@ -64,6 +66,8 @@ import { ConfirmDialogComponent } from './layouts/confirm-dialog/confirm-dialog.
     HistoryComponent,
     ResetPasswordComponent,
     ConfirmDialogComponent,
+    RecoveryPasswordComponent,
+    ResetComponent,
   ],
   imports: [
     BrowserModule,

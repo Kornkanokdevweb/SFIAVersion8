@@ -15,9 +15,7 @@
     </a>
 
     <div class="flex md:order-3">
-      
-
-      <div class="grid justify-items-end" *ngIf="authenticated">        
+      <div class="grid justify-items-end" *ngIf="authenticated">
         <button
           (click)="menu.toggle($event)"
           type="button"
@@ -42,7 +40,13 @@
             />
           </svg>
         </button>
-        <p-slideMenu #menu [model]="items" [popup]="true" [viewportHeight]="250" [menuWidth]="175"></p-slideMenu>
+        <p-slideMenu
+          #menu
+          [model]="items"
+          [popup]="true"
+          [viewportHeight]="250"
+          [menuWidth]="175"
+        ></p-slideMenu>
       </div>
 
       <!-- <div

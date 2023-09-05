@@ -333,19 +333,19 @@ exports.updateUser = async (req: Request, res: Response) => {
 };
 
 /**GET http://localhost:8080/api/generateOTP  --> Under Test  */
-exports.generateOTPHandler = async (req: Request, res: Response) => {
-  try {
-    const OTP = generateOTP();
-    req.app.locals.OTP = OTP;
+// exports.generateOTPHandler = async (req: Request, res: Response) => {
+//   try {
+//     const OTP = generateOTP();
+//     req.app.locals.OTP = OTP;
 
-    res.status(201).json({ code: OTP });
-  } catch (err) {
-    res.status(500).json({
-      suceess: false,
-      message: "Failed to generate OTP. An internal server error occurred.",
-    });
-  }
-};
+//     res.status(201).json({ code: OTP });
+//   } catch (err) {
+//     res.status(500).json({
+//       suceess: false,
+//       message: "Failed to generate OTP. An internal server error occurred.",
+//     });
+//   }
+// };
 
 /**GET http://localhost:8080/api/verifyOTP  --> Under Test  */
 exports.verifyOTPHandler = async (req: Request, res: Response) => {

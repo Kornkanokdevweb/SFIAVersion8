@@ -30,11 +30,11 @@ export class NavbarComponent implements OnInit {
       }
     )
     this.items = [
-      { label: 'Profile', routerLink: '/profile' },
-    { label: 'History', routerLink: '/history' },
-    { label: 'Portfolio', routerLink: '/portfolio' },
-    { label: 'Logout',icon: 'pi pi-fw pi-power-off', command: () => this.logOut() }
-  ];
+      { label: 'Profile', icon: 'pi pi-fw pi-user', routerLink: '/profile' },
+      { label: 'History', icon: 'pi pi-fw pi-trash', routerLink: '/history' },
+      { label: 'Portfolio', icon: 'pi pi-fw pi-book', routerLink: '/portfolio' },
+      { label: 'Logout', icon: 'pi pi-fw pi-power-off', command: () => this.logOut() }
+    ];
 
   }
 

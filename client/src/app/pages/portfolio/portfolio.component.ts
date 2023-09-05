@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
+import { Emitter } from 'src/app/emitters/emitter';
 
 @Component({
   selector: 'app-portfolio',
@@ -10,19 +11,12 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class PortfolioComponent implements OnInit {
   ngOnInit() {
-
+    Emitter.authEmitter.emit(true)
   }
 
-  constructor(private messageService: MessageService,
+  constructor(
+    private messageService: MessageService,
     public dialog: MatDialog) { }
-
-  showExport() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Export Portfolio successfully' });
-  }
-
-  showAdd() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Add data successfully' });
-  }
 
   displayAddEducation: boolean = false;
   displayEditEducation: boolean = false;
@@ -130,6 +124,5 @@ export class PortfolioComponent implements OnInit {
     // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
     this.closeEditLink();
   }
-
 
 }

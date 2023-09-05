@@ -14,6 +14,8 @@ import { DownloadComponent } from './pages/download/download.component';
 import { HistoryComponent } from './pages/history/history.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component'
 import { DetailStandardComponent } from './pages/detail-standard/detail-standard.component';
+import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
+import { ResetComponent } from './pages/reset/reset.component'
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -29,6 +31,8 @@ const routes: Routes = [
   {path:'history', component: HistoryComponent},
   {path:'reset-password', component: ResetPasswordComponent},
   {path:'detail-standard', component: DetailStandardComponent},
+  {path:'recovery-password', component: RecoveryPasswordComponent},
+  {path:'reset', component: ResetComponent}
 ];
 
 @NgModule({
