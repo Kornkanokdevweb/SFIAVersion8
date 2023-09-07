@@ -21,7 +21,7 @@ export class RecoveryPasswordComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private emailService: StoreEmailService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.storedEmail = this.emailService.getEmail();
@@ -70,7 +70,7 @@ export class RecoveryPasswordComponent implements OnInit {
     const email = this.storedEmail; // ใช้ค่า email ที่เก็บไว้
     this.http.get(`http://localhost:8080/api/generateOTP?email=${email}`).subscribe(
       (response) => {
-        console.log('OTP sent successfully:', response);
+        console.log('OTP sent successfully:');
         // ทำสิ่งที่คุณต้องการเมื่อ OTP ถูกส่ง
       },
       (error) => {

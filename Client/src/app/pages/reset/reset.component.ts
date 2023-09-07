@@ -3,11 +3,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { StoreEmailService } from 'src/app/service/store-email.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-reset',
   templateUrl: './reset.component.html',
-  styleUrls: ['./reset.component.css']
+  styleUrls: ['./reset.component.css'],
+  providers: [MessageService]
 })
 export class ResetComponent implements OnInit {
   resetForm!: FormGroup;
@@ -17,8 +19,9 @@ export class ResetComponent implements OnInit {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private emailService: StoreEmailService
-  ){}
+    private emailService: StoreEmailService,
+    private messageService: MessageService,
+  ) { }
 
   ngOnInit(): void {
     this.storedEmail = this.emailService.getEmail();
@@ -27,7 +30,7 @@ export class ResetComponent implements OnInit {
       this.router.navigate(['/reset-password']); // เปลี่ยนเส้นทางไปยังหน้า resetPassword
       return; // ออกจาก ngOnInit เพื่อไม่ให้ดำเนินการต่อ
     }
-    
+
     this.resetForm = this.formBuilder.group(
       {
         newPassword: '',
@@ -39,34 +42,40 @@ export class ResetComponent implements OnInit {
   resetPassword() {
     const newPassword = this.resetForm.get('newPassword')?.value;
     const confirmPassword = this.resetForm.get('confirmPassword')?.value;
-  
+
     if (newPassword !== confirmPassword) {
       // แสดงข้อความผิดพลาดหรือทำการจัดการเมื่อรหัสผ่านไม่ตรงกัน
       console.error('Passwords do not match');
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Passwords do not match' });
       return;
     }
-  
+
     const storedEmail = this.emailService.getEmail(); // รับค่าอีเมลที่เก็บไว้ใน Service
-  
+
     const resetData = {
       email: storedEmail, // ใช้ค่าอีเมลจาก Service
       password: newPassword
     };
-  
+
     this.http.put('http://localhost:8080/api/resetPassword', resetData).subscribe(
       (response: any) => {
         // รับข้อมูลการตอบสนองจาก API เมื่อรีเซ็ตรหัสผ่านสำเร็จ
-        console.log('Password reset successful:', response);
-        // ทำการเรียกใช้งาน Router เพื่อเปลี่ยนหน้าหลังจากการรีเซ็ตรหัสผ่าน
-        this.router.navigate(['/login']); // เปลี่ยนเส้นทางไปยังหน้า login หรือหน้าอื่นๆ ตามที่คุณต้องการ
+        console.log('Password reset successfull:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Password reset successfull.' });
+        setTimeout(() => {
+          // ทำการเรียกใช้งาน Router เพื่อเปลี่ยนหน้าหลังจากการรีเซ็ตรหัสผ่าน
+          this.router.navigate(['/login']); // เปลี่ยนเส้นทางไปยังหน้า login หรือหน้าอื่นๆ ตามที่คุณต้องการ
+        }, 2000); // Delay in milliseconds
+
       },
       (error) => {
         // จัดการข้อผิดพลาดเมื่อการรีเซ็ตรหัสผ่านไม่สำเร็จ
         console.error('Password reset failed:', error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Password reset failed' });
         // คุณสามารถแสดงข้อความผิดพลาดหรือทำการจัดการเพิ่มเติมได้ตามความเหมาะสม
       }
     );
   }
-  
+
 
 }

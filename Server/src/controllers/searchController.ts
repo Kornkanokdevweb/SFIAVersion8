@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
-import { Skills } from "../entitys/skills.entity";
 import { myDataSource } from "../configs/connectDatabase";
-import { Category } from "../entitys/category.entity";
-import { Subcategory } from "../entitys/subcategory.entity";
+import { Skills } from "../entitys/skills.entity";
 
-//การค้นหาข้อมูลskill
+//ข้อมูลskillทั้งหมด
 exports.searchSkills = async (req: Request, res: Response) => {
     try {
         const skillsRepository = myDataSource.getRepository(Skills); // Use getRepository function
@@ -47,48 +45,37 @@ exports.listSkill = async (req: Request, res: Response) => {
     }
 };
 
-exports.dropdownCategories = async (req: Request, res: Response) => {
+
+//การค้นหาข้อมูลแบบ dropdown
+exports.dropdownSkillsAPI = async (req: Request, res: Response) => {
   try {
-    const category_text = req.params.category_text; // ดึงค่า category_text จากพารามิเตอร์
+      const categoryText = req.query.categoryText; // Get category_text from query parameter
+      const subcategoryText = req.query.subcategoryText; // Get category_text from query parameter
+      const skillsRepository = myDataSource.getRepository(Skills); // Use getRepository function
 
-    const categoriesRepository = myDataSource.getRepository(Category);
+      let query = skillsRepository.createQueryBuilder('skill')
+          .leftJoinAndSelect('skill.category', 'category')
+          .leftJoinAndSelect('category.subcategory', 'subcategory')
+          .leftJoinAndSelect('skill.levels', 'level')
+          .leftJoinAndSelect('level.descriptions', 'descriptions');
 
-    let categories;
+      if (categoryText && subcategoryText) {
+          query = query
+            .where('category.category_text = :categoryText', { categoryText })
+            .andWhere('subcategory.subcategory_text = :subcategoryText', { subcategoryText });
+      } else if (categoryText) {
+        query = query.where('category.category_text = :categoryText', { categoryText });
+      }
 
-    if (category_text) {
-      // กรณีมีการระบุ category_text ใน URL
-      categories = await categoriesRepository.find({
-        relations: ["subcategory", "skill"],
-        where: { category_text },
-      });
-    } else {
-      // กรณีไม่มีการระบุ category_text ใน URL
-      categories = await categoriesRepository.find({
-        relations: ["subcategory", "skill"],
-      });
-    }
+      const skills = await query.getMany();
 
-    const subcategoryTexts = categories.map(category => category.subcategory.subcategory_text);
+      // Extract subcategory_text from the result
+      const subcategoryTexts = skills.map((skill) => skill.category?.subcategory?.subcategory_text);
 
-    return res.send({ categories: categories, subcategories: subcategoryTexts });
+      return res.send({ skills, subcategoryTexts });
+
   } catch (error) {
-    console.error("Error:", error);
-    return res.status(500).send("Internal Server Error");
-  }
-};
-
-exports.dropdownSubcategories = async (req: Request, res: Response) => {
-  try {
-    const categoryText = req.params.categoryText; // Get category_text from the URL parameter
-
-    // Fetch subcategories based on the selected category_text
-    const subcategories = await myDataSource.getRepository(Subcategory).createQueryBuilder("sub")
-      .innerJoin("sub.categories", "cat", "cat.category_text = :categoryText", { categoryText })
-      .getMany();
-
-    return res.send({ subcategories: subcategories });
-  } catch (error) {
-    console.error("Error:", error);
-    return res.status(500).send("Internal Server Error");
+      console.error("Error:", error);
+      return res.status(500).send("Internal Server Error"); // Send appropriate response in case of an error
   }
 };

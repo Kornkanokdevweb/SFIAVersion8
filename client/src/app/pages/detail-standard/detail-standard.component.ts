@@ -1,5 +1,6 @@
 import { Component} from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Emitter } from 'src/app/emitters/emitter';
 
 @Component({
   selector: 'app-detail-standard',
@@ -8,6 +9,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   providers: [ConfirmationService, MessageService],
 })
 export class DetailStandardComponent {
+
+  ngOnInit() {
+    Emitter.authEmitter.emit(true)
+  }
 
   constructor(private messageService: MessageService){ }
 

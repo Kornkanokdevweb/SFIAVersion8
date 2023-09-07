@@ -1,12 +1,10 @@
 import { Router } from "express";
-const { searchSkills, listSkill, dropdownCategories, dropdownSubcategories } = require('../controllers/searchController')
-
 const router = Router();
+const { searchSkills, listSkill, 
+        dropdownSkillsAPI } = require('../controllers/searchController')
 
 router.get('/search', searchSkills);
-router.get('/search/:codeskill', listSkill);
-router.get('/category', dropdownCategories);//ค้นหาข้อมูลCategoryทั้งหมด
-router.get('/category/:category_text', dropdownSubcategories);//ค้นหาCategoryแบบเฉพาะเจาะจง
+router.get('/category', dropdownSkillsAPI);
 
 
 module.exports = router
