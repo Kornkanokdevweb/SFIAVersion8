@@ -1,13 +1,14 @@
-<div class="container">
+<div class="container mb-4">
     <div class="flex flex-col justify-center items-center md:flex-row">
         <div
-            class="w-full md:w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            class="w-full md:w-full mb-3 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
             <form class="flex flex-col justify-center items-center md:flex-row md:space-y-0 md:space-x-2">
                 <h3>{{message}}</h3>
 
-                <div>
-                    <label for="categoryDropdown">Category:</label>
+                <div class="max-w-3xl">
+                    <label for="categoryDropdown" class="mb-2">Category:</label>
                     <select id="categoryDropdown" [(ngModel)]="selectedCategory" (change)="onCategoryChange()"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         [ngModelOptions]="{standalone: true}">
                         <option value="" disabled>Select a category</option>
                         <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
@@ -15,9 +16,10 @@
                 </div>
 
 
-                <div>
-                    <label for="subcategoryDropdown">Subcategories:</label>
+                <div class="max-w-3xl">
+                    <label for="subcategoryDropdown" class="mb-2">Subcategy:</label>
                     <select id="subcategoryDropdown" [(ngModel)]="selectedSubcategory" (change)="onSubcategoryChange()"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         [ngModelOptions]="{standalone: true}" [disabled]="selectedCategory === ''">
                         <option value="" disabled>All</option>
                         <option *ngFor="let subcategory of subcategories" [value]="subcategory">{{ subcategory }}
@@ -27,8 +29,8 @@
 
 
                 <!-- InputText and Submit Button -->
-                <div class="md:w-full">
-                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Search skill</label>
+                <div class="md:w-full ">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Search skill:</label>
                     <div class="flex items-center">
                         <label for="search" class="sr-only">Search</label>
                         <div class="w-full">
@@ -55,23 +57,21 @@
 
 
     <!-- Result Data-->
-    <div class="flex flex-col justify-center items-center my-10">
-        <div class="w-full md:w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 my-8"
+    <div class="flex flex-col justify-center items-center ">
+        <div class="w-full md:w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 my-2.5"
             *ngFor="let result of searchResults">
-            <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ result.skill_name }}</h5>
+            <h5 class="mb-2 ml-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ result.skill_name }}
+            </h5>
             <div class="md:grid md:grid-cols-2">
                 <div>
-                    <p class="font-normal text-gray-700 dark:text-gray-400">{{ result.overall }}</p>
+                    <p class="ml-2 font-normal text-gray-700 dark:text-gray-400">{{ result.overall }}</p>
                 </div>
-                <div class="mt-4 ml-36 md:mt-0 md:col-start-2 md:col-end-3">
+                <div class="mt-4 ml-64 md:mt-0 md:col-start-2 md:col-end-3">
                     <button type="button"
-                        class="w-full h-full text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:focus:ring-yellow-900">Read
+                        class="w-full h-full text-white bg-sky-400 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:focus:ring-blue-800">Read
                         more</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
 </div>

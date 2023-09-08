@@ -61,90 +61,90 @@ export class HomeComponent implements OnInit {
     this.fetchCategories();
   }
 
- //defaut ข้อมูลทั้งหมด
- fetchSkills() {
-  this.http.get<Skills[]>('http://localhost:8080/api/search').subscribe(
-    (skills) => {
-      this.searchResults = skills;
-    },
-    (error) => {
-      console.error('Error fetching skills:', error);
-    }
-  );
-}
-
-//ค้นหาข้อมูลจากการกรอก InputText
-searchSkills() {
-  const validInputPattern = /^[a-zA-Z\u0E00-\u0E7F\s]*$/;
-  this.isInvalidInput = !validInputPattern.test(this.searchSkill);
-
-  if (!this.isInvalidInput) {
+  //defaut ข้อมูลทั้งหมด
+  fetchSkills() {
     this.http.get<Skills[]>('http://localhost:8080/api/search').subscribe(
       (skills) => {
-        this.searchResults = skills.filter((result) =>
-          result.skill_name && result.skill_name.toLowerCase().includes(this.searchSkill.toLowerCase())
-        );
+        this.searchResults = skills;
       },
       (error) => {
         console.error('Error fetching skills:', error);
       }
     );
   }
-}
 
-//การแสดงข้อมูลใน dropdown category
-fetchCategories() {
-  this.http.get<any>('http://localhost:8080/api/category').subscribe((response) => {
-    const allCategories = response.skills.map((skill: any) => skill.category.category_text);
-    this.categories = this.removeDuplicates(allCategories);
-  });
-}
+  //ค้นหาข้อมูลจากการกรอก InputText
+  searchSkills() {
+    const validInputPattern = /^[a-zA-Z\u0E00-\u0E7F\s]*$/;
+    this.isInvalidInput = !validInputPattern.test(this.searchSkill);
 
-//เมื่อมีการเลือก dropdown category 
-onCategoryChange() {
-  if (this.selectedCategory) {
-    this.http.get<any>('http://localhost:8080/api/category?categoryText=' + this.selectedCategory)
-      .subscribe((response) => {
-        const allSubcategories = response.subcategoryTexts;
-        this.subcategories = this.removeDuplicates(allSubcategories);
-      });
-  } else {
-    this.subcategories = [];
-  }
-}
-
-//เมื่อมีการเลือก dropdown subcategory ให้ทำการ fetch ข้อมูลด้วย
-onSubcategoryChange() {
-  if (this.selectedSubcategory) {
-    const apiUrl = `http://localhost:8080/api/category?categoryText=${this.selectedCategory}&subcategoryText=${this.selectedSubcategory}`;
-
-    this.http.get<any>(apiUrl).subscribe(
-      (response) => {
-        this.searchResults = response.skills;
-        console.log(response.skills);
-      },
-      (error) => {
-        console.error('Error fetching skills:', error);
-      }
-    );
-  } else {
-    this.fetchSkills();
-  }
-}
-
-//ฟังก์ชันสำหรับการลบข้อมูลใน dropdown ที่ซ้ำกัน
-removeDuplicates(items: string[]): string[] {
-  const uniqueItems = [];
-  const seenItems = new Set();
-
-  for (const item of items) {
-    if (!seenItems.has(item)) {
-      seenItems.add(item);
-      uniqueItems.push(item);
+    if (!this.isInvalidInput) {
+      this.http.get<Skills[]>('http://localhost:8080/api/search').subscribe(
+        (skills) => {
+          this.searchResults = skills.filter((result) =>
+            result.skill_name && result.skill_name.toLowerCase().includes(this.searchSkill.toLowerCase())
+          );
+        },
+        (error) => {
+          console.error('Error fetching skills:', error);
+        }
+      );
     }
   }
 
-  return uniqueItems;
-}
+  //การแสดงข้อมูลใน dropdown category
+  fetchCategories() {
+    this.http.get<any>('http://localhost:8080/api/category').subscribe((response) => {
+      const allCategories = response.skills.map((skill: any) => skill.category.category_text);
+      this.categories = this.removeDuplicates(allCategories);
+    });
+  }
+
+  //เมื่อมีการเลือก dropdown category 
+  onCategoryChange() {
+    if (this.selectedCategory) {
+      this.http.get<any>('http://localhost:8080/api/category?categoryText=' + this.selectedCategory)
+        .subscribe((response) => {
+          const allSubcategories = response.subcategoryTexts;
+          this.subcategories = this.removeDuplicates(allSubcategories);
+        });
+    } else {
+      this.subcategories = [];
+    }
+  }
+
+  //เมื่อมีการเลือก dropdown subcategory ให้ทำการ fetch ข้อมูลด้วย
+  onSubcategoryChange() {
+    if (this.selectedSubcategory) {
+      const apiUrl = `http://localhost:8080/api/category?categoryText=${this.selectedCategory}&subcategoryText=${this.selectedSubcategory}`;
+
+      this.http.get<any>(apiUrl).subscribe(
+        (response) => {
+          this.searchResults = response.skills;
+          console.log(response.skills);
+        },
+        (error) => {
+          console.error('Error fetching skills:', error);
+        }
+      );
+    } else {
+      this.fetchSkills();
+    }
+  }
+
+  //ฟังก์ชันสำหรับการลบข้อมูลใน dropdown ที่ซ้ำกัน
+  removeDuplicates(items: string[]): string[] {
+    const uniqueItems = [];
+    const seenItems = new Set();
+
+    for (const item of items) {
+      if (!seenItems.has(item)) {
+        seenItems.add(item);
+        uniqueItems.push(item);
+      }
+    }
+
+    return uniqueItems;
+  }
 
 }
