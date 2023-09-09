@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Portfolio } from './portfolio.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Experience{
@@ -14,6 +14,7 @@ export class Experience{
     })
     date: Date;
 
-    @ManyToOne(() => Portfolio, portfolio => portfolio.experience,{onDelete: 'SET NULL'})
-    portfolio: Portfolio;
+    @ManyToOne(() => User, (user) => user.experiences)
+    user: User;
+
 }

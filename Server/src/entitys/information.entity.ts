@@ -13,14 +13,8 @@ export class Information{
     @Column()
     info_text: string;
 
-    @ManyToOne(() => Levels)
-    level_id: Levels;
-
     @ManyToOne(() => Description)
-    description_id: Description;
-
-    @ManyToMany(() => Skills)
-    skill_id: Skills[];
+    descriptions: Description;
 
     @ManyToOne(() => User, (user) => user.informations)
     user: User;

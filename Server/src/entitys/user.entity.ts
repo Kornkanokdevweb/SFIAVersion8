@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany } from "typeorm";
-import { Portfolio } from "./portfolio.entity";
 import { Information } from "./information.entity";
-    
+import { Experience } from "./experience.entity";
+import { Education } from "./education.entity";
+import { Link } from "./link.entity";
+
   @Entity()
   @Unique("my_unique_constraint", ["email"])
   export class User {
@@ -60,11 +62,17 @@ import { Information } from "./information.entity";
     })
     address: string;
 
-    @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
-    portfolio: Portfolio[];
-
     @OneToMany(() => Information, (information) => information.user)
     informations: Information[];
+
+    @OneToMany(() => Experience, (experience) => experience.user)
+    experiences: Experience[];
+
+    @OneToMany(() => Education, (education) => education.user)
+    educations: Experience[];
+
+    @OneToMany(() => Link, (link) => link.user)
+    links: Link[];
   
     @CreateDateColumn({
       type: "timestamp",
