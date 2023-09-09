@@ -27,6 +27,8 @@ interface Skills {
 
 export class HomeComponent implements OnInit {
 
+  currentPage: number = 1;
+  pageSize: number = 5;
 
   message = ''
 
@@ -146,5 +148,16 @@ export class HomeComponent implements OnInit {
 
     return uniqueItems;
   }
+
+  paginateResults(): Skills[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return this.searchResults.slice(startIndex, endIndex);
+  }
+
+  changePage(pageNumber: number) {
+    this.currentPage = pageNumber;
+  }
+
 
 }

@@ -38,6 +38,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MessagesModule } from 'primeng/messages';
 import { SlideMenuModule } from 'primeng/slidemenu';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
@@ -92,6 +93,7 @@ import { ResetComponent } from './pages/reset/reset.component';
     MatDialogModule,
     MessagesModule,
     SlideMenuModule,
+    NgbPaginationModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
