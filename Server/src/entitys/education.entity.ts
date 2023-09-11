@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
+import { Portfolio } from './portfolio.entity';
 
 @Entity()
 export class Education{
@@ -24,12 +24,11 @@ export class Education{
     @Column()
     branch: string;
 
-    @ManyToOne(() => User, (user) => user.educations)
-    user: User;
-
     @CreateDateColumn({
         type: "timestamp"
     })
     date: Date;
 
+    @ManyToOne(() => Portfolio, portfolio => portfolio.education,{onDelete: 'SET NULL'})
+    portfolio: Portfolio;
 }

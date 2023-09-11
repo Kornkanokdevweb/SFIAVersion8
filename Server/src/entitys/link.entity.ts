@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
+import { Portfolio } from './portfolio.entity';
 
 @Entity()
 export class Link{
@@ -12,12 +12,11 @@ export class Link{
     @Column()
     link_text: string;
 
-    @ManyToOne(() => User, (user) => user.links)
-    user: User;
-
     @CreateDateColumn({
         type: "timestamp"
     })
     date: Date;
 
+    @ManyToOne(() => Portfolio, portfolio => portfolio.link,{onDelete: 'SET NULL'})
+    portfolio: Portfolio;
 }
