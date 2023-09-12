@@ -1,14 +1,18 @@
 import { Router } from "express";
-const { Education } = require('../controllers/portfolioController')
+const { createEducation,getEducation,updateEducation,deleteEducation } = require('../controllers/educationController')
 
 const router = Router();
 
-//**POST Methods */
+//POST Methods */
+router.post('/createEducation', createEducation)
 
-//**GET Methods */
+//GET Methods /
+router.get('/getEducation',getEducation)
 
+//**PUT Methods
+router.put('/updateEducation',updateEducation)
 
-//**PUT Methods *
-
+//*DELETE Methods/
+router.delete('/deleteEducation',deleteEducation)
 
 module.exports = router

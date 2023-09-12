@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import { Token } from "../entitys/token.entity";
 import { MoreThanOrEqual } from "typeorm";
 import fs from "fs";
+import { Portfolio } from "../entitys/portfolio.entity";
 
 dotenv.config();
 
@@ -38,6 +39,15 @@ exports.register = async (req: Request, res: Response) => {
       password: hashedPasswordValue,
     });
     await userRepository.save(newUser);
+
+    // เพิ่มข้อมูลในตาราง Portfolio
+    const portfolioRepository = myDataSource.getRepository(Portfolio);
+    const newPortfolioEntry = portfolioRepository.create({
+
+      user: newUser,
+    
+    });
+    await portfolioRepository.save(newPortfolioEntry);
 
     res.status(200).json({
       success: true,

@@ -4,7 +4,7 @@ import { Portfolio } from './portfolio.entity';
 @Entity()
 export class Education{
     @PrimaryGeneratedColumn()
-    education_id: number;
+    education_id: string;
 
     @Column()
     syear: number;

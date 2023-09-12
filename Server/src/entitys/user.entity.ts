@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany } from "typeorm";
 import { Portfolio } from "./portfolio.entity";
-import { Information } from "./information.entity";
+import { Datacollection } from "./datacollection.entity";
     
   @Entity()
   @Unique("my_unique_constraint", ["email"])
@@ -63,8 +63,8 @@ import { Information } from "./information.entity";
     @OneToMany(() => Portfolio, (portfolio) => portfolio.user)
     portfolio: Portfolio[];
 
-    @OneToMany(() => Information, (information) => information.user)
-    informations: Information[];
+    @OneToMany(() => Datacollection, (datacollection) => datacollection.user)
+    datacollection: Datacollection[];
   
     @CreateDateColumn({
       type: "timestamp",

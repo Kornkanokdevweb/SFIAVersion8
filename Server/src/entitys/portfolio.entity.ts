@@ -7,14 +7,14 @@ import { Education } from './education.entity';
 @Entity()
 export class Portfolio {
   @PrimaryGeneratedColumn()
-  portfolio_id: number;
+  id: number;
 
   @ManyToOne(() => User, (user) => user.portfolio)
   user: User;
 
   @OneToMany(() => Experience, (experience) => experience.portfolio)
   experience: Experience[];
-
+Z
   @OneToMany(() => Link, (link) => link.portfolio)
   link: Link[];
 
