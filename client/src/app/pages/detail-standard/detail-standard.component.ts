@@ -1,6 +1,8 @@
-import { Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-detail-standard',
@@ -8,21 +10,32 @@ import { Emitter } from 'src/app/emitters/emitter';
   styleUrls: ['./detail-standard.component.css'],
   providers: [ConfirmationService, MessageService],
 })
-export class DetailStandardComponent {
 
-  ngOnInit() {
-    Emitter.authEmitter.emit(true)
-  }
+export class DetailStandardComponent implements OnInit {
 
-  constructor(private messageService: MessageService){ }
-
+  codeskill!: number;
+  skillDetails: any;
   visible: boolean = false;
+  selectedMetal: string | null = null;
+  
+  constructor(
+    private messageService: MessageService,
+    private route: ActivatedRoute,
+    private http: HttpClient
+  ){ }
+
+  ngOnInit(): void {
+    this.route.params.subscribe((params) => {
+      this.codeskill = params['codeskill']; // Get the skill code from route parameters
+      this.fetchSkillDetails();
+
+      Emitter.authEmitter.emit(true);
+    });
+  }
 
   showDialog() {
     this.visible = true;
   }
-
-  selectedMetal: string | null = null;
 
   showDetails(metal: string) {
     this.selectedMetal = metal;
@@ -39,5 +52,18 @@ export class DetailStandardComponent {
     this.closeAddLink();
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Add data successfully' });
   }
+
+  fetchSkillDetails() {
+    this.http.get(`http://localhost:8080/api/search?codeskill=${this.codeskill}`)
+      .subscribe(
+        (details: any) => { // ระบุชนิดข้อมูลที่คาดหวัง
+          this.skillDetails = details;
+        },
+        (error) => {
+          console.error('Error fetching skill details:', error);
+        }
+      );
+  }
+  
 
 }
