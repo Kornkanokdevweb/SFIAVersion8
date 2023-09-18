@@ -136,6 +136,8 @@ exports.updateExperience = async (req: Request, res: Response) => {
             });
         }
 
+        experience.exp_text = exp_text;
+
         await myDataSource.getRepository(Experience).save(experience);
         return res.status(200).json({
             success: true,
