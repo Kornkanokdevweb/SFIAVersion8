@@ -7,7 +7,7 @@ import { Education } from './education.entity';
 @Entity()
 export class Portfolio {
   @PrimaryGeneratedColumn()
-  id: number;
+  id:   boolean;
 
   @ManyToOne(() => User, (user) => user.portfolio)
   user: User;

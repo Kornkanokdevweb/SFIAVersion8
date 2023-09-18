@@ -45,6 +45,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ConfirmDialogComponent } from './layouts/confirm-dialog/confirm-dialog.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
 import { ResetComponent } from './pages/reset/reset.component';
+import { EducationComponent } from './layouts/education/education.component';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { ResetComponent } from './pages/reset/reset.component';
     ConfirmDialogComponent,
     RecoveryPasswordComponent,
     ResetComponent,
+    EducationComponent,
   ],
   imports: [
     BrowserModule,

@@ -18,20 +18,12 @@ export class PortfolioComponent implements OnInit {
     private messageService: MessageService,
     public dialog: MatDialog) { }
 
-  displayAddEducation: boolean = false;
-  displayEditEducation: boolean = false;
   displayAddExperience: boolean = false;
   displayEditExperience: boolean = false;
   displayAddLink: boolean = false;
   displayEditLink: boolean = false;
 
-  showAddEducation() {
-    this.displayAddEducation = true;
-  }
 
-  showEditEducation() {
-    this.displayEditEducation = true;
-  }
 
   showAddExperience() {
     this.displayAddExperience = true;
@@ -50,32 +42,6 @@ export class PortfolioComponent implements OnInit {
   }
 
   date: Date[] | undefined;
-
-
-
-  closeAddEducation() {
-    this.displayAddEducation = false;
-  }
-
-  saveAddEducation() {
-    // ทำการบันทึกข้อมูลที่แก้ไข
-    // ตัวอย่างเช่น: this.editedExperience.save();
-
-    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
-    this.closeAddEducation();
-  }
-
-  closeEditEducation() {
-    this.displayEditEducation = false;
-  }
-
-  saveEditEducation() {
-    // ทำการบันทึกข้อมูลที่แก้ไข
-    // ตัวอย่างเช่น: this.editedExperience.save();
-
-    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
-    this.closeEditEducation();
-  }
 
   closeAddExperience() {
     this.displayAddExperience = false;

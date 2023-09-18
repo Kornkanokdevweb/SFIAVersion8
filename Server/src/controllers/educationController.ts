@@ -5,6 +5,7 @@ import { User } from "../entitys/user.entity";
 import { myDataSource } from "../configs/connectDatabase";
 import jwt from "jsonwebtoken";
 
+//**POST Methods */
 exports.createEducation = async (req: Request, res: Response) => {
     try {
         const refreshToken = req.cookies["refreshToken"];
@@ -21,7 +22,7 @@ exports.createEducation = async (req: Request, res: Response) => {
         const user = await myDataSource
             .getRepository(User)
             .findOne({ where: { id: verifyToken.id } });
-            console.log(user)
+        console.log(user)
         if (!user) {
             return res.status(401).send({
                 success: false,
@@ -31,7 +32,7 @@ exports.createEducation = async (req: Request, res: Response) => {
         const portfolio = await myDataSource
             .getRepository(Portfolio)
             .findOne({ where: { user: { id: verifyToken.id } } });
-            console.log(portfolio)
+        console.log(portfolio)
         if (!portfolio) {
             return res.status(404).send({
                 success: false,
@@ -72,6 +73,7 @@ exports.createEducation = async (req: Request, res: Response) => {
     }
 }
 
+//**GET Methods*/
 exports.getEducation = async (req: Request, res: Response) => {
     try {
         // ดึงข้อมูล userId จาก refreshToken และหา portfolio ของผู้ใช้
@@ -127,10 +129,11 @@ exports.getEducation = async (req: Request, res: Response) => {
     }
 };
 
+//**DELETE Methods */
 exports.deleteEducation = async (req, res) => {
     try {
         const refreshToken = req.cookies["refreshToken"];
-        const verifyToken = jwt.verify(
+        const verifyToken: any = jwt.verify(
             refreshToken,
             process.env.JWT_REFRESH_SECRET_KEY
         );
@@ -140,6 +143,7 @@ exports.deleteEducation = async (req, res) => {
                 message: "Unauthenticated",
             });
         }
+        
         const educationId = req.query.education_id; // รับ education_id จาก query
         if (!educationId) {
             return res.status(400).send({
@@ -147,14 +151,28 @@ exports.deleteEducation = async (req, res) => {
                 message: "Missing education_id parameter",
             });
         }
+        
+        // Find the user's portfolio
+        const portfolio = await myDataSource
+            .getRepository(Portfolio)
+            .findOne({ where: { user: { id: verifyToken.id } } });
+        
+        if (!portfolio) {
+            return res.status(404).send({
+                success: false,
+                message: "Portfolio not found",
+            });
+        }
+        
         const educationRepository = myDataSource.getRepository(Education);
-        const deleteResult = await educationRepository.delete(educationId);
+        const deleteResult = await educationRepository.delete({ education_id: educationId, portfolio });
         if (deleteResult.affected === 0) {
             return res.status(404).send({
                 success: false,
                 message: "No education record found to delete",
             });
         }
+        
         return res.status(200).send({
             success: true,
             message: "Education record deleted successfully",
@@ -168,42 +186,36 @@ exports.deleteEducation = async (req, res) => {
     }
 };
 
-
+//**PUT Methods */
 exports.updateEducation = async (req: Request, res: Response) => {
     try {
+        // Extract user ID from the refreshToken
         const refreshToken = req.cookies["refreshToken"];
         const verifyToken: any = jwt.verify(
             refreshToken,
             process.env.JWT_REFRESH_SECRET_KEY
         );
+
         if (!verifyToken) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
             });
         }
+
+        // Find the user's portfolio
         const portfolio = await myDataSource
             .getRepository(Portfolio)
             .findOne({ where: { user: { id: verifyToken.id } } });
+
         if (!portfolio) {
             return res.status(404).send({
                 success: false,
                 message: "Portfolio not found",
             });
         }
-        const education_id = req.params.education_id;
-        // ดึงข้อมูล Education จากฐานข้อมูล
-        const educationRepository = myDataSource.getRepository(Education);
-        const educationToUpdate = await educationRepository.findOne({
-            where: { education_id: education_id, portfolio: portfolio },
-        });
-        if (!educationToUpdate) {
-            return res.status(404).send({
-                success: false,
-                message: "Education not found",
-            });
-        }
-        // อัพเดทค่าของ Education จาก req.body
+
+        // Extract education data from the request body
         const {
             syear,
             eyear,
@@ -213,27 +225,44 @@ exports.updateEducation = async (req: Request, res: Response) => {
             branch,
         } = req.body;
 
-        educationToUpdate.syear = syear;
-        educationToUpdate.eyear = eyear;
-        educationToUpdate.level_edu = level_edu;
-        educationToUpdate.universe = universe;
-        educationToUpdate.faculty = faculty;
-        educationToUpdate.branch = branch;
+        // Extract education_id from the URL params
+        const educationId = typeof req.query.education_id === 'string'
+            ? req.query.education_id
+            : '';
 
-        await educationRepository.save(educationToUpdate);
+        // Find the specific education record associated with educationId
+        const education = await myDataSource
+            .getRepository(Education)
+            .findOne({ where: { education_id: educationId, portfolio } });
 
-        return res.status(200).send({
+        if (!education) {
+            return res.status(404).send({
+                success: false,
+                message: "Education record not found",
+            });
+        }
+
+        // Update the education record with the new data
+        education.syear = syear;
+        education.eyear = eyear;
+        education.level_edu = level_edu;
+        education.universe = universe;
+        education.faculty = faculty;
+        education.branch = branch;
+
+        // Save the updated education record
+        await myDataSource.getRepository(Education).save(education);
+
+        return res.status(200).json({
             success: true,
-            message: "Record update success",
-            education: educationToUpdate
+            message: "Education record updated successfully",
+            education: education,
         });
     } catch (err) {
         console.error(err);
-        return res.status(500).send({
+        return res.status(500).json({
             success: false,
             message: "Server error",
         });
     }
-}
-
-
+};
