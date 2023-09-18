@@ -30,7 +30,7 @@ const routes: Routes = [
   {path:'download', component: DownloadComponent},
   {path:'history', component: HistoryComponent},
   {path:'reset-password', component: ResetPasswordComponent},
-  {path:'detail-standard', component: DetailStandardComponent},
+  {path:'detail-standard/:codeskill', component: DetailStandardComponent},
   {path:'recovery-password', component: RecoveryPasswordComponent},
   {path:'reset', component: ResetComponent}
 ];

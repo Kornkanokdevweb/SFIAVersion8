@@ -1,38 +1,19 @@
 <div class="container mx-auto px-4 md:w-8/12 bg-sky-200 pb-8 pr-5 pl-5 border border-gray-200 rounded-lg shadow-md">
   <div class="grid justify-items-center">
-    <div class="w-full p-6">
+    <div class="w-full p-6" *ngFor="let skill of skillDetails">
       <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-        Project management
+        {{ skill.skill_name }}
       </h5>
       <div>
         <p class="font-normal text-gray-700 dark:text-gray-400">
-          Overall description: Delivering agreed outcomes from projects using
-          appropriate management techniques, collaboration, leadership and
-          governance.
+          {{ skill.overall }}
         </p>
       </div>
     </div>
 
-    <div class="w-full mx-5 md:mx-10 p-8 bg-white rounded-lg">
+    <div class="w-full mx-5 md:mx-10 p-8 bg-white rounded-lg" *ngFor="let skill of skillDetails">
       <p class="font-normal text-gray-700 dark:text-gray-400 text-sm">
-        This skill is applicable to all project management techniques and life
-        cycles — which can be on a continuum from predictive (plan-driven)
-        approaches to adaptive (iterative/agile) approaches. Activities may
-        include — but are not limited to: selecting techniques and life cycle
-        models based on the context of the project establishing team structures
-        and a collaborative working environment communicating with stakeholders
-        and maintaining awareness of business needs and priorities using visual
-        techniques for project tracking and reporting timeboxing and incremental
-        deliveries defining deliverables, milestones and dependencies applying
-        change control and risk management processes acquiring the necessary
-        resources and skills agreeing constraints of cost, timescales, quality
-        and scope reviewing experiences and learning from current and previous
-        projects ensuring that projects are formally closed and reviewed. An
-        understanding of project size and complexity is helpful when applying
-        the project management skill. Typical factors that influence project
-        complexity include the complexity of resourcing, scale of organisational
-        impact, use of new technologies, number of interdependences, stability
-        of requirements, business implications, and risks.
+        {{ skill.note }}
       </p>
     </div>
   </div>

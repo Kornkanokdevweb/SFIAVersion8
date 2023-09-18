@@ -12,7 +12,7 @@ interface Subcategory {
 }
 
 interface Skills {
-  id: number;
+  codeskill: number;
   skill_name: string;
   overall: string;
   category: Category;
@@ -157,6 +157,11 @@ export class HomeComponent implements OnInit {
 
   changePage(pageNumber: number) {
     this.currentPage = pageNumber;
+  }
+
+  viewSkillDetail(codeskill: number) {
+    // Navigate to the skill detail page and pass the codeskill as a parameter
+    this.router.navigate(['/detail-standard', codeskill]);
   }
 
 
