@@ -5,42 +5,38 @@ import { Skills } from "../entitys/skills.entity";
 //ข้อมูลskillทั้งหมด
 exports.searchSkills = async (req: Request, res: Response) => {
     try {
-        const codeskill = req.query.codeskill; // เปลี่ยนให้ใช้ req.query แทน req.params
+        const codeskill = req.query.codeskill;
+        const levelName = req.query.level_name;
 
-        const skillsRepository = myDataSource.getRepository(Skills); // Use getRepository function
-        let skills;
+        const skillsRepository = myDataSource.getRepository(Skills);
+        let skillsQuery = skillsRepository.createQueryBuilder('skill')
+            .leftJoinAndSelect('skill.category', 'category')
+            .leftJoinAndSelect('category.subcategory', 'subcategory')
+            .leftJoinAndSelect('skill.levels', 'level')
+            .leftJoinAndSelect('level.descriptions', 'descriptions');
 
         if (codeskill) {
-            // If codeskill parameter is provided, perform specific skill search
-            const skill = await skillsRepository.createQueryBuilder('skill')
-                .where({ codeskill })
-                .leftJoinAndSelect('skill.category', 'category')
-                .leftJoinAndSelect('category.subcategory', 'subcategory')
-                .leftJoinAndSelect('skill.levels', 'level')
-                .leftJoinAndSelect('level.descriptions', 'descriptions')
-                .getOne();
+            skillsQuery = skillsQuery.where({ codeskill });
+        }
 
-            if (!skill) {
-                return res.status(404).send("Skill not found");
-            }
+        if (levelName) {
+            skillsQuery = skillsQuery.andWhere('level.level_name = :levelName', { levelName });
+        }
 
-            skills = [skill];
-        } else {
-            // If codeskill parameter is not provided, retrieve all skills
-            skills = await skillsRepository.createQueryBuilder('skill')
-                .leftJoinAndSelect('skill.category', 'category')
-                .leftJoinAndSelect('category.subcategory', 'subcategory')
-                .leftJoinAndSelect('skill.levels', 'level')
-                .leftJoinAndSelect('level.descriptions', 'descriptions')
-                .getMany();
+        const skills = await skillsQuery.getMany();
+
+        if (skills.length === 0) {
+            return res.status(404).send("No skills found");
         }
 
         return res.send(skills);
     } catch (error) {
         console.error("Error:", error);
-        return res.status(500).send("Internal Server Error"); // Send appropriate response in case of an error
+        return res.status(500).send("Internal Server Error");
     }
 };
+
+
 
 //การค้นหาข้อมูลแบบ dropdown
 exports.dropdownSkillsAPI = async (req: Request, res: Response) => {

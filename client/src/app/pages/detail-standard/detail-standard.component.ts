@@ -14,42 +14,70 @@ import { HttpClient } from '@angular/common/http';
 export class DetailStandardComponent implements OnInit {
 
   codeskill!: number;
+  levelNames: string[] = [];
   skillDetails: any;
-  visible: boolean = false;
+
   selectedMetal: string | null = null;
-  
+  selectedLevelDescriptions: string[] = [];
+
+  visible: boolean[] = [];
+
+
   constructor(
     private messageService: MessageService,
     private route: ActivatedRoute,
     private http: HttpClient
-  ){ }
+  ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.codeskill = params['codeskill']; // Get the skill code from route parameters
       this.fetchSkillDetails();
 
-      Emitter.authEmitter.emit(true);
+      Emitter.authEmitter.emit(false);
     });
   }
 
-  showDialog() {
-    this.visible = true;
+  showDialog(index: number) {
+    this.visible[index] = true;
   }
 
-  showDetails(metal: string) {
-    this.selectedMetal = metal;
+  showDetails(levelName: string) {
+    this.http.get(`http://localhost:8080/api/search?codeskill=${this.codeskill}&level_name=${levelName}`)
+      .subscribe(
+        (details: any) => {
+          this.selectedMetal = levelName;
+          const selectedLevels = details[0]?.levels.filter((level: any) => level.level_name === levelName);
+
+          if (selectedLevels && selectedLevels.length > 0) {
+            // สร้างอาร์เรย์ของคำอธิบายของทุก level ที่เกี่ยวข้อง
+            const descriptions = selectedLevels.map((level: any) => level.descriptions[0]?.description_text || "");
+            // รวมข้อมูลใน descriptions และเขียนเป็นข้อความที่สามารถแสดงได้ใน HTML
+            this.selectedLevelDescriptions = descriptions;
+
+            // อัพเดตความยาวของอาร์เรย์ visible
+            this.visible = new Array(descriptions.length).fill(false);
+          } else {
+            this.selectedLevelDescriptions = ["Level not found"];
+          }
+        },
+        (error) => {
+          console.error('Error fetching skill details:', error);
+        }
+      );
   }
 
-  closeAddLink() {
-    this.visible = false;
+
+
+  closeAddLink(index: number) {
+    this.visible[index] = false;
   }
 
-  saveAddLink() {
+
+  saveAddLink(index: number) {
     // ทำการบันทึกข้อมูลที่แก้ไข
-    
+    this.visible[index] = false;
     // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
-    this.closeAddLink();
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Add data successfully' });
   }
 
@@ -58,12 +86,27 @@ export class DetailStandardComponent implements OnInit {
       .subscribe(
         (details: any) => { // ระบุชนิดข้อมูลที่คาดหวัง
           this.skillDetails = details;
+          this.levelNames = details[0].levels.map((level: any) => level.level_name);
+          this.levelNames = this.getUniqueItems(this.levelNames);
+          for (let i = 0; i < this.levelNames.length; i++) {
+            const levelName = this.levelNames[i];
+            // console.log(`${levelName}`);
+          }
         },
         (error) => {
           console.error('Error fetching skill details:', error);
         }
       );
   }
-  
+
+  private getUniqueItems(array: string[]): string[] {
+    const uniqueArray: string[] = [];
+    array.forEach(item => {
+      if (!uniqueArray.includes(item)) {
+        uniqueArray.push(item);
+      }
+    });
+    return uniqueArray;
+  }
 
 }
