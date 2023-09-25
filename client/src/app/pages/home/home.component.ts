@@ -109,9 +109,15 @@ export class HomeComponent implements OnInit {
         .subscribe((response) => {
           const allSubcategories = response.subcategoryTexts;
           this.subcategories = this.removeDuplicates(allSubcategories);
+          // เมื่อเลือก dropdown category ให้ทำการเรียกฟังก์ชัน onSubcategoryChange() เพื่อ fetch ข้อมูล
+          if (this.subcategories.length > 0) {
+            this.selectedSubcategory = this.subcategories[0]; // เลือก subcategory ที่มาอันแรก
+            this.onSubcategoryChange();
+          }
         });
     } else {
       this.subcategories = [];
+      this.selectedSubcategory = null;
     }
   }
 

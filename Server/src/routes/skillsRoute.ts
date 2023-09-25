@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 const { searchSkills, listSkill, 
-        dropdownSkillsAPI } = require('../controllers/searchController')
+        dropdownSkillsAPI } = require('../controllers/skillsController')
 
 router.get('/search', searchSkills);
 router.get('/category', dropdownSkillsAPI);
