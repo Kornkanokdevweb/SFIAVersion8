@@ -79,6 +79,7 @@ exports.getExperience = async (req: Request, res: Response) => {
             .find({ where: { portfolio: portfolio } })
 
         const experienceList = experienceData.map((experience) => ({
+            exp_id: experience.exp_id,
             exp_text: experience.exp_text,
         }));
 

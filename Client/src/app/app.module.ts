@@ -46,6 +46,9 @@ import { ConfirmDialogComponent } from './layouts/confirm-dialog/confirm-dialog.
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
 import { ResetComponent } from './pages/reset/reset.component';
 import { EducationComponent } from './layouts/education/education.component';
+import { ExperienceComponent } from './layouts/experience/experience.component';
+import { LinkComponent } from './layouts/link/link.component';
+import { JobComponent } from './layouts/job/job.component';
 
 
 @NgModule({
@@ -71,6 +74,9 @@ import { EducationComponent } from './layouts/education/education.component';
     RecoveryPasswordComponent,
     ResetComponent,
     EducationComponent,
+    ExperienceComponent,
+    LinkComponent,
+    JobComponent,
   ],
   imports: [
     BrowserModule,
