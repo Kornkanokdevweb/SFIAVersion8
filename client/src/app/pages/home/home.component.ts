@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
   pageSize: number = 5;
 
   message = ''
+  isLoggedIn: boolean = false;
 
   searchSkill: string = '';
   searchResults: Skills[] = [];
@@ -61,6 +62,10 @@ export class HomeComponent implements OnInit {
       });
     this.fetchSkills();
     this.fetchCategories();
+  }
+
+  logout() {
+    this.isLoggedIn = false;
   }
 
   //defaut ข้อมูลทั้งหมด

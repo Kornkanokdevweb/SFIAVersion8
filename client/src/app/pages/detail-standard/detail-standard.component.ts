@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router  } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -22,11 +22,14 @@ export class DetailStandardComponent implements OnInit {
 
   visible: boolean[] = [];
 
+  isLoggedIn: boolean = false;
+  message = '';
 
   constructor(
     private messageService: MessageService,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -34,8 +37,19 @@ export class DetailStandardComponent implements OnInit {
       this.codeskill = params['codeskill']; // Get the skill code from route parameters
       this.fetchSkillDetails();
 
-      Emitter.authEmitter.emit(false);
     });
+  }
+
+  checkLoginStatus() {
+    this.http.get('http://localhost:8080/api/user')
+      .subscribe({
+        next: (res: any) => {
+          // ถ้าล็อกอินแล้ว 
+        },
+        error: () => {
+          this.router.navigate(['/login']); // ตั้งค่า URL ของหน้าล็อกอินตามที่คุณต้องการ
+        }
+      });
   }
 
   showDialog(index: number) {
@@ -67,12 +81,9 @@ export class DetailStandardComponent implements OnInit {
       );
   }
 
-
-
   closeAddLink(index: number) {
     this.visible[index] = false;
   }
-
 
   saveAddLink(index: number) {
     // ทำการบันทึกข้อมูลที่แก้ไข
