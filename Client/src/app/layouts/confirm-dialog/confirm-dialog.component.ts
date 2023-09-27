@@ -9,7 +9,9 @@ import { PrimeNGConfig } from 'primeng/api';
   providers: [ConfirmationService, MessageService]
 })
 export class ConfirmDialogComponent {
-  constructor(private confirmationService: ConfirmationService, private messageService: MessageService,private primengConfig: PrimeNGConfig) { }
+  constructor(private confirmationService: ConfirmationService, 
+    private messageService: MessageService,
+    private primengConfig: PrimeNGConfig) { }
   ngOnInit() {
     this.primengConfig.ripple = true;
 }

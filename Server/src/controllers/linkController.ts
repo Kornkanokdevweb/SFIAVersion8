@@ -81,6 +81,7 @@ exports.getLink = async (req: Request, res: Response) => {
             .find({ where: { portfolio: portfolio}})
 
         const linkList = linkData.map((link) => ({
+            link_id: link.link_id,
             link_name: link.link_name,
             link_text: link.link_text,
         }));

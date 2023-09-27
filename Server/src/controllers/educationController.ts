@@ -108,6 +108,7 @@ exports.getEducation = async (req: Request, res: Response) => {
 
         // สร้าง array เพื่อเก็บข้อมูลการศึกษาที่จะส่งกลับ
         const educationList = educationData.map((education) => ({
+            education_id:education.education_id,
             syear: education.syear,
             eyear: education.eyear,
             level_edu: education.level_edu,
