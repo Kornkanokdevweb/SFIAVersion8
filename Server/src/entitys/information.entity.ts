@@ -15,6 +15,5 @@ export class Information{
 
     @ManyToOne(() => Datacollection, (datacollection) => datacollection.information)
     datacollection: Datacollection;
-
-    
+  
 }

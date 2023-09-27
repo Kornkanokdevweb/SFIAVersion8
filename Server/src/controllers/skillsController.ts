@@ -71,3 +71,4 @@ exports.dropdownSkillsAPI = async (req: Request, res: Response) => {
       return res.status(500).send("Internal Server Error"); // Send appropriate response in case of an error
   }
 };
+
