@@ -61,7 +61,6 @@ exports.createEducation = async (req: Request, res: Response) => {
         return res.status(200).send({
             success: true,
             message: "Record update success",
-            user: user,
             portfolio: portfolio,
         });
     } catch (err) {
@@ -108,7 +107,7 @@ exports.getEducation = async (req: Request, res: Response) => {
 
         // สร้าง array เพื่อเก็บข้อมูลการศึกษาที่จะส่งกลับ
         const educationList = educationData.map((education) => ({
-            education_id:education.education_id,
+            education_id:education.id,
             syear: education.syear,
             eyear: education.eyear,
             level_edu: education.level_edu,
@@ -166,7 +165,7 @@ exports.deleteEducation = async (req, res) => {
         }
         
         const educationRepository = myDataSource.getRepository(Education);
-        const deleteResult = await educationRepository.delete({ education_id: educationId, portfolio });
+        const deleteResult = await educationRepository.delete({ id: educationId, portfolio });
         if (deleteResult.affected === 0) {
             return res.status(404).send({
                 success: false,
@@ -204,20 +203,9 @@ exports.updateEducation = async (req: Request, res: Response) => {
             });
         }
 
-        // Find the user's portfolio
-        const portfolio = await myDataSource
-            .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
-
-        if (!portfolio) {
-            return res.status(404).send({
-                success: false,
-                message: "Portfolio not found",
-            });
-        }
-
-        // Extract education data from the request body
+        const userId = verifyToken.id;
         const {
+            educationId, 
             syear,
             eyear,
             level_edu,
@@ -226,16 +214,11 @@ exports.updateEducation = async (req: Request, res: Response) => {
             branch,
         } = req.body;
 
-        // Extract education_id from the URL params
-        const educationId = typeof req.query.education_id === 'string'
-            ? req.query.education_id
-            : '';
-
-        // Find the specific education record associated with educationId
-        const education = await myDataSource
-            .getRepository(Education)
-            .findOne({ where: { education_id: educationId, portfolio } });
-
+        const educationRepository = myDataSource.getRepository(Education);
+        const education = await educationRepository.findOne({
+            where: { id: educationId , portfolio: { user: { id: userId } } },
+        });
+        
         if (!education) {
             return res.status(404).send({
                 success: false,
@@ -252,7 +235,7 @@ exports.updateEducation = async (req: Request, res: Response) => {
         education.branch = branch;
 
         // Save the updated education record
-        await myDataSource.getRepository(Education).save(education);
+        await educationRepository.save(education);
 
         return res.status(200).json({
             success: true,

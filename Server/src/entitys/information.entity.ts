@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne}from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, ManyToOne, CreateDateColumn}from 'typeorm';
 import { Description } from './description.entity';
 import { Datacollection } from './datacollection.entity';
 
@@ -15,5 +15,10 @@ export class Information{
 
     @ManyToOne(() => Datacollection, (datacollection) => datacollection.information)
     datacollection: Datacollection;
+
+    @CreateDateColumn({
+        type: "timestamp"
+    })
+    date: Date;
   
 }

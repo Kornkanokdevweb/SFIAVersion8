@@ -79,7 +79,7 @@ exports.getExperience = async (req: Request, res: Response) => {
             .find({ where: { portfolio: portfolio } })
 
         const experienceList = experienceData.map((experience) => ({
-            exp_id: experience.exp_id,
+            exp_id: experience.id,
             exp_text: experience.exp_text,
         }));
 
@@ -110,26 +110,15 @@ exports.updateExperience = async (req: Request, res: Response) => {
                 message: "Unauthenticated",
             });
         }
-        const portfolio = await myDataSource
-            .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
-        if (!portfolio) {
-            return res.status(404).send({
-                success: false,
-                message: "Portfolio not found",
-            });
-        }
+        const userId = verifyToken.id;
+        const { expId, exp_text } = req.body;
 
-        const { exp_text } = req.body;
+        const experienceRepository = myDataSource.getRepository(Experience);
 
-        const expId = typeof req.query.exp_id === 'string'
-            ? req.query.exp_id
-            : '';
-
-        const experience = await myDataSource
-            .getRepository(Experience)
-            .findOne({ where: { exp_id: expId, portfolio } })
-
+        const experience = await experienceRepository.findOne({
+            where: { id: expId, portfolio: { user: { id: userId } } },
+        })
+           
         if (!experience) {
             return res.status(404).send({
                 success: false,
@@ -138,8 +127,8 @@ exports.updateExperience = async (req: Request, res: Response) => {
         }
 
         experience.exp_text = exp_text;
-
-        await myDataSource.getRepository(Experience).save(experience);
+        await experienceRepository.save(experience);
+        
         return res.status(200).json({
             success: true,
             message: "Experience record updated successfully",
@@ -188,7 +177,7 @@ exports.deleteExperience = async (req, res) => {
             });
         }
         const experienceRepository = myDataSource.getRepository(Experience);
-        const deleteResult = await experienceRepository.delete({ exp_id: expId, portfolio });
+        const deleteResult = await experienceRepository.delete({ id: expId, portfolio });
         if (deleteResult.affected === 0) {
             return res.status(404).send({
                 success: false,

@@ -4,7 +4,7 @@ import { Portfolio } from './portfolio.entity';
 @Entity()
 export class Link{
     @PrimaryGeneratedColumn()
-    link_id: string;
+    id: number;
 
     @Column()
     link_name: string;
