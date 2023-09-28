@@ -49,6 +49,7 @@ import { EducationComponent } from './layouts/education/education.component';
 import { ExperienceComponent } from './layouts/experience/experience.component';
 import { LinkComponent } from './layouts/link/link.component';
 import { JobComponent } from './layouts/job/job.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -102,6 +103,7 @@ import { JobComponent } from './layouts/job/job.component';
     MessagesModule,
     SlideMenuModule,
     NgbPaginationModule,
+    MatMenuModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
