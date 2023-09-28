@@ -81,7 +81,7 @@ exports.getLink = async (req: Request, res: Response) => {
             .find({ where: { portfolio: portfolio}})
 
         const linkList = linkData.map((link) => ({
-            link_id: link.link_id,
+            link_id: link.id,
             link_name: link.link_name,
             link_text: link.link_text,
         }));
@@ -101,7 +101,7 @@ exports.getLink = async (req: Request, res: Response) => {
 
 //**PUT Methods*/
 exports.updateLink = async (req: Request, res: Response) => {
-    try{
+    try {
         const refreshToken = req.cookies["refreshToken"];
         const verifyToken: any = jwt.verify(
             refreshToken,
@@ -113,50 +113,44 @@ exports.updateLink = async (req: Request, res: Response) => {
                 message: "Unauthenticated",
             });
         }
-        const portfolio = await myDataSource
-            .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
-        if (!portfolio) {
-            return res.status(404).send({
-                success: false,
-                message: "Portfolio not found",
-            });
-        }
-        const { link_name, link_text } = req.body;
 
-        const linkId = typeof req.query.link_id === 'string'
-            ? req.query.link_id
-            : '';
+        const userId = verifyToken.id; // รับ user id จาก token
+        const { linkId, link_name, link_text } = req.body; // รับ ID ของลิงก์และค่า link_name, link_text ที่ต้องการอัปเดตจากข้อมูลที่ส่งมา
 
-        const link = await myDataSource
-            .getRepository(Link)
-            .findOne({ where: { link_id: linkId, portfolio } });
+        const linkRepository = myDataSource.getRepository(Link);
+
+        // ตรวจสอบว่าลิงก์ที่ต้องการอัปเดตมีอยู่หรือไม่
+        const link = await linkRepository.findOne({
+            where: { id: linkId, portfolio: { user: { id: userId } } },
+        });
 
         if (!link) {
             return res.status(404).send({
                 success: false,
-                message: "Link record not found",
+                message: "Link not found",
             });
         }
 
+        // ทำการอัปเดตค่า link_name และ link_text
         link.link_name = link_name;
         link.link_text = link_text;
+        await linkRepository.save(link);
 
-        await myDataSource.getRepository(Link).save(link);
-
-        return res.status(200).json({
+        return res.status(200).send({
             success: true,
-            message: "Link record updated successfully",
-            link: link,
+            message: "Record update success",
+            link,
         });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({
+        return res.status(500).send({
             success: false,
             message: "Server error",
         });
     }
 }
+
+
 
 //**DELETE Methods */
 exports.deleteLink = async (req, res) => {
@@ -191,7 +185,7 @@ exports.deleteLink = async (req, res) => {
             });
         }
         const linkRepository = myDataSource.getRepository(Link);
-        const deleteResult = await linkRepository.delete({ link_id: linkId, portfolio});
+        const deleteResult = await linkRepository.delete({ id: linkId, portfolio});
         if(deleteResult.affected === 0) {
             return res.status(404).send({
                 success: false,
