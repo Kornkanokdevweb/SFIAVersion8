@@ -36,7 +36,15 @@ export class DetailStandardComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.codeskill = params['codeskill']; // Get the skill code from route parameters
       this.fetchSkillDetails();
-      // this.checkLoginStatus();
+      this.http.get('http://localhost:8080/api/user')
+      .subscribe({
+        next: (res: any) => {
+          Emitter.authEmitter.emit(true)
+        },
+        error: () => {
+           // ตั้งค่า URL ของหน้าล็อกอินตามที่คุณต้องการ
+        }
+      });
     });
   }
 
@@ -54,6 +62,7 @@ export class DetailStandardComponent implements OnInit {
 
   showDialog(index: number) {
     this.visible[index] = true;
+    this.checkLoginStatus();
   }
 
   showDetails(levelName: string) {

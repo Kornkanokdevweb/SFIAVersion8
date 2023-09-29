@@ -37,6 +37,7 @@ export class ExperienceComponent implements OnInit {
       exp_text: '',
     });
   }
+  
   ngOnInit(): void {
     this.fetchExperienceData();
   }
