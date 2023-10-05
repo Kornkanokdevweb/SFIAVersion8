@@ -3,6 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
 import { ActivatedRoute, Router  } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 
 @Component({
   selector: 'app-detail-standard',
@@ -36,13 +37,14 @@ export class DetailStandardComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.codeskill = params['codeskill']; // Get the skill code from route parameters
       this.fetchSkillDetails();
-      this.http.get('http://localhost:8080/api/user')
+      this.http.get('http://localhost:8080/api/user', {withCredentials: true})
       .subscribe({
         next: (res: any) => {
           Emitter.authEmitter.emit(true)
+          AuthInterceptor.accessToken
         },
         error: () => {
-           // ตั้งค่า URL ของหน้าล็อกอินตามที่คุณต้องการ
+          Emitter.authEmitter.emit(false)
         }
       });
     });
@@ -55,7 +57,7 @@ export class DetailStandardComponent implements OnInit {
           Emitter.authEmitter.emit(true)
         },
         error: () => {
-          this.router.navigate(['/login']); // ตั้งค่า URL ของหน้าล็อกอินตามที่คุณต้องการ
+          window.location.reload()
         }
       });
   }
@@ -73,12 +75,8 @@ export class DetailStandardComponent implements OnInit {
           const selectedLevels = details[0]?.levels.filter((level: any) => level.level_name === levelName);
 
           if (selectedLevels && selectedLevels.length > 0) {
-            // สร้างอาร์เรย์ของคำอธิบายของทุก level ที่เกี่ยวข้อง
             const descriptions = selectedLevels.map((level: any) => level.descriptions[0]?.description_text || "");
-            // รวมข้อมูลใน descriptions และเขียนเป็นข้อความที่สามารถแสดงได้ใน HTML
             this.selectedLevelDescriptions = descriptions;
-
-            // อัพเดตความยาวของอาร์เรย์ visible
             this.visible = new Array(descriptions.length).fill(false);
           } else {
             this.selectedLevelDescriptions = ["Level not found"];
@@ -95,9 +93,7 @@ export class DetailStandardComponent implements OnInit {
   }
 
   saveAddLink(index: number) {
-    // ทำการบันทึกข้อมูลที่แก้ไข
     this.visible[index] = false;
-    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Add data successfully' });
   }
 
@@ -110,7 +106,6 @@ export class DetailStandardComponent implements OnInit {
           this.levelNames = this.getUniqueItems(this.levelNames);
           for (let i = 0; i < this.levelNames.length; i++) {
             const levelName = this.levelNames[i];
-            // console.log(`${levelName}`);
           }
         },
         (error) => {
@@ -128,5 +123,4 @@ export class DetailStandardComponent implements OnInit {
     });
     return uniqueArray;
   }
-
 }

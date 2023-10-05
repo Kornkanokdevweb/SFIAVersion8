@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { matchPassword } from './matchPassword.validator';
 import { MessageService } from 'primeng/api';
+import { Emitter } from 'src/app/emitters/emitter';
+import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 
 @Component({
   selector: 'app-register',
@@ -22,6 +24,15 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.http.get('http://localhost:8080/api/user')
+      .subscribe({
+        next: (res: any) => {
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          Emitter.authEmitter.emit(false)
+        }
+      });
     this.registerForm = this.formBuilder.group(
       {
         email: ['', Validators.required], // เพิ่ม Validators.required เพื่อตรวจสอบว่า email ไม่เป็นค่าว่าง

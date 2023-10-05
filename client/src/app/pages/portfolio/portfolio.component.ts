@@ -10,7 +10,8 @@ import { Emitter } from 'src/app/emitters/emitter';
   providers: [ConfirmationService, MessageService],
 })
 export class PortfolioComponent implements OnInit {
-  ngOnInit() {
+
+  ngOnInit(): void {
     Emitter.authEmitter.emit(true)
   }
 
@@ -90,5 +91,4 @@ export class PortfolioComponent implements OnInit {
     // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
     this.closeEditLink();
   }
-
 }

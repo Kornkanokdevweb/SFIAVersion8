@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../entitys/user.entity";
 import { myDataSource } from "../configs/connectDatabase";
 import { loginValidation, registerValidation } from "../utils/validation";
-import { hashedPassword, matchPassword, generateOTP } from "../utils/authUtil";
+import { hashedPassword, matchPassword, getUserIdFromRefreshToken } from "../utils/authUtil";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Token } from "../entitys/token.entity";
@@ -131,7 +131,7 @@ exports.login = async (req: Request, res: Response) => {
         id: user.id,
       },
       process.env.JWT_ACCESS_SECRET_KEY,
-      { expiresIn: "30s" }
+      { expiresIn: "3h" }
     );
 
     res.send({
@@ -246,7 +246,7 @@ exports.refreshToken = async (req: Request, res: Response) => {
         id: payload.id,
       },
       process.env.JWT_ACCESS_SECRET_KEY,
-      { expiresIn: "30s" }
+      { expiresIn: "3h" }
     );
 
     res.send({
@@ -275,23 +275,19 @@ exports.refreshToken = async (req: Request, res: Response) => {
 }
 */
 exports.updateUser = async (req: Request, res: Response) => {
-  const refreshToken = req.cookies["refreshToken"];
   try {
-    const verifyToken: any = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET_KEY
-    );
-
-    if (!verifyToken) {
-      return res.status(401).send({
-        success: false,
-        message: "Unauthenticated",
-      });
-    }
+    const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
+            return res.status(401).send({
+                success: false,
+                message: "Unauthenticated",
+            });
+        }
 
     const user = await myDataSource
       .getRepository(User)
-      .findOne({ where: { id: verifyToken.id } });
+      .findOne({ where: { id: userId } });
 
     if (!user) {
       return res.send(401).send({
@@ -350,21 +346,6 @@ exports.updateUser = async (req: Request, res: Response) => {
     });
   }
 };
-
-/**GET http://localhost:8080/api/generateOTP  --> Under Test  */
-// exports.generateOTPHandler = async (req: Request, res: Response) => {
-//   try {
-//     const OTP = generateOTP();
-//     req.app.locals.OTP = OTP;
-
-//     res.status(201).json({ code: OTP });
-//   } catch (err) {
-//     res.status(500).json({
-//       suceess: false,
-//       message: "Failed to generate OTP. An internal server error occurred.",
-//     });
-//   }
-// };
 
 /**GET http://localhost:8080/api/verifyOTP  --> Under Test  */
 exports.verifyOTPHandler = async (req: Request, res: Response) => {
