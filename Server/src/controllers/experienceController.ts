@@ -2,17 +2,14 @@ import { Request, Response } from "express";
 import { Experience } from "../entitys/experience.entity";
 import { Portfolio } from "../entitys/portfolio.entity";
 import { myDataSource } from "../configs/connectDatabase";
-import jwt from "jsonwebtoken";
+import { getUserIdFromRefreshToken } from "../utils/authUtil";
 
 //**POST Methods */
 exports.createExperience = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -20,7 +17,7 @@ exports.createExperience = async (req: Request, res: Response) => {
         }
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
         if (!portfolio) {
             return res.status(404).send({
                 success: false,
@@ -53,12 +50,9 @@ exports.createExperience = async (req: Request, res: Response) => {
 //**GET Methods */
 exports.getExperience = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -66,7 +60,7 @@ exports.getExperience = async (req: Request, res: Response) => {
         }
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
         if (!portfolio) {
             return res.status(404).send({
                 success: false,
@@ -99,18 +93,14 @@ exports.getExperience = async (req: Request, res: Response) => {
 //**PUT Methods*/
 exports.updateExperience = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
             });
         }
-        const userId = verifyToken.id;
         const { expId, exp_text } = req.body;
 
         const experienceRepository = myDataSource.getRepository(Experience);
@@ -118,7 +108,7 @@ exports.updateExperience = async (req: Request, res: Response) => {
         const experience = await experienceRepository.findOne({
             where: { id: expId, portfolio: { user: { id: userId } } },
         })
-           
+
         if (!experience) {
             return res.status(404).send({
                 success: false,
@@ -147,12 +137,9 @@ exports.updateExperience = async (req: Request, res: Response) => {
 //**DELETE Methods */
 exports.deleteExperience = async (req, res) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -168,7 +155,7 @@ exports.deleteExperience = async (req, res) => {
 
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
 
         if (!portfolio) {
             return res.status(404).send({

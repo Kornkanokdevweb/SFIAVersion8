@@ -1,6 +1,6 @@
 import { Router } from "express";
 const { register, login, logout, updateUser, verifyOTPHandler, createResetSession, resetPassword, authenticateUser, refreshToken } = require('../controllers/authController')
-const { verifyUser , localVariables, upload } = require('../middlewares/authMiddleware.ts')
+const { verifyUser , localVariables, upload, requireAuth } = require('../middlewares/authMiddleware.ts')
 const { registerMail, generateOTPHandler } = require('../controllers/mailerController')
 
 const router = Router();
@@ -19,7 +19,7 @@ router.get('/verifyOTP', verifyUser, verifyOTPHandler); // verify generate OTP
 router.get('/createResetSession', createResetSession)
 
 //**PUT Methods *
-router.put('/updateUser', upload, updateUser); // is use to update the user profile
+router.put('/updateUser', requireAuth, upload, updateUser); // is use to update the user profile
 router.put('/resetPassword', verifyUser ,resetPassword); // use to reset password
 
 module.exports = router

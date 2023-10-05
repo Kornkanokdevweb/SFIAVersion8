@@ -32,7 +32,6 @@ export class AuthInterceptor implements HttpInterceptor {
         return this.http.post('http://localhost:8080/api/refresh', {}, {withCredentials: true}).pipe(
           switchMap((res: any) => {
             AuthInterceptor.accessToken = res.token;
-
             return next.handle(request.clone({
               setHeaders: {
                 Authorization: `Bearer ${AuthInterceptor.accessToken}`

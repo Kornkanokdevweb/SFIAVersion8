@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Emitter } from 'src/app/emitters/emitter'; 
+import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 
 @Component({
   selector: 'app-contact',
@@ -14,13 +15,13 @@ export class ContactComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:8080/api/user')
+    this.http.get('http://localhost:8080/api/user' , {withCredentials: true})
       .subscribe({
         next: (res: any) => {
           Emitter.authEmitter.emit(true)
+          AuthInterceptor.accessToken
         },
         error: () => {
-          console.log(`You are not logged in`)
           Emitter.authEmitter.emit(false)
         }
       });

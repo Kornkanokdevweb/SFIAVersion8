@@ -14,5 +14,5 @@ export class Levels {
   skill: Skills;
 
   @OneToMany(() => Description, (description) => description.level)
-  descriptions: Levels[];
+  descriptions: Description[];
 }

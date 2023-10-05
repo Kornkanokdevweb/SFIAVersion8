@@ -12,7 +12,8 @@ import html2canvas from 'html2canvas';
   providers: [ConfirmationService, MessageService],
 })
 export class PortfolioComponent implements OnInit {
-  ngOnInit() {
+
+  ngOnInit(): void {
     Emitter.authEmitter.emit(true)
   }
 
@@ -23,3 +24,65 @@ export class PortfolioComponent implements OnInit {
     
   }
 
+  showEditExperience() {
+    this.displayEditExperience = true;
+  }
+
+  showAddLink() {
+    this.displayAddLink = true;
+  }
+
+  showEditLink() {
+    this.displayEditLink = true;
+  }
+
+  date: Date[] | undefined;
+
+  closeAddExperience() {
+    this.displayAddExperience = false;
+  }
+
+  saveAddExperience() {
+    // ทำการบันทึกข้อมูลที่แก้ไข
+    // ตัวอย่างเช่น: this.editedExperience.save();
+
+    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
+    this.closeAddExperience();
+  }
+
+  closeEditExperience() {
+    this.displayEditExperience = false;
+  }
+
+  saveEditExperience() {
+    // ทำการบันทึกข้อมูลที่แก้ไข
+    // ตัวอย่างเช่น: this.editedExperience.save();
+
+    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
+    this.closeEditExperience();
+  }
+
+  closeAddLink() {
+    this.displayAddLink = false;
+  }
+
+  saveAddLink() {
+    // ทำการบันทึกข้อมูลที่แก้ไข
+    // ตัวอย่างเช่น: this.editedExperience.save();
+
+    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
+    this.closeAddLink();
+  }
+
+  closeEditLink() {
+    this.displayEditLink = false;
+  }
+
+  saveEditLink() {
+    // ทำการบันทึกข้อมูลที่แก้ไข
+    // ตัวอย่างเช่น: this.editedExperience.save();
+
+    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
+    this.closeEditLink();
+  }
+}

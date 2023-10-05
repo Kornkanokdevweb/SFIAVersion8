@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http'
 import { Router } from '@angular/router';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { MessageService } from 'primeng/api';
+import { Emitter } from 'src/app/emitters/emitter';
 
 @Component({
   selector: 'app-login',
@@ -26,6 +27,15 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.http.get('http://localhost:8080/api/user')
+      .subscribe({
+        next: (res: any) => {
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          Emitter.authEmitter.emit(false)
+        }
+      });
     this.loginForm = this.formBuilder.group({
       email: '',
       password: '',
@@ -36,7 +46,6 @@ export class LoginComponent implements OnInit {
     this.http.post('http://localhost:8080/api/login', this.loginForm.getRawValue(), { withCredentials: true })
       .subscribe((res: any) => {
         AuthInterceptor.accessToken = res.token;
-
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Login successful.' });
         setTimeout(() => {
           this.router.navigate(['/']);

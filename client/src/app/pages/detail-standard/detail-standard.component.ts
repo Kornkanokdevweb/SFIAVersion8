@@ -3,6 +3,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+
+import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
+
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 interface Information {
@@ -55,15 +58,16 @@ export class DetailStandardComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.codeskill = params['codeskill']; // Get the skill code from route parameters
       this.fetchSkillDetails();
-      this.http.get('http://localhost:8080/api/user')
-        .subscribe({
-          next: (res: any) => {
-            Emitter.authEmitter.emit(true)
-          },
-          error: () => {
-            // ตั้งค่า URL ของหน้าล็อกอินตามที่คุณต้องการ
-          }
-        });
+      this.http.get('http://localhost:8080/api/user', {withCredentials: true})
+      .subscribe({
+        next: (res: any) => {
+          Emitter.authEmitter.emit(true)
+          AuthInterceptor.accessToken
+        },
+        error: () => {
+          Emitter.authEmitter.emit(false)
+        }
+      });
     });
   }
 
@@ -74,7 +78,7 @@ export class DetailStandardComponent implements OnInit {
           Emitter.authEmitter.emit(true)
         },
         error: () => {
-          this.router.navigate(['/login']); // ตั้งค่า URL ของหน้าล็อกอินตามที่คุณต้องการ
+          window.location.reload()
         }
       });
   }
@@ -88,7 +92,6 @@ export class DetailStandardComponent implements OnInit {
           this.levelNames = this.getUniqueItems(this.levelNames);
           for (let i = 0; i < this.levelNames.length; i++) {
             const levelName = this.levelNames[i];
-            // console.log(`${levelName}`);
           }
         },
         (error) => {
@@ -189,5 +192,4 @@ export class DetailStandardComponent implements OnInit {
     });
     return uniqueArray;
   }
-
 }

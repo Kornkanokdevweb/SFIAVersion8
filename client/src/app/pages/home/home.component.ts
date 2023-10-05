@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Emitter } from 'src/app/emitters/emitter';
 import { Router } from '@angular/router';
+import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 
 interface Category {
   category_text: string;
@@ -43,29 +44,30 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:8080/api/user')
-      .subscribe({
-        next: (res: any) => {
-          this.message = `Hi ${res.id}`
-          Emitter.authEmitter.emit(true)
-        },
-        error: () => {
-          //handle error
-          this.router.navigate(['/'])
-          console.log(`You are not logged in`)
-          Emitter.authEmitter.emit(false)
-        }
-      });
+    this.checkLogin()
     this.fetchSkills();
     this.fetchCategories();
   }
 
-  logout() {
-    this.isLoggedIn = false;
+  checkLogin(){
+    this.http.get('http://localhost:8080/api/user', {withCredentials: true})
+    .subscribe({
+      next: (res: any) => {
+        this.message = `Hi ${res.id}`
+        AuthInterceptor.accessToken
+        Emitter.authEmitter.emit(true)
+      },
+      error: () => {
+        //handle error
+        this.router.navigate(['/'])
+        console.log(`You are not logged in`)
+        Emitter.authEmitter.emit(false)
+      }
+    });
   }
 
   //defaut ข้อมูลทั้งหมด
@@ -174,6 +176,4 @@ export class HomeComponent implements OnInit {
     // Navigate to the skill detail page and pass the codeskill as a parameter
     this.router.navigate(['/detail-standard', codeskill]);
   }
-
-
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, OneToOne, OneToMany, JoinColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryColumn, Column, OneToMany, ManyToOne } from "typeorm";
 import { Category } from "./category.entity";
 import { Levels } from "./levels.entity";
 

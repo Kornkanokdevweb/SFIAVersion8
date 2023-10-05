@@ -1,29 +1,15 @@
 import { Request, Response } from "express";
 import { Education } from "../entitys/education.entity";
 import { Portfolio } from "../entitys/portfolio.entity";
-import { User } from "../entitys/user.entity";
 import { myDataSource } from "../configs/connectDatabase";
-import jwt from "jsonwebtoken";
+import { getUserIdFromRefreshToken } from "../utils/authUtil";
 
 //**POST Methods */
 exports.createEducation = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
-            return res.status(401).send({
-                success: false,
-                message: "Unauthenticated",
-            });
-        }
-        const user = await myDataSource
-            .getRepository(User)
-            .findOne({ where: { id: verifyToken.id } });
-        console.log(user)
-        if (!user) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -31,7 +17,7 @@ exports.createEducation = async (req: Request, res: Response) => {
         }
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
         console.log(portfolio)
         if (!portfolio) {
             return res.status(404).send({
@@ -75,14 +61,9 @@ exports.createEducation = async (req: Request, res: Response) => {
 //**GET Methods*/
 exports.getEducation = async (req: Request, res: Response) => {
     try {
-        // ดึงข้อมูล userId จาก refreshToken และหา portfolio ของผู้ใช้
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -91,7 +72,7 @@ exports.getEducation = async (req: Request, res: Response) => {
 
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
 
         if (!portfolio) {
             return res.status(404).send({
@@ -132,12 +113,9 @@ exports.getEducation = async (req: Request, res: Response) => {
 //**DELETE Methods */
 exports.deleteEducation = async (req, res) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -155,7 +133,7 @@ exports.deleteEducation = async (req, res) => {
         // Find the user's portfolio
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
         
         if (!portfolio) {
             return res.status(404).send({
@@ -189,21 +167,15 @@ exports.deleteEducation = async (req, res) => {
 //**PUT Methods */
 exports.updateEducation = async (req: Request, res: Response) => {
     try {
-        // Extract user ID from the refreshToken
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
             });
         }
 
-        const userId = verifyToken.id;
         const {
             educationId, 
             syear,

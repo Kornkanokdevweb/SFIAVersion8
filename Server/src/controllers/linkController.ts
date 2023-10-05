@@ -2,17 +2,14 @@ import { Request, Response } from "express";
 import { Link } from "../entitys/link.entity";
 import { Portfolio } from "../entitys/portfolio.entity";
 import { myDataSource } from "../configs/connectDatabase";
-import jwt from "jsonwebtoken";
+import { getUserIdFromRefreshToken } from "../utils/authUtil";
 
 //**POST Methods */
 exports.createLink = async (req: Request, res: Response) => {
     try{
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -20,7 +17,7 @@ exports.createLink = async (req: Request, res: Response) => {
         }
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
         if (!portfolio) {
             return res.status(404).send({
                 success: false,
@@ -55,12 +52,9 @@ exports.createLink = async (req: Request, res: Response) => {
 //**GET Methods */
 exports.getLink = async (req: Request, res: Response) => {
     try{
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if(!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -68,7 +62,7 @@ exports.getLink = async (req: Request, res: Response) => {
         }
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
 
         if(!portfolio) {
             return res.status(404).send({
@@ -102,19 +96,15 @@ exports.getLink = async (req: Request, res: Response) => {
 //**PUT Methods*/
 exports.updateLink = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
             });
         }
 
-        const userId = verifyToken.id; // รับ user id จาก token
         const { linkId, link_name, link_text } = req.body; // รับ ID ของลิงก์และค่า link_name, link_text ที่ต้องการอัปเดตจากข้อมูลที่ส่งมา
 
         const linkRepository = myDataSource.getRepository(Link);
@@ -150,17 +140,12 @@ exports.updateLink = async (req: Request, res: Response) => {
     }
 }
 
-
-
 //**DELETE Methods */
 exports.deleteLink = async (req, res) => {
     try{
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
+        const userId = await getUserIdFromRefreshToken(req);
+        
+        if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
@@ -176,7 +161,7 @@ exports.deleteLink = async (req, res) => {
 
         const portfolio = await myDataSource
             .getRepository(Portfolio)
-            .findOne({ where: { user: { id: verifyToken.id } } });
+            .findOne({ where: { user: { id: userId } } });
 
         if (!portfolio) {
             return res.status(404).send({

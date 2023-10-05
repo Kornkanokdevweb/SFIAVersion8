@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { myDataSource } from "../configs/connectDatabase";
-import jwt from "jsonwebtoken";
 import { Skills } from "../entitys/skills.entity";
 import { Datacollection } from "../entitys/datacollection.entity";
 import { Information } from "../entitys/information.entity";
 import { Description } from "../entitys/description.entity";
-import { Levels } from "../entitys/levels.entity"
+import { findDatacollectionByUserId, getUserIdFromRefreshToken } from "../utils/authUtil";
 
 //ข้อมูลskillทั้งหมด
 exports.searchSkills = async (req: Request, res: Response) => {
@@ -86,27 +85,20 @@ exports.dropdownSkillsAPI = async (req: Request, res: Response) => {
 // Post Method
 exports.createDatacollection = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
-            return res.status(401).send({
-                success: false,
-                message: "Unauthenticated",
-            });
+        const userId = await getUserIdFromRefreshToken(req);
+
+        if (!userId) {
+        return res.status(401).send({
+            success: false,
+            message: "Unauthenticated",
+        });
         }
 
-        const userId = verifyToken.id; // รับ user id จาก token
-        
-        const descriptionId: any = req.query.descriptionId
-        const { info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
-        console.log(descriptionId)
+        const { descriptionId, info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
 
-        const datacollection = await myDataSource
-            .getRepository(Datacollection)
-            .findOne({ where: { user: { id: userId } } });
+        const datacollection: Datacollection = await findDatacollectionByUserId(
+            userId
+        );
 
         if (!datacollection) {
             return res.status(404).send({
@@ -151,24 +143,25 @@ exports.createDatacollection = async (req: Request, res: Response) => {
 // GET Method
 exports.getDatacollection = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
-            return res.status(401).send({
-                success: false,
-                message: "Unauthenticated",
-            });
+        const userId = await getUserIdFromRefreshToken(req);
+
+        if (!userId) {
+        return res.status(401).send({
+            success: false,
+            message: "Unauthenticated",
+        });
         }
 
-        const userId = verifyToken.id; // รับ user id จาก token
+        const datacollection: Datacollection = await findDatacollectionByUserId(
+            userId
+        );
 
-        const datacollection = await myDataSource
-            .getRepository(Datacollection)
-            .findOne({ where: { user: { id: userId } } })
-        console.log(datacollection)
+        if (!datacollection) {
+            return res.status(404).send({
+                success: false,
+                message: "Datacollection not found",
+            });
+        }
 
         const descriptionId = req.body.descriptionId
         if (!descriptionId || descriptionId.length === 0) {
@@ -225,19 +218,15 @@ exports.getDatacollection = async (req: Request, res: Response) => {
 // PUT Method
 exports.updateDatacollection = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
-            return res.status(401).send({
-                success: false,
-                message: "Unauthenticated",
-            });
+        const userId = await getUserIdFromRefreshToken(req);
+
+        if (!userId) {
+        return res.status(401).send({
+            success: false,
+            message: "Unauthenticated",
+        });
         }
 
-        const userId = verifyToken.id; // รับ user id จาก token
         const { informationId, info_text } = req.body; // รับ ID ของข้อมูล Information และค่า info_text ที่ต้องการอัปเดตจากข้อมูลที่ส่งมา
 
         const informationRepository = myDataSource.getRepository(Information);
@@ -275,19 +264,15 @@ exports.updateDatacollection = async (req: Request, res: Response) => {
 // delete method
 exports.deleteDatacollection = async (req: Request, res: Response) => {
     try {
-        const refreshToken = req.cookies["refreshToken"];
-        const verifyToken: any = jwt.verify(
-            refreshToken,
-            process.env.JWT_REFRESH_SECRET_KEY
-        );
-        if (!verifyToken) {
-            return res.status(401).send({
-                success: false,
-                message: "Unauthenticated",
-            });
+        const userId = await getUserIdFromRefreshToken(req);
+
+        if (!userId) {
+        return res.status(401).send({
+            success: false,
+            message: "Unauthenticated",
+        });
         }
 
-        const userId = verifyToken.id; // รับ user id จาก token
         const { informationId } = req.body; // รับ ID ของข้อมูล Information ที่ต้องการลบจากข้อมูลที่ส่งมา
 
         const informationRepository = myDataSource.getRepository(Information);
@@ -319,5 +304,3 @@ exports.deleteDatacollection = async (req: Request, res: Response) => {
         });
     }
 }
-
-

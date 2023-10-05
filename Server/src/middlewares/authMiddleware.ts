@@ -32,7 +32,10 @@ exports.requireAuth = (req:Request, res: Response, next: NextFunction) => {
             }
         })
     } else {
-        console.log("else")
+        return res.status(401).send({
+            success: false,
+            message: "กรุณาเข้าสู่ระบบ"
+        })
         next();
     }
 }
