@@ -12,7 +12,7 @@ exports.searchSkills = async (req: Request, res: Response) => {
     try {
         const codeskill = req.query.codeskill;
         const levelName = req.query.level_name;
-        const description = req.query.id;
+        const descid = req.query.descid; // เพิ่มการรับค่า descid
 
         const skillsRepository = myDataSource.getRepository(Skills);
         let skillsQuery = skillsRepository.createQueryBuilder('skill')
@@ -29,6 +29,10 @@ exports.searchSkills = async (req: Request, res: Response) => {
             skillsQuery = skillsQuery.andWhere('level.level_name = :levelName', { levelName });
         }
 
+        if (descid) {
+            skillsQuery = skillsQuery.andWhere('descriptions.descid = :descid', { descid });
+        }
+
         const skills = await skillsQuery.getMany();
 
         if (skills.length === 0) {
@@ -41,6 +45,7 @@ exports.searchSkills = async (req: Request, res: Response) => {
         return res.status(500).send("Internal Server Error");
     }
 };
+
 
 //การค้นหาข้อมูลแบบ dropdown
 exports.dropdownSkillsAPI = async (req: Request, res: Response) => {
@@ -94,8 +99,10 @@ exports.createDatacollection = async (req: Request, res: Response) => {
         }
 
         const userId = verifyToken.id; // รับ user id จาก token
-
-        const { descriptionId, info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
+        
+        const descriptionId: any = req.query.descriptionId
+        const { info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
+        console.log(descriptionId)
 
         const datacollection = await myDataSource
             .getRepository(Datacollection)
