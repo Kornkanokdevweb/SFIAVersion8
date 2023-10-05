@@ -2,3 +2,8 @@
     min-height: 85vh;
     margin-top: 10px;
 }
+
+.sticky {
+    position: sticky;
+    z-index: 2; /* Set a higher z-index than radar chart container */
+}

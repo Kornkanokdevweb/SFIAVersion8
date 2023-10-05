@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-portfolio',
@@ -19,15 +21,7 @@ export class PortfolioComponent implements OnInit {
     private messageService: MessageService,
     public dialog: MatDialog) { }
 
-  displayAddExperience: boolean = false;
-  displayEditExperience: boolean = false;
-  displayAddLink: boolean = false;
-  displayEditLink: boolean = false;
-
-
-
-  showAddExperience() {
-    this.displayAddExperience = true;
+    
   }
 
   showEditExperience() {
