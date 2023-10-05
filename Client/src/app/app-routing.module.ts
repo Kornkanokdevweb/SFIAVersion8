@@ -16,6 +16,7 @@ import { ResetPasswordComponent } from './pages/reset-password/reset-password.co
 import { DetailStandardComponent } from './pages/detail-standard/detail-standard.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
 import { ResetComponent } from './pages/reset/reset.component'
+import { PortfolioInformationComponent } from './pages/portfolio-information/portfolio-information.component';
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -32,7 +33,8 @@ const routes: Routes = [
   {path:'reset-password', component: ResetPasswordComponent},
   {path:'detail-standard/:codeskill', component: DetailStandardComponent},
   {path:'recovery-password', component: RecoveryPasswordComponent},
-  {path:'reset', component: ResetComponent}
+  {path:'reset', component: ResetComponent},
+  {path:'portfolio-information', component: PortfolioInformationComponent}
 ];
 
 @NgModule({

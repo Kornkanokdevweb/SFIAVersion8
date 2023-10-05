@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-portfolio',
@@ -18,77 +20,6 @@ export class PortfolioComponent implements OnInit {
     private messageService: MessageService,
     public dialog: MatDialog) { }
 
-  displayAddExperience: boolean = false;
-  displayEditExperience: boolean = false;
-  displayAddLink: boolean = false;
-  displayEditLink: boolean = false;
-
-
-
-  showAddExperience() {
-    this.displayAddExperience = true;
+    
   }
 
-  showEditExperience() {
-    this.displayEditExperience = true;
-  }
-
-  showAddLink() {
-    this.displayAddLink = true;
-  }
-
-  showEditLink() {
-    this.displayEditLink = true;
-  }
-
-  date: Date[] | undefined;
-
-  closeAddExperience() {
-    this.displayAddExperience = false;
-  }
-
-  saveAddExperience() {
-    // ทำการบันทึกข้อมูลที่แก้ไข
-    // ตัวอย่างเช่น: this.editedExperience.save();
-
-    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
-    this.closeAddExperience();
-  }
-
-  closeEditExperience() {
-    this.displayEditExperience = false;
-  }
-
-  saveEditExperience() {
-    // ทำการบันทึกข้อมูลที่แก้ไข
-    // ตัวอย่างเช่น: this.editedExperience.save();
-
-    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
-    this.closeEditExperience();
-  }
-
-  closeAddLink() {
-    this.displayAddLink = false;
-  }
-
-  saveAddLink() {
-    // ทำการบันทึกข้อมูลที่แก้ไข
-    // ตัวอย่างเช่น: this.editedExperience.save();
-
-    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
-    this.closeAddLink();
-  }
-
-  closeEditLink() {
-    this.displayEditLink = false;
-  }
-
-  saveEditLink() {
-    // ทำการบันทึกข้อมูลที่แก้ไข
-    // ตัวอย่างเช่น: this.editedExperience.save();
-
-    // เมื่อบันทึกเสร็จแล้วให้ปิดหน้าต่าง
-    this.closeEditLink();
-  }
-
-}
