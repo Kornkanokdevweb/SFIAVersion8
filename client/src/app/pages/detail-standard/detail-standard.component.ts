@@ -135,6 +135,7 @@ export class DetailStandardComponent implements OnInit {
       // อาจจะแสดงข้อความแจ้งเตือนหรือทำอย่างอื่นตามที่คุณต้องการ
     }
   }
+  addDataSuccess: boolean = false;
 
   displayAddInfo: boolean = false;
 
@@ -171,6 +172,8 @@ export class DetailStandardComponent implements OnInit {
           console.error('Error creating Information:', err);
         },
       });
+
+      this.addDataSuccess = true;
 
       // Close the dialog and reset the form
       this.visible[this.selectedDescriptionIndex] = false;

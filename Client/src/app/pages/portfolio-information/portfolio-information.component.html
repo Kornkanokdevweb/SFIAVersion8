@@ -1,118 +1,69 @@
-<div class="grid justify-items-end">
-    <button type="button" (click)="exportToPDF()"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Export
-        PDF</button>
+<div class="bg-gray-400">
+<div class="flex flex-wrap items-center justify-between pt-2">
+    <div class="flex md:order-2">
+        <button type="button" (click)="exportToPDF()"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Export
+            PDF</button>
+    </div>
+
+    <div class="ml-auto">
+        <button type="button" routerLink="/portfolio"
+            class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Back</button>
+    </div>
 </div>
 
-<div id="pdf-content" class="container max-w-screen-md mx-auto p-2 mb-3">
-    <div class="bg-zinc-100">
-        <div class="bg-sky-200 h-20"></div>
-        <div class="grid grid-cols-4 pt-3 mb-2">
-            <div class="row-span-1 pl-12">
-                <button type="button" class="w-28 h-28 mb-3 rounded-full bg-slate-200"></button>
-            </div>
-            <div class="row-span-2 col-span-2 pt-7">
-                <p class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">สมยศ ยิ่งยงยืนยัน</p>
-                <p class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Somyod yingyong</p>
-            </div>
-            <div class="row-span-1">
-                <button type="button"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"></button>
-            </div>
-            <div class="col-span-4 ">
-                <p class="pl-12 b-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise
-                    technology
-                    acquisitions of 2021 so far, in reverse chronological order.</p>
-            </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Education</p>
+<div class="grid min-h-screen place-items-center print:min-h-0">
+    <div
+        class="h-[297mm] w-[210mm] overflow-hidden rounded-md bg-white shadow-lg print:m-0 print:h-screen print:w-screen print:rounded-none print:shadow-none">
+        <div id="pdf-content">
+            <div class="grid grid-cols-5 pt-3 mb-2">
+                <div class="row-span-1 pl-12">
+                    <button type="button" class="w-28 h-28 mb-3 rounded-full bg-slate-200"></button>
+                </div>
+                <div class="row-span-2 col-span-2 pt-7 ml-4">
+                    <p class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">สมยศ ยิ่งยงยืนยันนอนยัน</p>
+                    <p class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Somyod yingyong</p>
+                </div>
+                <div class="row-span-2 col-span-2 text-sm pt-4 space-y-2">
+                    <p><span class="font-semibold">Email:</span> Test1@gmail.com</p>
+                    <p><span class="font-semibold">Line:</span> Test</p>
+                    <p><span class="font-semibold">Phone Number:</span> 099-9999999</p>
+                </div>
+                <div class="col-span-5 pl-12 b-3">
+                    <p><span  class="font-semibold">Address:</span> 123 Main Street, Zip Code 12345, Anytown, United States</p>
                 </div>
             </div>
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Spider Chart</p>
+            <div class="grid grid-cols-2 gap-2">
+                <div class="row-span-2">
+                    <div class="bg-sky-200 font-medium rounded-lg text-sm px-5 py-2">
+                        <p class="text-center">Education</p>
+                    </div>
                 </div>
-                <app-spiderchart></app-spiderchart>
-            </div>
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Link</p>
+                <div class="row-span-2 max-h-80">
+                    <div class="bg-sky-200 font-medium rounded-lg text-sm px-5 py-2">
+                        <p class="text-center">Spider Chart</p>
+                    </div>
+                    <app-spiderchart></app-spiderchart>
                 </div>
-            </div>
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Data Chart</p>
+                <div class="row-span-2">
+                    <div class="bg-sky-200 font-medium rounded-lg text-sm px-5 py-2">
+                        <p class="text-center">Link</p>
+                    </div>
                 </div>
-                <app-datachart></app-datachart>
-            </div>
-            <div class="col-span-2 ">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Experience</p>
+               
+                <div class="row-span-2">
+                    <div class="bg-sky-200 font-medium rounded-lg text-sm px-5 py-2">
+                        <p class="text-center">Data Chart</p>
+                    </div>
+                    <app-datachart></app-datachart>
+                </div>
+                <div class="col-span-2">
+                    <div class="bg-sky-200 font-medium rounded-lg text-sm px-5 py-2">
+                        <p class="text-center">Experience</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<body class="grid min-h-screen place-items-center bg-gray-400 print:min-h-0">
-    <main
-      class="m-4 h-[297mm] w-[210mm] overflow-hidden rounded-md bg-white p-8 shadow-lg print:m-0 print:h-screen print:w-screen print:rounded-none print:shadow-none"
-    >
-    <div class="bg-zinc-100">
-        <div class="bg-sky-200 h-10"></div>
-        <div class="grid grid-cols-4 pt-3 mb-2">
-            <div class="row-span-1 pl-12">
-                <button type="button" class="w-28 h-28 mb-3 rounded-full bg-slate-200"></button>
-            </div>
-            <div class="row-span-2 col-span-2 pt-7">
-                <p class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">สมยศ ยิ่งยงยืนยัน</p>
-                <p class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">Somyod yingyong</p>
-            </div>
-            <div class="row-span-1">
-                <button type="button"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"></button>
-            </div>
-            <div class="col-span-4 ">
-                <p class="pl-12 b-3 font-normal text-gray-700 dark:text-gray-400">Here are the biggest enterprise
-                    technology
-                    acquisitions of 2021 so far, in reverse chronological order.</p>
-            </div>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Education</p>
-                </div>
-            </div>
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Spider Chart</p>
-                </div>
-                <app-spiderchart></app-spiderchart>
-            </div>
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Link</p>
-                </div>
-            </div>
-            <div class="row-span-2">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Data Chart</p>
-                </div>
-                <app-datachart></app-datachart>
-            </div>
-            <div class="col-span-2 ">
-                <div class="bg-sky-200 font-medium rounded-lg text-base px-5 py-2">
-                    <p class="text-center">Experience</p>
-                </div>
-                <div class="bg-slate-300 h-20">
-
-                </div>
-            </div>
-        </div>
-    </div>
-    </main>
-  </body>
+</div>

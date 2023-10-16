@@ -1,11 +1,11 @@
 <div class="background">
-    <div class="sticky top-0">
-        <app-navbar></app-navbar>
-    </div>
-  
-    <div class="app-body">
-      <router-outlet></router-outlet>
-    </div>
-  
-    <app-footer></app-footer>
+  <div class="sticky top-0" *ngIf="!hideNavbarAndFooter">
+    <app-navbar></app-navbar>
+  </div>
+
+  <div class="app-body">
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-footer *ngIf="!hideNavbarAndFooter"></app-footer>
 </div>

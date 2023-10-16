@@ -103,11 +103,12 @@ export class HomeComponent implements OnInit {
 
   //การแสดงข้อมูลใน dropdown category
   fetchCategories() {
-    this.http.get<any>('http://localhost:8080/api/category').subscribe((response) => {
+    this.http.get<any>('http://localhost:8080/api/category').subscribe((response: any) => {
       const allCategories = response.skills.map((skill: any) => skill.category.category_text);
       this.categories = this.removeDuplicates(allCategories);
     });
   }
+  
 
   //เมื่อมีการเลือก dropdown category 
   onCategoryChange() {
@@ -147,20 +148,21 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  //ฟังก์ชันสำหรับการลบข้อมูลใน dropdown ที่ซ้ำกัน
-  removeDuplicates(items: string[]): string[] {
-    const uniqueItems = [];
-    const seenItems = new Set();
+ // ฟังก์ชันสำหรับการลบข้อมูลใน dropdown ที่ซ้ำกัน
+removeDuplicates(items: string[]): string[] {
+  const uniqueItems: string[] = [];
+  const seenItems = new Set<string>();
 
-    for (const item of items) {
-      if (!seenItems.has(item)) {
-        seenItems.add(item);
-        uniqueItems.push(item);
-      }
+  for (const item of items) {
+    if (!seenItems.has(item)) {
+      seenItems.add(item);
+      uniqueItems.push(item);
     }
-
-    return uniqueItems;
   }
+
+  return uniqueItems;
+}
+
 
   paginateResults(): Skills[] {
     const startIndex = (this.currentPage - 1) * this.pageSize;
