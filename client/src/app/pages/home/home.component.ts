@@ -29,7 +29,7 @@ interface Skills {
 export class HomeComponent implements OnInit {
 
   currentPage: number = 1;
-  pageSize: number = 5;
+  pageSize: number = 8;
 
   message = ''
   isLoggedIn: boolean = false;
@@ -75,6 +75,7 @@ export class HomeComponent implements OnInit {
     this.http.get<Skills[]>('http://localhost:8080/api/search').subscribe(
       (skills) => {
         this.searchResults = skills;
+        console.log(this.searchResults)
       },
       (error) => {
         console.error('Error fetching skills:', error);
@@ -122,9 +123,12 @@ export class HomeComponent implements OnInit {
             this.onSubcategoryChange();
           }
         });
+        this.currentPage = 1;
     } else {
       this.subcategories = [];
       this.selectedSubcategory = null;
+
+      this.currentPage = 1;
     }
   }
 
@@ -136,20 +140,21 @@ export class HomeComponent implements OnInit {
       this.http.get<any>(apiUrl).subscribe(
         (response) => {
           this.searchResults = response.skills;
-          console.log(response.skills);
         },
         (error) => {
           console.error('Error fetching skills:', error);
         }
       );
+      this.currentPage = 1;
     } else {
       this.fetchSkills();
+      this.currentPage = 1;
     }
   }
 
   //ฟังก์ชันสำหรับการลบข้อมูลใน dropdown ที่ซ้ำกัน
   removeDuplicates(items: string[]): string[] {
-    const uniqueItems = [];
+    const uniqueItems: string[] = [];
     const seenItems = new Set();
 
     for (const item of items) {
@@ -160,16 +165,6 @@ export class HomeComponent implements OnInit {
     }
 
     return uniqueItems;
-  }
-
-  paginateResults(): Skills[] {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    return this.searchResults.slice(startIndex, endIndex);
-  }
-
-  changePage(pageNumber: number) {
-    this.currentPage = pageNumber;
   }
 
   viewSkillDetail(codeskill: number) {

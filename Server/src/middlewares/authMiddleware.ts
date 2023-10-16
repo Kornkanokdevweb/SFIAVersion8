@@ -27,7 +27,7 @@ exports.requireAuth = (req:Request, res: Response, next: NextFunction) => {
             if (err) {
                 console.log(err.message);
             } else {
-                console.log(decodedToken);
+                // console.log(decodedToken);
                 next();
             }
         })

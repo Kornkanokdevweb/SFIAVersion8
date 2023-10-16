@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { initFlowbite } from 'flowbite';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -8,11 +9,16 @@ import { initFlowbite } from 'flowbite';
 })
 export class AppComponent {
   title = 'SFIA8';
+  hideNavbarAndFooter = false; // Initialize as false
 
-  ngOnInit(): void {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     initFlowbite();
-  }
 
-  
-  
+    // Subscribe to route changes to check if you are on the portfolio-information page
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.hideNavbarAndFooter = event.url === '/portfolio-information';
+      }
+    });
+  }
 }

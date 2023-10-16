@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { PrimeNGConfig } from 'primeng/api';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -30,7 +29,6 @@ export class ExperienceComponent implements OnInit {
     private http: HttpClient,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private primengConfig: PrimeNGConfig
   ) {
     this.updateForm = this.formBuilder.group({
       exp_id: '',
@@ -89,6 +87,7 @@ export class ExperienceComponent implements OnInit {
       .subscribe({
         next: (res) => {
           // หลังจากสร้างข้อมูลสำเร็จ
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Experience add successfully' });
           console.log('Experience created successfully:', res);
           this.fetchExperienceData(); // รีเฟรชรายการการศึกษาหลังจากสร้าง
           this.displayAddExperience = false; // ปิดหน้าต่างเพิ่มการศึกษา

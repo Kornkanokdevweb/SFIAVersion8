@@ -1,4 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ViewChild } from "@angular/core";
+import {
+  ApexChart,
+  ApexAxisChartSeries,
+  ChartComponent,
+  ApexDataLabels,
+  ApexPlotOptions,
+  ApexYAxis,
+  ApexLegend,
+  ApexGrid,
+} from "ng-apexcharts";
+
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  dataLabels: ApexDataLabels;
+  plotOptions: ApexPlotOptions;
+  yaxis: ApexYAxis;
+  xaxis: any;
+  grid: ApexGrid;
+  colors: string[];
+  legend: ApexLegend;
+};
 
 @Component({
   selector: 'app-datachart',
@@ -6,72 +29,81 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./datachart.component.css'],
 })
 export class DatachartComponent {
-  basicData: any;
+  @ViewChild("chart")
+  chart!: ChartComponent;
 
-  basicOptions: any;
-
-  ngOnInit() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue(
-      '--text-color-secondary'
-    );
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-
-    this.basicData = {
-      labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-      datasets: [
-        {
-          label: 'Sales',
-          data: [540, 325, 702, 620],
-          backgroundColor: [
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-          ],
-          borderColor: [
-            'rgb(255, 159, 64)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-          ],
-          borderWidth: 1,
-        },
+  public chartOptions: ChartOptions = {
+    series: [],
+    chart: {
+      height: 380,
+      type: "bar",
+      events: {
+        click: function (chart, w, e) {
+          // console.log(chart, w, e)
+        }
+      }
+    },
+    colors: [
+      "#008FFB",
+      "#00E396",
+      "#FEB019",
+      "#FF4560",
+      "#775DD0",
+      "#546E7A",
+      "#26a69a",
+      "#D10CE8"
+    ],
+    plotOptions: {
+      bar: {
+        columnWidth: "50%",
+        distributed: true
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    legend: {
+      show: false
+    },
+    grid: {
+      row: {
+        colors: ["#fff", "#f2f2f2"]
+      }
+    },
+    xaxis: {
+      labels: {
+        rotate: -45
+      },
+      categories: [
+        "Apples",
+        "Oranges",
+        "Strawberries",
+        "Pineapples",
+        "Mangoes",
+        "Bananas",
+        "Blackberries",
+        "Pears",
+        "Watermelons melons",
+        "Cherries",
+        "Pomegranates",
+        "Tangerines",
+        "Papayas"
       ],
-    };
+    },
+    yaxis: {
+      title: {
+        text: "Servings"
+      }
+    },
 
-    this.basicOptions = {
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor,
-          },
-        },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: textColorSecondary,
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
-          },
-        },
-        x: {
-          ticks: {
-            color: textColorSecondary,
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false,
-          },
-        },
-      },
-      maintainAspectRatio: false, // ปิดการรักษาอัตราส่วน
-      aspectRatio: 1 // ปรับค่าตามที่คุณต้องการ
-    };
+  };
+
+  constructor() {
+    this.chartOptions.series = [
+      {
+        name: "distibuted",
+        data: [21, 22, 25, 28, 16, 21, 13, 30,21, 45, 10, 50, 55]
+      }
+    ];
   }
 }

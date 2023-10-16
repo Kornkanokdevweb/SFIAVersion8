@@ -1,4 +1,4 @@
-<div class="container mb-4">
+<div class="container max-w-screen-xl mx-auto mb-4">
     <div class="flex flex-col justify-center items-center md:flex-row">
         <div
             class="w-full md:w-full mb-3 p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
@@ -58,7 +58,7 @@
     <!-- Result Data -->
     <div class="flex flex-col justify-center items-center">
         <div class="w-full md:w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 my-2.5"
-            *ngFor="let result of paginateResults()">
+            *ngFor="let result of searchResults | paginate: { itemsPerPage: pageSize, currentPage: currentPage}">
             <!-- แสดงข้อมูลรายการที่ได้จาก paginateResults() -->
             <h5 class="mb-2 ml-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ result.skill_name }}
             </h5>
@@ -67,7 +67,7 @@
                     <p class="ml-2 font-normal text-gray-700 dark:text-gray-400">{{ result.overall }}</p>
                 </div>
                 <div class="mt-4 ml-64 md:mt-0 md:col-start-2 md:col-end-3">
-                    <button type="button" (click)="viewSkillDetail(result.codeskill)" 
+                    <button type="button" (click)="viewSkillDetail(result.codeskill)"
                         class="w-full h-full text-white bg-blue-700 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:focus:ring-blue-800">Read
                         more</button>
                 </div>
@@ -77,22 +77,7 @@
 
     <!-- Pagination Controls -->
     <div class="flex justify-center items-center mt-3">
-        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1"
-            class="px-3 py-1 mr-2 flex items-center justify-center px-3 h-10 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-950 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-            <svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 14 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13 5H1m0 0 4 4M1 5l4-4" />
-            </svg>
-            Previous</button>
-        <button (click)="changePage(currentPage + 1)" [disabled]="(currentPage * pageSize) >= searchResults.length"
-            class="px-3 py-1 flex items-center justify-center px-3 h-10 text-sm font-medium text-gray-700 bg-gray-200 border border-gray-950 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next
-            <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 14 10">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M1 5h12m0 0L9 1m4 4L9 9" />
-            </svg>
-        </button>
+        <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
     </div>
 
 </div>

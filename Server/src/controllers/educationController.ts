@@ -18,7 +18,6 @@ exports.createEducation = async (req: Request, res: Response) => {
         const portfolio = await myDataSource
             .getRepository(Portfolio)
             .findOne({ where: { user: { id: userId } } });
-        console.log(portfolio)
         if (!portfolio) {
             return res.status(404).send({
                 success: false,
