@@ -1,10 +1,16 @@
 import { Request, Response } from "express";
 import { myDataSource } from "../configs/connectDatabase";
 import { Skills } from "../entitys/skills.entity";
+import { Levels } from "../entitys/levels.entity";
 import { Datacollection } from "../entitys/datacollection.entity";
 import { Information } from "../entitys/information.entity";
 import { Description } from "../entitys/description.entity";
-import { findDatacollectionByUserId, getUserIdFromRefreshToken } from "../utils/authUtil";
+import { In } from "typeorm";
+import {
+  findDatacollectionByUserId,
+  findInformationByDatacollectionId,
+  getUserIdFromRefreshToken,
+} from "../utils/authUtil";
 
 //ข้อมูลskillทั้งหมด
 exports.searchSkills = async (req: Request, res: Response) => {
@@ -94,7 +100,8 @@ exports.createDatacollection = async (req: Request, res: Response) => {
         });
         }
 
-        const { descriptionId, info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
+        const descriptionId: any = req.query.descriptionId;
+        const {info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
 
         const datacollection: Datacollection = await findDatacollectionByUserId(
             userId
@@ -123,13 +130,14 @@ exports.createDatacollection = async (req: Request, res: Response) => {
             datacollection,
             description, // เพิ่ม description เข้าไปในข้อมูล
         });
-        await infoRepository.save(newInformation);
+        const saveInformation = await infoRepository.save(newInformation);
 
         return res.status(200).send({
             success: true,
             message: "Record create success",
             datacollection,
             description,
+            info_id: saveInformation.id
         });
     } catch (err) {
         console.error(err);
@@ -143,77 +151,88 @@ exports.createDatacollection = async (req: Request, res: Response) => {
 // GET Method
 exports.getDatacollection = async (req: Request, res: Response) => {
     try {
-        const userId = await getUserIdFromRefreshToken(req);
-
-        if (!userId) {
+      const userId = await getUserIdFromRefreshToken(req);
+  
+      if (!userId) {
         return res.status(401).send({
-            success: false,
-            message: "Unauthenticated",
+          success: false,
+          message: "Unauthenticated",
         });
-        }
-
-        const datacollection: Datacollection = await findDatacollectionByUserId(
-            userId
-        );
-
-        if (!datacollection) {
-            return res.status(404).send({
-                success: false,
-                message: "Datacollection not found",
-            });
-        }
-
-        const descriptionId = req.body.descriptionId
-        if (!descriptionId || descriptionId.length === 0) {
-            return res.status(404).send({
-                success: false,
-                message: "DescriptionId not found",
-            });
-        }
-        
-        // ค้นหาข้อมูลในตาราง Information โดยใช้ descriptionId เป็นเงื่อนไข
-        const information = await myDataSource
-            .getRepository(Information)
-            .find({ where:{ datacollection: { id: datacollection.id }, description: { id: descriptionId } } });
-
-        if (!information || information.length === 0) {
-            return res.status(404).send({
-                success: false,
-                message: "Information not found for the given descriptionId",
-            });
-        }
-
-        const skillsRepository = myDataSource.getRepository(Skills);
-        const skillData = await skillsRepository
-            .createQueryBuilder('skill')
-            .leftJoinAndSelect('skill.category', 'category')
-            .leftJoinAndSelect('category.subcategory', 'subcategory')
-            .leftJoinAndSelect('skill.levels', 'level')
-            .leftJoinAndSelect('level.descriptions', 'descriptions')
-            .where('descriptions.id = :descriptionId', { descriptionId }) // เพิ่มเงื่อนไข descriptionId
-            .getOne();
-        if (!skillData) {
-            return res.status(404).send({
-                success: false,
-                message: "Skill data not found for the given descriptionId",
-            });
-        }
-
-        return res.status(200).send({
-            success: true,
-            message: "Information found",
-            information,
-            descriptionId,
-            skill: skillData,
+      }
+  
+      const datacollection: Datacollection = await findDatacollectionByUserId(userId);
+  
+      if (!datacollection) {
+        return res.status(404).send({
+          success: false,
+          message: "Datacollection not found",
         });
+      }
+      const datacollectionId: string = datacollection.id.toString();
+  
+      const information = await findInformationByDatacollectionId(datacollectionId);
+  
+      if (!information) {
+        return res.status(401).send({
+          success: false,
+          message: "Information not found for the given datacollection",
+        });
+      }
+  
+      const descriptionIds = information.map((info) => info.description.id);
+  
+      const descriptionRepository = myDataSource.getRepository(Description);
+  
+      const descriptionsWithLevel = await descriptionRepository.find({
+        where: {
+          id: In(descriptionIds),
+        },
+        relations: ["level"],
+      });
+  
+      const levelsRepository = myDataSource.getRepository(Levels);
+  
+      const levelsData = await Promise.all(
+        descriptionsWithLevel.map(async (description) => {
+          const levelIdToSearch = description.level.id;
+          const level = await levelsRepository.findOne({
+            where: { id: levelIdToSearch },
+          });
+  
+          const skillsRepository = myDataSource.getRepository(Skills);
+          const uniqueSkills = await skillsRepository.find({
+            relations: ["levels"],
+            where: {
+              levels: { id: levelIdToSearch },
+            },
+          });
+  
+          return {
+            descriptionId: description.id,
+            descriptionText: description.description_text,
+            levelId: description.level.id,
+            level,
+            uniqueSkills,
+          };
+        })
+      );
+  
+      return res.status(200).send({
+        success: true,
+        message: "Information found",
+        datacollection,
+        information, // เพิ่มข้อมูล information ในการคืนค่า
+        descriptionsWithLevel: levelsData,
+      });
     } catch (err) {
-        console.error(err);
-        return res.status(500).send({
-            success: false,
-            message: "Server error",
-        });
+      console.log(err);
+      res.status(500).send({
+        success: false,
+        message: "Internal Server Error",
+      });
     }
-}
+  };
+  
 
 // PUT Method
 exports.updateDatacollection = async (req: Request, res: Response) => {
@@ -227,7 +246,8 @@ exports.updateDatacollection = async (req: Request, res: Response) => {
         });
         }
 
-        const { informationId, info_text } = req.body; // รับ ID ของข้อมูล Information และค่า info_text ที่ต้องการอัปเดตจากข้อมูลที่ส่งมา
+        const informationId: any = req.query.informationId;
+        const { info_text } = req.body; // รับ ID ของข้อมูล Information และค่า info_text ที่ต้องการอัปเดตจากข้อมูลที่ส่งมา
 
         const informationRepository = myDataSource.getRepository(Information);
 
@@ -273,7 +293,7 @@ exports.deleteDatacollection = async (req: Request, res: Response) => {
         });
         }
 
-        const { informationId } = req.body; // รับ ID ของข้อมูล Information ที่ต้องการลบจากข้อมูลที่ส่งมา
+        const informationId: any  = req.query.informationId; // รับ ID ของข้อมูล Information ที่ต้องการลบจากข้อมูลที่ส่งมา
 
         const informationRepository = myDataSource.getRepository(Information);
 

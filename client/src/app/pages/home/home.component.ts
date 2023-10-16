@@ -149,8 +149,8 @@ export class HomeComponent implements OnInit {
 
   //ฟังก์ชันสำหรับการลบข้อมูลใน dropdown ที่ซ้ำกัน
   removeDuplicates(items: string[]): string[] {
-    const uniqueItems = [];
-    const seenItems = new Set();
+    const uniqueItems: string[] = [];
+    const seenItems = new Set<string>();
 
     for (const item of items) {
       if (!seenItems.has(item)) {
