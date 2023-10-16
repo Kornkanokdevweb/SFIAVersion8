@@ -1,4 +1,7 @@
-<div
-    class="border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 p-3">
-    <p-chart type="radar" [data]="data" [options]="options"></p-chart>
-</div>
+<div id="chart" >
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+    ></apx-chart>
+  </div>

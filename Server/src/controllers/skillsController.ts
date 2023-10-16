@@ -94,8 +94,8 @@ exports.createDatacollection = async (req: Request, res: Response) => {
         });
         }
 
-        const { descriptionId, info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
-
+        const descriptionId: any = req.query.descriptionId; // รับ description id และ info_text จากข้อมูลที่ส่งมา
+        const {info_text} = req.body
         const datacollection: Datacollection = await findDatacollectionByUserId(
             userId
         );

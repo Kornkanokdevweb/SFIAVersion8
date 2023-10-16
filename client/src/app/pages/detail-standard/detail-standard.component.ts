@@ -72,13 +72,16 @@ export class DetailStandardComponent implements OnInit {
   }
 
   checkLoginStatus() {
-    this.http.get('http://localhost:8080/api/user')
+    this.http.get('http://localhost:8080/api/user', {withCredentials: true})
       .subscribe({
         next: (res: any) => {
           Emitter.authEmitter.emit(true)
         },
         error: () => {
-          window.location.reload()
+          this.router.navigate(['/login'])
+          .then(() => {
+            window.location.reload()
+          })
         }
       });
   }

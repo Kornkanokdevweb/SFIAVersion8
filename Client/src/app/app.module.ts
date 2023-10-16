@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -109,7 +111,9 @@ import { DatachartComponent } from './layouts/datachart/datachart.component';
     MessagesModule,
     SlideMenuModule,
     NgbPaginationModule,
-    MatMenuModule
+    MatMenuModule,
+    NgxPaginationModule,
+    NgApexchartsModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
