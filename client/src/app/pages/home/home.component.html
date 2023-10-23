@@ -73,6 +73,9 @@
                 </div>
             </div>
         </div>
+        <div *ngIf="searchResults.length === 0" class="text-center text-gray-700 dark:text-gray-400">
+            No result.
+        </div>
     </div>
 
     <!-- Pagination Controls -->
