@@ -1,0 +1,52 @@
+
+.card1{
+    display: grid;
+    grid-template-columns: 280px;
+    grid-template-rows: 270px 210px 50px;
+    grid-template-areas: "image" "text" "stats";
+
+}
+.card-image1{
+    grid-area: image;
+    background: url("E:\SFIAVersion8\Client\src\assets\images\user.jpg");
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-size: cover;
+}
+
+.card-image2{
+    grid-area: image;
+    background: url("E:\SFIAVersion8\Client\src\assets\images\user.jpg");
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-size: cover;
+}
+
+.card-image3{
+    grid-area: image;
+    background: url("E:\SFIAVersion8\Client\src\assets\images\user.jpg");
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-size: cover;
+}
+
+.card-image4{
+    grid-area: image;
+    background: url("E:\SFIAVersion8\Client\src\assets\images\user.jpg");
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-size: cover;
+}
+
+.card-stats1{
+    grid-area: stats;
+    background-color: #737373;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.card1:hover{
+    transform: scale(1.05);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+}
+

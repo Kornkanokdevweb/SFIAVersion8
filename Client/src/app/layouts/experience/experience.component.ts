@@ -87,7 +87,7 @@ export class ExperienceComponent implements OnInit {
       .subscribe({
         next: (res) => {
           // หลังจากสร้างข้อมูลสำเร็จ
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Experience add successfully' });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Experience created successfully' });
           console.log('Experience created successfully:', res);
           this.fetchExperienceData(); // รีเฟรชรายการการศึกษาหลังจากสร้าง
           this.displayAddExperience = false; // ปิดหน้าต่างเพิ่มการศึกษา
@@ -114,6 +114,7 @@ export class ExperienceComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Experience updated successfully' });
           console.log('Experience updated successfully:', res);
           this.fetchExperienceData();
           this.displayEditExperience = false;

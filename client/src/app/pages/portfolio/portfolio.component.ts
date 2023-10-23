@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
 
 @Component({
@@ -15,6 +14,4 @@ export class PortfolioComponent implements OnInit {
     Emitter.authEmitter.emit(true)
   }
 
-  constructor(
-    public dialog: MatDialog) { }
   }

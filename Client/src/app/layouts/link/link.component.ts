@@ -94,6 +94,7 @@ export class LinkComponent implements OnInit {
       .subscribe({
         next: (res) => {
           // หลังจากสร้างข้อมูลสำเร็จ
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Link created successfully' });
           console.log('Link created successfully:', res);
           this.fetchLinkData(); // รีเฟรชรายการการศึกษาหลังจากสร้าง
           this.displayAddLink = false; // ปิดหน้าต่างเพิ่มการศึกษา
@@ -123,6 +124,7 @@ export class LinkComponent implements OnInit {
       .subscribe({
         next: (res) => {
           // หลังจากแก้ไขข้อมูลสำเร็จ
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Link updated successfully' });
           console.log('Link updated successfully:', res);
           this.fetchLinkData(); // รีเฟรชรายการการศึกษาหลังจากแก้ไข
           this.displayEditLink = false; // ปิดหน้าต่างแก้ไขการศึกษา

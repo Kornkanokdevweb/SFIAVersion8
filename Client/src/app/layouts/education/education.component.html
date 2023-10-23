@@ -11,13 +11,13 @@
     <div
       class="w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-800">
       <p>
-        Start Year: {{ educationItem.syear }} - End Year:
+        <span class="font-semibold">Start Year : </span> {{ educationItem.syear }} - <span class="font-semibold">End Year : </span>
         {{ educationItem.eyear }}
       </p>
-      <p>Level Education: {{ educationItem.level_edu }}</p>
-      <p>University: {{ educationItem.universe }}</p>
-      <p>Faculty: {{ educationItem.faculty }}</p>
-      <p>Branch: {{ educationItem.branch }}</p>
+      <p><span class="font-semibold">Level Education : </span> {{ educationItem.level_edu }}</p>
+      <p><span class="font-semibold">University : </span> {{ educationItem.universe }}</p>
+      <p><span class="font-semibold">Faculty : </span> {{ educationItem.faculty }}</p>
+      <p><span class="font-semibold">Branch : </span> {{ educationItem.branch }}</p>
     </div>
     <div class="flex md:order-2 space-x-2">
       <button (click)="EditEducation(educationItem)">
@@ -109,7 +109,6 @@
               </div>
             </ng-template>
           </p-toast>
-          <p-toast></p-toast>
           <button (click)="DeleteEducation(educationItem)">
             <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 448 512">
               <path
@@ -123,7 +122,6 @@
 
   <!-- Add Education -->
   <div class="grid justify-items-center pt-3">
-    <p-toast></p-toast>
     <button (click)="AddEducation()" type="button"
       class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-dashed border-2 border-gray-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
       Add Data
@@ -188,3 +186,4 @@
     </p-dialog>
   </div>
 </div>
+<p-toast></p-toast>

@@ -10,7 +10,7 @@
   <div *ngFor="let experienceItem of experience" class="flex flex-wrap items-center justify-between pt-3 space-x-5">
     <div
       class="w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
-      <p>Experience Detail: {{ experienceItem.exp_text }}</p>
+      <p><span class="font-semibold">Experience Detail : </span> {{ experienceItem.exp_text }}</p>
     </div>
     <!-- Edit Experience -->
     <div class="flex md:order-2 space-x-2">
@@ -61,7 +61,6 @@
               </div>
             </ng-template>
           </p-toast>
-          <p-toast></p-toast>
           <button (click)="DeleteExperience(experienceItem)">
             <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 448 512">
               <path
@@ -98,3 +97,4 @@
     </p-dialog>
   </div>
 </div>
+<p-toast></p-toast>

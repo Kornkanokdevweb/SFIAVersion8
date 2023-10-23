@@ -14,7 +14,7 @@ export class Portfolio {
 
   @OneToMany(() => Experience, (experience) => experience.portfolio)
   experience: Experience[];
-Z
+
   @OneToMany(() => Link, (link) => link.portfolio)
   link: Link[];
 

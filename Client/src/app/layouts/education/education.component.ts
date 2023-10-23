@@ -111,6 +111,7 @@ export class EducationComponent implements OnInit {
       .subscribe({
         next: (res) => {
           // หลังจากสร้างข้อมูลสำเร็จ
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Education created successfully' });
           console.log('Education created successfully:', res);
           this.fetchEducationData(); // รีเฟรชรายการการศึกษาหลังจากสร้าง
           this.displayAddEducation = false; // ปิดหน้าต่างเพิ่มการศึกษา
@@ -144,6 +145,7 @@ export class EducationComponent implements OnInit {
       .subscribe({
         next: (res) => {
           // หลังจากแก้ไขข้อมูลสำเร็จ
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Education updated successfully' });
           console.log('Education updated successfully:', res);
           this.fetchEducationData(); // รีเฟรชรายการการศึกษาหลังจากแก้ไข
           this.displayEditEducation = false; // ปิดหน้าต่างแก้ไขการศึกษา
@@ -165,11 +167,7 @@ export class EducationComponent implements OnInit {
       branch: education.branch,
     });
     this.messageService.add({
-      key: 'confirm',
-      sticky: true,
-      severity: 'warn',
-      summary: 'Confirmation',
-      detail: 'Are you sure you want to proceed?',
+      key: 'confirm', sticky: true, severity: 'warn', summary: 'Confirmation', detail: 'Are you sure you want to proceed?',
     });
   }
 
@@ -188,18 +186,14 @@ export class EducationComponent implements OnInit {
           this.fetchEducationData(); // รีเฟรชรายการการศึกษาหลังจากลบ
           this.messageService.clear('confirm'); // ลบข้อความยืนยัน
           this.messageService.add({
-            severity: 'success',
-            summary: 'Confirmed',
-            detail: 'Education deleted successfully',
+            severity: 'success', summary: 'Confirmed', detail: 'Education deleted successfully',
           });
         },
         error: (err) => {
           console.error('Error deleting education:', err);
           this.messageService.clear('confirm'); // ลบข้อความยืนยัน
           this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to delete education',
+            severity: 'error', summary: 'Error', detail: 'Failed to delete education',
           });
         },
       });
@@ -208,9 +202,7 @@ export class EducationComponent implements OnInit {
   onReject() {
     this.messageService.clear('confirm');
     this.messageService.add({
-      severity: 'error',
-      summary: 'Rejected',
-      detail: 'You have rejected',
+      severity: 'error', summary: 'Rejected', detail: 'You have rejected',
     });
   }
 }
