@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Emitter } from 'src/app/emitters/emitter';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
@@ -31,7 +31,6 @@ export class HomeComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 8;
 
-  message = ''
   isLoggedIn: boolean = false;
 
   searchSkill: string = '';
@@ -57,7 +56,6 @@ export class HomeComponent implements OnInit {
     this.http.get('http://localhost:8080/api/user', {withCredentials: true})
     .subscribe({
       next: (res: any) => {
-        this.message = `Hi ${res.id}`
         AuthInterceptor.accessToken
         Emitter.authEmitter.emit(true)
       },

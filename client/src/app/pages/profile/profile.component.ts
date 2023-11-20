@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Emitter } from 'src/app/emitters/emitter';
 
 const API_URL = 'http://localhost:8080/api';
@@ -17,6 +17,14 @@ interface UserProfile {
   phone: string;
   address: string;
 }
+
+const thaiNameValidator = /^[ก-๏\s]+$/;
+const thaiSurnameValidator = /^[ก-๏\s]+$/;
+const englishNameValidator = /^[A-Za-z\s]+$/;
+const englishSurnameValidator = /^[A-Za-z\s]+$/;
+const phoneValidator = /^[0-9]{10}$/; 
+const addressValidator = /^[a-zA-Z0-9\sก-๏,.-/]+$/;
+const lineIdValidator = /^[\w-]{1,100}$/;
 
 @Component({
   selector: 'app-profile',
@@ -48,13 +56,13 @@ export class ProfileComponent implements OnInit {
   ) {
     this.updateForm = this.formBuilder.group({
       profileImage: '',
-      line: '',
-      firstNameTH: '',
-      lastNameTH: '',
-      firstNameEN: '',
-      lastNameEN: '',
-      phone: '',
-      address: '',
+      line: ['', [Validators.required, Validators.pattern(lineIdValidator)]],
+      firstNameTH: ['', [Validators.required, Validators.pattern(thaiNameValidator)]],
+      lastNameTH: ['', [Validators.required, Validators.pattern(thaiSurnameValidator)]],
+      firstNameEN: ['', [Validators.required, Validators.pattern(englishNameValidator)]],
+      lastNameEN: ['', [Validators.required, Validators.pattern(englishSurnameValidator)]],
+      phone: ['', [Validators.required, Validators.pattern(phoneValidator)]],
+      address: ['', [Validators.required, Validators.pattern(addressValidator)]],
     });
   }
 
@@ -106,12 +114,10 @@ export class ProfileComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error updating profile', error);
-          // Handle error scenarios here
         }
       });
   }
   
-
   private setFormValuesFromUserData(): void {
     this.updateForm.patchValue({
       profileImage: this.user.profileImage,
@@ -127,7 +133,6 @@ export class ProfileComponent implements OnInit {
 
   private updateUserWithNewData(updatedData: any): void {
     this.user = { ...this.user, ...updatedData };
-    // Handle any specific behavior after successful update
   }
 
   selectImage(event: any){
@@ -141,4 +146,5 @@ export class ProfileComponent implements OnInit {
       console.log(fileName)
     }
   }
+
 }

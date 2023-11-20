@@ -1,95 +1,125 @@
 <div class="container max-w-screen-xl mx-auto mb-3">
     <h5 class="text-center text-xl font-semibold pb-4">Personal info</h5>
-        <div class="grid grid-cols-2 gap-6">
-            <div
-                class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <form class="flex flex-col items-center pb-10">
+    <div class="grid grid-cols-2 gap-6">
+        <div
+            class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <form class="flex flex-col items-center pb-10">
+                <div class="image w-24 h-24">
+                    <img [src]="selectedImageURL ? selectedImageURL :'http://localhost:8080/uploads/' + user.profileImage"
+                        [ngStyle]="{'width': '100px', 'height': '100px'}" *ngIf="user.profileImage"
+                        class="rounded-circle ">
                     <label for="image" class="cursor-pointer">
-                        <img class="w-24 h-24 mb-3 rounded-full shadow-lg"
-                            [src]="selectedImageURL ? selectedImageURL :'http://localhost:8080/uploads/' + user.profileImage"
-                            alt="Profile Image" *ngIf="user.profileImage" />
-                        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">Your profile image</h5>
+                        <img src="/assets/images/camera.png">
+                        <input id="image" class="hidden" type="file" name="image" (change)="selectImage($event)">
                     </label>
-                    <input id="image" class="hidden" type="file" name="image" (change)="selectImage($event)">
-                </form>
-                <div>
-                    <div class="mb-6 space-y-4">
-                        <div>
-                            <label for="email"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
-                                address</label>
-                            <input type="email" id="email" aria-label="disabled input"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-not-allowed"
-                                placeholder={{user.email}} disabled>
-                        </div>
-                        <div [formGroup]="updateForm">
-                            <label for="line" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Line
-                                ID</label>
-                            <input formControlName="line" type="line" id="line"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                [value]="user.line" placeholder="Your line id" required>
-                        </div>
-                    </div>
                 </div>
-            </div>
-            <div
-                class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <div class="flex flex-col pb-10">
-                    <div class="grid gap-6 mb-6 md:grid-cols-2">
-                        <div [formGroup]="updateForm">
-                            <label for="firstNameTH"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thai name</label>
-                            <input formControlName="firstNameTH" type="text" id="firstNameTH"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                [value]="user.firstNameTH" placeholder="John" required>
-                        </div>
-                        <div [formGroup]="updateForm">
-                            <label for="lastNameTH"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thai
-                                Surname</label>
-                            <input formControlName="lastNameTH" type="text" id="lastNameTH"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                [value]="user.lastNameTH" placeholder="Doe" required>
-                        </div>
-                        <div [formGroup]="updateForm">
-                            <label for="firstNameEN"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">English
-                                name</label>
-                            <input formControlName="firstNameEN" type="text" id="firstNameEN"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                [value]="user.firstNameEN" placeholder="John" required>
-                        </div>
-                        <div [formGroup]="updateForm">
-                            <label for="lastNameEN"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">English
-                                Surname</label>
-                            <input formControlName="lastNameEN" type="text" id="lastNameEN"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                [value]="user.lastNameEN" placeholder="Doe" required>
-                        </div>
-                        <div [formGroup]="updateForm">
-                            <label for="phone"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
-                                number</label>
-                            <input formControlName="phone" type="tel" id="phone"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                [value]="user.phone" placeholder="Your phone number"
-                                pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required>
-                        </div>
+            </form>
+            <div>
+                <div class="mb-6 space-y-4">
+                    <div>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email
+                            address</label>
+                        <input type="email" id="email" aria-label="disabled input"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 cursor-not-allowed"
+                            placeholder={{user.email}} disabled>
                     </div>
                     <div [formGroup]="updateForm">
-                        <label for="address"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                        <textarea formControlName="address" id="address" rows="2"
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            [value]="user.address" placeholder="Write your Address here...">
-                    </textarea>
+                        <label for="line" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Line
+                            ID<span class="text-red-500">*</span></label>
+                        <input formControlName="line" type="line" id="line"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [value]="user.line" required>
+                        <div *ngIf="updateForm.get('line')?.hasError('required')" class="text-red-500 text-xs">Line ID is
+                            required.</div>
+                        <div *ngIf="updateForm.get('line')?.hasError('pattern')" class="text-red-500 text-xs">Please enter a
+                            valid Line ID.</div>
                     </div>
                 </div>
             </div>
         </div>
+        <div
+            class="w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <div class="flex flex-col pb-10">
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div [formGroup]="updateForm">
+                        <label for="firstNameTH"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thai name<span
+                                class="text-red-500">*</span></label>
+                        <input formControlName="firstNameTH" type="text" id="firstNameTH"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [value]="user.firstNameTH" required>
+                        <div *ngIf="updateForm.get('firstNameTH')?.hasError('required')" class="text-red-500 text-xs">Thai name
+                            is required.</div>
+                        <div *ngIf="updateForm.get('firstNameTH')?.hasError('pattern')" class="text-red-500 text-xs">Please
+                            enter a valid Thai name.</div>
+                    </div>
+
+                    <div [formGroup]="updateForm">
+                        <label for="lastNameTH"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Thai
+                            Surname<span class="text-red-500">*</span></label>
+                        <input formControlName="lastNameTH" type="text" id="lastNameTH"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [value]="user.lastNameTH" required>
+                        <div *ngIf="updateForm.get('lastNameTH')?.hasError('required')" class="text-red-500 text-xs">Thai
+                            Surname is required.</div>
+                        <div *ngIf="updateForm.get('lastNameTH')?.hasError('pattern')" class="text-red-500 text-xs">Please enter
+                            a valid Thai Surname.</div>
+                    </div>
+                    <div [formGroup]="updateForm">
+                        <label for="firstNameEN"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">English
+                            name<span class="text-red-500">*</span></label>
+                        <input formControlName="firstNameEN" type="text" id="firstNameEN"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [value]="user.firstNameEN" required>
+                        <div *ngIf="updateForm.get('firstNameEN')?.hasError('required')" class="text-red-500 text-xs">English
+                            name is required.</div>
+                        <div *ngIf="updateForm.get('firstNameEN')?.hasError('pattern')" class="text-red-500 text-xs">Please
+                            enter a valid English name.</div>
+                    </div>
+                    <div [formGroup]="updateForm">
+                        <label for="lastNameEN"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">English
+                            Surname<span class="text-red-500">*</span></label>
+                        <input formControlName="lastNameEN" type="text" id="lastNameEN"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [value]="user.lastNameEN" required>
+                        <div *ngIf="updateForm.get('lastNameEN')?.hasError('required')" class="text-red-500 text-xs">English
+                            Surname is required.</div>
+                        <div *ngIf="updateForm.get('lastNameEN')?.hasError('pattern')" class="text-red-500 text-xs">Please enter
+                            a valid English Surname.</div>
+                    </div>
+                    <div [formGroup]="updateForm">
+                        <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
+                            number<span class="text-red-500">*</span></label>
+                        <input formControlName="phone" type="tel" id="phone"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            [value]="user.phone" required>
+                        <div *ngIf="updateForm.get('phone')?.hasError('required')" class="text-red-500 text-xs">Phone number is
+                            required.</div>
+                        <div *ngIf="updateForm.get('phone')?.hasError('pattern')" class="text-red-500 text-xs">Please enter a
+                            valid 10-digit phone number.</div>
+                    </div>
+                </div>
+                <div [formGroup]="updateForm">
+                    <label for="address"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address<span
+                            class="text-red-500">*</span></label>
+                    <textarea formControlName="address" id="address" rows="2"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        [value]="user.address" required>
+                    </textarea>
+                    <div *ngIf="updateForm.get('address')?.hasError('required')" class="text-red-500 text-xs">Address is
+                        required.</div>
+                    <div *ngIf="updateForm.get('address')?.hasError('pattern')" class="text-red-500 text-xs">Please enter a
+                        valid address.</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="grid justify-items-center pt-4">
-        <button type="button" (click)="updateProfile()"
-            class="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-font-medium rounded-full text-base px-5 py-2.5 text-center mr-2 mb-2 dark:focus:ring-yellow-900">Save</button>
+        <button type="button" (click)="updateProfile()" [disabled]="updateForm.invalid"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Save</button>
     </div>
 </div>

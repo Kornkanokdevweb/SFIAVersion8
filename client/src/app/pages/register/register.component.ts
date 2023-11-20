@@ -5,7 +5,9 @@ import { Router } from '@angular/router';
 import { matchPassword } from './matchPassword.validator';
 import { MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
-import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
+
+const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
 
 @Component({
   selector: 'app-register',
@@ -14,7 +16,7 @@ import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
   providers: [MessageService]
 })
 export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup; // ไม่ต้องใช้ ! สำหรับ registerForm และเพิ่ม Validators เข้ามา
+  registerForm!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,10 +37,9 @@ export class RegisterComponent implements OnInit {
       });
     this.registerForm = this.formBuilder.group(
       {
-        email: ['', Validators.required], // เพิ่ม Validators.required เพื่อตรวจสอบว่า email ไม่เป็นค่าว่าง
-        password: ['', Validators.required], // เพิ่ม Validators.required เพื่อตรวจสอบว่า password ไม่เป็นค่าว่าง
-        ConfirmPassword: ['', Validators.required], // เพิ่ม Validators.required เพื่อตรวจสอบว่า ConfirmPassword ไม่เป็นค่าว่าง
-        AcceptTerms: '' // เพิ่ม Validators.requiredTrue เพื่อตรวจสอบว่า AcceptTerms เป็น true
+        email: ['', [Validators.required, Validators.pattern(emailValidator)]],
+        password: ['', [Validators.required, Validators.pattern(passwordValidator)]],
+        ConfirmPassword: ['', Validators.required],
       },
       {
         validators: matchPassword
@@ -47,7 +48,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    if (this.registerForm.valid) { // ตรวจสอบว่าฟอร์มถูกต้อง
+    if (this.registerForm.valid) { 
       this.http.post('http://localhost:8080/api/register', this.registerForm.getRawValue(), {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
@@ -93,6 +94,10 @@ export class RegisterComponent implements OnInit {
           }
         }
       );
+    }else {
+      // Add toast message for invalid form
+      this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Please fill in all required fields.' });
     }
   }
+  
 }

@@ -8,7 +8,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'SFIA8';
+  title = 'SFIAV8';
   hideNavbarAndFooter = false; // Initialize as false
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {

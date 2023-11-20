@@ -2,7 +2,7 @@
 .card1{
     display: grid;
     grid-template-columns: 280px;
-    grid-template-rows: 270px 210px 50px;
+    grid-template-rows: 240px 180px 40px;
     grid-template-areas: "image" "text" "stats";
 
 }

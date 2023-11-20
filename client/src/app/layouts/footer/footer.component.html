@@ -1,61 +1,30 @@
-<footer class="py-1 bg-sky-300 xl:pt-20 dark:bg-gray-800">
-    <div class="mx-auto w-full max-w-screen-xl p-4 py-3 lg:py-8">
-        <div class="md:flex md:justify-between">
-          <div class="mb-6 md:mb-0">
-              <a href="https://flowbite.com/" class="flex items-center">
-                  <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 mr-3" alt="FlowBite Logo" />
-                  <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">SFIA8</span>
-              </a>
-          </div>
-          <div class="grid grid-cols-2 gap-5 sm:gap-6 sm:grid-cols-3">
-              <div>
-                  <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Menu</h2>
-                  <ul class="text-white dark:text-gray-400 font-medium">
-                      <li class="mb-4">
-                          <a routerLinkActive="active" routerLink="" class="hover:underline">Home</a>
-                      </li>
-                      <li>
-                          <a routerLinkActive="active" routerLink="/skill" class="hover:underline">Skill</a>
-                      </li>
-                  </ul>
-              </div>
-              <div>
-                  <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Follow us</h2>
-                  <ul class="text-white dark:text-gray-400 font-medium">
-                      <li class="mb-4">
-                          <a routerLinkActive="active" routerLink="/about" class="hover:underline ">About</a>
-                      </li>
-                      <li>
-                          <a routerLinkActive="active" routerLink="/download" class="hover:underline">Download</a>
-                      </li>
-                  </ul>
-              </div>
-              <div>
-                
-                  <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Contact us</h2>
-                  <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                      <div class="flex mt-4 space-x-5 sm:justify-center sm:mt-0">
-                        <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                <path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg>
-                            <span class="sr-only">Email</span>
-                        </a>
-                        <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                <path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg>
-                            <span class="sr-only">Facebook</span>
-                        </a>
-                        <a href="#" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                                <path d="M311 196.8v81.3c0 2.1-1.6 3.7-3.7 3.7h-13c-1.3 0-2.4-.7-3-1.5l-37.3-50.3v48.2c0 2.1-1.6 3.7-3.7 3.7h-13c-2.1 0-3.7-1.6-3.7-3.7V196.9c0-2.1 1.6-3.7 3.7-3.7h12.9c1.1 0 2.4 .6 3 1.6l37.3 50.3V196.9c0-2.1 1.6-3.7 3.7-3.7h13c2.1-.1 3.8 1.6 3.8 3.5zm-93.7-3.7h-13c-2.1 0-3.7 1.6-3.7 3.7v81.3c0 2.1 1.6 3.7 3.7 3.7h13c2.1 0 3.7-1.6 3.7-3.7V196.8c0-1.9-1.6-3.7-3.7-3.7zm-31.4 68.1H150.3V196.8c0-2.1-1.6-3.7-3.7-3.7h-13c-2.1 0-3.7 1.6-3.7 3.7v81.3c0 1 .3 1.8 1 2.5c.7 .6 1.5 1 2.5 1h52.2c2.1 0 3.7-1.6 3.7-3.7v-13c0-1.9-1.6-3.7-3.5-3.7zm193.7-68.1H327.3c-1.9 0-3.7 1.6-3.7 3.7v81.3c0 1.9 1.6 3.7 3.7 3.7h52.2c2.1 0 3.7-1.6 3.7-3.7V265c0-2.1-1.6-3.7-3.7-3.7H344V247.7h35.5c2.1 0 3.7-1.6 3.7-3.7V230.9c0-2.1-1.6-3.7-3.7-3.7H344V213.5h35.5c2.1 0 3.7-1.6 3.7-3.7v-13c-.1-1.9-1.7-3.7-3.7-3.7zM512 93.4V419.4c-.1 51.2-42.1 92.7-93.4 92.6H92.6C41.4 511.9-.1 469.8 0 418.6V92.6C.1 41.4 42.2-.1 93.4 0H419.4c51.2 .1 92.7 42.1 92.6 93.4zM441.6 233.5c0-83.4-83.7-151.3-186.4-151.3s-186.4 67.9-186.4 151.3c0 74.7 66.3 137.4 155.9 149.3c21.8 4.7 19.3 12.7 14.4 42.1c-.8 4.7-3.8 18.4 16.1 10.1s107.3-63.2 146.5-108.2c27-29.7 39.9-59.8 39.9-93.1z"/></svg>
-                            <span class="sr-only">Line</span>
-                        </a>
-                      </div>
-                  </ul>
-              </div>
-          </div>
-      </div>
-      <hr class="my-6 border-gray-500 sm:mx-auto dark:border-gray-900 lg:my-8" />
-      <p class="text-center">Computer Engineering</p>
+<footer
+    class="py-1 bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-sky-400 to-sky-200 xl:pt-20 dark:bg-gray-800 rounded-l-lg">
+    <div class="grid grid-cols-3 gap-2 p-2">
+        <div class="grid justify-items-center mt-2">
+            <img src="/assets/images/logo_sfia.png" class="h-8" />
+        </div>
+        <div>
+            <p class="font-semibold">Menu</p>
+            <div class="text-xs mt-1">
+                <ul
+                    class="flex flex-col font-medium rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent dark:bg-gray-800 md:dark:bg-transparent dark:border-gray-700">
+                    <li>
+                        <a routerLinkActive="active" routerLink="" class="hover:underline">Home</a>
+                    </li>
+                    <li>
+                        <a routerLinkActive="active" routerLink="/download" class="hover:underline">Download</a>
+                    </li>
+                    <li>
+                        <a routerLinkActive="active" routerLink="/about" class="hover:underline">About
+                            us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-xs p-2">
+            <p>Department of Electrical and Computer Engineering</p>
+            <p>Faculty of Engineering Naresuan University</p>
+        </div>
     </div>
 </footer>

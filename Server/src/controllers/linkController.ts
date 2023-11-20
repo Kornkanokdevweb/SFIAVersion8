@@ -6,9 +6,9 @@ import { getUserIdFromRefreshToken } from "../utils/authUtil";
 
 //**POST Methods */
 exports.createLink = async (req: Request, res: Response) => {
-    try{
+    try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
@@ -32,7 +32,7 @@ exports.createLink = async (req: Request, res: Response) => {
         const newLink = linkRepository.create({
             link_name,
             link_text,
-            portfolio: portfolio, //เพิ่ม portfolioId ในบันทึก Link
+            portfolio: portfolio,
         });
         await linkRepository.save(newLink);
         return res.status(200).send({
@@ -40,7 +40,7 @@ exports.createLink = async (req: Request, res: Response) => {
             message: "Record create success",
             portfolio: portfolio,
         });
-    }catch (err) {
+    } catch (err) {
         console.error(err);
         return res.status(500).send({
             success: false,
@@ -51,9 +51,9 @@ exports.createLink = async (req: Request, res: Response) => {
 
 //**GET Methods */
 exports.getLink = async (req: Request, res: Response) => {
-    try{
+    try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
@@ -64,7 +64,7 @@ exports.getLink = async (req: Request, res: Response) => {
             .getRepository(Portfolio)
             .findOne({ where: { user: { id: userId } } });
 
-        if(!portfolio) {
+        if (!portfolio) {
             return res.status(404).send({
                 success: false,
                 message: "Portfolio not found",
@@ -72,7 +72,7 @@ exports.getLink = async (req: Request, res: Response) => {
         }
         const linkData = await myDataSource
             .getRepository(Link)
-            .find({ where: { portfolio: portfolio}})
+            .find({ where: { portfolio: portfolio } })
 
         const linkList = linkData.map((link) => ({
             link_id: link.id,
@@ -97,7 +97,7 @@ exports.getLink = async (req: Request, res: Response) => {
 exports.updateLink = async (req: Request, res: Response) => {
     try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
@@ -105,13 +105,13 @@ exports.updateLink = async (req: Request, res: Response) => {
             });
         }
 
-        const { linkId, link_name, link_text } = req.body; // รับ ID ของลิงก์และค่า link_name, link_text ที่ต้องการอัปเดตจากข้อมูลที่ส่งมา
+        const { link_id, link_name, link_text } = req.body;
 
         const linkRepository = myDataSource.getRepository(Link);
 
         // ตรวจสอบว่าลิงก์ที่ต้องการอัปเดตมีอยู่หรือไม่
         const link = await linkRepository.findOne({
-            where: { id: linkId, portfolio: { user: { id: userId } } },
+            where: { id: link_id, portfolio: { user: { id: userId } } },
         });
 
         if (!link) {
@@ -121,7 +121,6 @@ exports.updateLink = async (req: Request, res: Response) => {
             });
         }
 
-        // ทำการอัปเดตค่า link_name และ link_text
         link.link_name = link_name;
         link.link_text = link_text;
         await linkRepository.save(link);
@@ -131,6 +130,7 @@ exports.updateLink = async (req: Request, res: Response) => {
             message: "Record update success",
             link,
         });
+
     } catch (err) {
         console.error(err);
         return res.status(500).send({
@@ -142,9 +142,9 @@ exports.updateLink = async (req: Request, res: Response) => {
 
 //**DELETE Methods */
 exports.deleteLink = async (req, res) => {
-    try{
+    try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
@@ -170,8 +170,8 @@ exports.deleteLink = async (req, res) => {
             });
         }
         const linkRepository = myDataSource.getRepository(Link);
-        const deleteResult = await linkRepository.delete({ id: linkId, portfolio});
-        if(deleteResult.affected === 0) {
+        const deleteResult = await linkRepository.delete({ id: linkId, portfolio });
+        if (deleteResult.affected === 0) {
             return res.status(404).send({
                 success: false,
                 message: "No link record found to delete",

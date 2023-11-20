@@ -8,7 +8,7 @@ import { getUserIdFromRefreshToken } from "../utils/authUtil";
 exports.createExperience = async (req: Request, res: Response) => {
     try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
@@ -24,9 +24,7 @@ exports.createExperience = async (req: Request, res: Response) => {
                 message: "Portfolio not found",
             });
         }
-        const {
-            exp_text
-        } = req.body;
+        const { exp_text } = req.body;
         const experienceRepository = myDataSource.getRepository(Experience);
         const newExperience = experienceRepository.create({
             exp_text,
@@ -51,7 +49,7 @@ exports.createExperience = async (req: Request, res: Response) => {
 exports.getExperience = async (req: Request, res: Response) => {
     try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
@@ -94,19 +92,19 @@ exports.getExperience = async (req: Request, res: Response) => {
 exports.updateExperience = async (req: Request, res: Response) => {
     try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
                 message: "Unauthenticated",
             });
         }
-        const { expId, exp_text } = req.body;
+        const { exp_id, exp_text } = req.body;
 
         const experienceRepository = myDataSource.getRepository(Experience);
 
         const experience = await experienceRepository.findOne({
-            where: { id: expId, portfolio: { user: { id: userId } } },
+            where: { id: exp_id, portfolio: { user: { id: userId } } },
         })
 
         if (!experience) {
@@ -116,9 +114,10 @@ exports.updateExperience = async (req: Request, res: Response) => {
             });
         }
 
-        experience.exp_text = exp_text;
+
+        experience.exp_text = exp_text
         await experienceRepository.save(experience);
-        
+
         return res.status(200).json({
             success: true,
             message: "Experience record updated successfully",
@@ -138,7 +137,7 @@ exports.updateExperience = async (req: Request, res: Response) => {
 exports.deleteExperience = async (req, res) => {
     try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,

@@ -176,7 +176,7 @@ exports.updateEducation = async (req: Request, res: Response) => {
         }
 
         const {
-            educationId, 
+            education_id, 
             syear,
             eyear,
             level_edu,
@@ -186,8 +186,9 @@ exports.updateEducation = async (req: Request, res: Response) => {
         } = req.body;
 
         const educationRepository = myDataSource.getRepository(Education);
+
         const education = await educationRepository.findOne({
-            where: { id: educationId , portfolio: { user: { id: userId } } },
+            where: { id: education_id , portfolio: { user: { id: userId } } },
         });
         
         if (!education) {

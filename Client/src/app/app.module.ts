@@ -15,7 +15,6 @@ import { HomeComponent } from './pages/home/home.component';
 import { DetailStandardComponent } from './pages/detail-standard/detail-standard.component';
 import { AddInformationComponent } from './pages/add-information/add-information.component';
 import { AboutComponent } from './pages/about/about.component';
-import { ContactComponent } from './pages/contact/contact.component';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -62,7 +61,6 @@ import {MatMenuModule} from '@angular/material/menu';
     DetailStandardComponent,
     AddInformationComponent,
     AboutComponent,
-    ContactComponent,
     LoginComponent,
     RegisterComponent,
     ProfileComponent,

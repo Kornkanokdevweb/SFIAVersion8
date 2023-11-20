@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -17,7 +17,7 @@ interface ExperienceInfo {
   selector: 'app-experience',
   templateUrl: './experience.component.html',
   styleUrls: ['./experience.component.css'],
-  providers: [ConfirmationService, MessageService],
+  providers: [MessageService],
 })
 export class ExperienceComponent implements OnInit {
   experience: ExperienceInfo[] = [];
@@ -28,14 +28,14 @@ export class ExperienceComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private formBuilder: FormBuilder,
-    private messageService: MessageService,
+    private messageService: MessageService
   ) {
     this.updateForm = this.formBuilder.group({
       exp_id: '',
       exp_text: '',
     });
   }
-  
+
   ngOnInit(): void {
     this.fetchExperienceData();
   }
@@ -46,8 +46,6 @@ export class ExperienceComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.experience = res.data;
-
-          console.log(this.experience);
         },
         error: () => {
           this.router.navigate(['/login']);
@@ -59,6 +57,7 @@ export class ExperienceComponent implements OnInit {
 
   displayAddExperience: boolean = false;
   displayEditExperience: boolean = false;
+  confirmEdit: boolean = false;
 
   AddExperience() {
     this.updateForm.patchValue({
@@ -72,7 +71,6 @@ export class ExperienceComponent implements OnInit {
       exp_id: experience.exp_id,
       exp_text: experience.exp_text,
     });
-    console.log(this.EditExperience);
 
     this.displayEditExperience = true;
   }
@@ -86,11 +84,14 @@ export class ExperienceComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          // หลังจากสร้างข้อมูลสำเร็จ
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Experience created successfully' });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Experience created successfully',
+          });
           console.log('Experience created successfully:', res);
-          this.fetchExperienceData(); // รีเฟรชรายการการศึกษาหลังจากสร้าง
-          this.displayAddExperience = false; // ปิดหน้าต่างเพิ่มการศึกษา
+          this.fetchExperienceData();
+          this.displayAddExperience = false;
 
           // เคลียร์ฟอร์มหลังจากบันทึกข้อมูล
           this.updateForm.reset({
@@ -104,17 +105,34 @@ export class ExperienceComponent implements OnInit {
   }
 
   saveEditExperience(): void {
+    if (!this.confirmEdit) {
+      this.messageService.add({
+        key: 'confirm1',
+        sticky: true,
+        severity: 'warn',
+        summary: 'Are you sure?',
+        detail: 'Are you sure you want to proceed?',
+      });
+      this.confirmEdit = true;
+    }
+  }
+
+  onConfirmEdit() {
     const formData = this.updateForm.value;
     const experienceId = formData.exp_id;
-    console.log(formData);
 
+    this.messageService.clear('confirm1');
     this.http
       .put(`${API_URL}/updateExperience?exp_id=${experienceId}`, formData, {
         withCredentials: true,
       })
       .subscribe({
         next: (res) => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Experience updated successfully' });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Experience updated successfully',
+          });
           console.log('Experience updated successfully:', res);
           this.fetchExperienceData();
           this.displayEditExperience = false;
@@ -123,6 +141,18 @@ export class ExperienceComponent implements OnInit {
           console.error('Error updating education:', err);
         },
       });
+    this.confirmEdit = false;
+  }
+
+  onRejectEdit() {
+    this.messageService.clear('confirm1');
+    this.displayEditExperience = false;
+    this.confirmEdit = false;
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Rejected',
+      detail: 'You have rejected',
+    });
   }
 
   DeleteExperience(experience: ExperienceInfo) {
@@ -143,7 +173,6 @@ export class ExperienceComponent implements OnInit {
     const formData = this.updateForm.value;
     const experienceId = formData.exp_id;
 
-    // เรียกใช้ API สำหรับการลบข้อมูลการศึกษา
     this.http
       .delete(`${API_URL}/deleteExperience?exp_id=${experienceId}`, {
         withCredentials: true,
@@ -151,8 +180,8 @@ export class ExperienceComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Experience deleted successfully:', res);
-          this.fetchExperienceData(); // รีเฟรชรายการการศึกษาหลังจากลบ
-          this.messageService.clear('confirm'); // ลบข้อความยืนยัน
+          this.fetchExperienceData();
+          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'success',
             summary: 'Confirmed',
@@ -161,7 +190,7 @@ export class ExperienceComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error deleting experience:', err);
-          this.messageService.clear('confirm'); // ลบข้อความยืนยัน
+          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',

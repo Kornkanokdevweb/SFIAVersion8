@@ -1,0 +1,20 @@
+.image {
+    position: relative;
+}
+
+.image label {
+    background-color: #ffffff;
+    color: #fff;
+    padding: 6px;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    font-size: 13px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    bottom: 0;
+    right: 0;
+    border: 2px dotted rgb(0, 0, 0);
+}

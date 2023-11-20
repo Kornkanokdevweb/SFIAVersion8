@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 
 const API_URL = 'http://localhost:8080/api';
@@ -19,7 +19,7 @@ interface LinkInfo {
   selector: 'app-link',
   templateUrl: './link.component.html',
   styleUrls: ['./link.component.css'],
-  providers: [ConfirmationService, MessageService],
+  providers: [MessageService],
 })
 export class LinkComponent implements OnInit {
   link: LinkInfo[] = [];
@@ -51,8 +51,6 @@ export class LinkComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.link = res.data;
-
-          console.log(this.link);
         },
         error: () => {
           this.router.navigate(['/login']);
@@ -63,6 +61,7 @@ export class LinkComponent implements OnInit {
   }
   displayAddLink: boolean = false;
   displayEditLink: boolean = false;
+  confirmEdit: boolean = false;
 
   AddLink() {
     this.updateForm.patchValue({
@@ -86,20 +85,21 @@ export class LinkComponent implements OnInit {
   saveAddLink(): void {
     const formData = this.updateForm.value;
 
-    // ส่งข้อมูลไปยัง API สร้างการศึกษา
     this.http
       .post(`${API_URL}/createLink`, formData, {
         withCredentials: true,
       })
       .subscribe({
         next: (res) => {
-          // หลังจากสร้างข้อมูลสำเร็จ
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Link created successfully' });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Link created successfully',
+          });
           console.log('Link created successfully:', res);
-          this.fetchLinkData(); // รีเฟรชรายการการศึกษาหลังจากสร้าง
-          this.displayAddLink = false; // ปิดหน้าต่างเพิ่มการศึกษา
+          this.fetchLinkData();
+          this.displayAddLink = false;
 
-          // เคลียร์ฟอร์มหลังจากบันทึกข้อมูล
           this.updateForm.reset({
             link_name: '',
             link_text: '',
@@ -112,27 +112,54 @@ export class LinkComponent implements OnInit {
   }
 
   saveEditLink(): void {
+    if (!this.confirmEdit) {
+      this.messageService.add({
+        key: 'confirm1',
+        sticky: true,
+        severity: 'warn',
+        summary: 'Are you sure?',
+        detail: 'Are you sure you want to proceed?',
+      });
+      this.confirmEdit = true;
+    }
+  }
+
+  onConfirmEdit() {
     const formData = this.updateForm.value;
     const linkId = formData.link_id;
-    console.log(formData);
 
-    // ส่งข้อมูลการแก้ไขไปยัง API
+    this.messageService.clear('confirm1');
     this.http
       .put(`${API_URL}/updateLink?link_id=${linkId}`, formData, {
         withCredentials: true,
       })
       .subscribe({
         next: (res) => {
-          // หลังจากแก้ไขข้อมูลสำเร็จ
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Link updated successfully' });
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Link updated successfully',
+          });
           console.log('Link updated successfully:', res);
-          this.fetchLinkData(); // รีเฟรชรายการการศึกษาหลังจากแก้ไข
-          this.displayEditLink = false; // ปิดหน้าต่างแก้ไขการศึกษา
+          this.fetchLinkData();
+          this.displayEditLink = false;
         },
         error: (err) => {
-          console.error('Error updating link:', err);
+          console.error('Error updating education:', err);
         },
       });
+    this.confirmEdit = false;
+  }
+
+  onRejectEdit() {
+    this.messageService.clear('confirm1');
+    this.displayEditLink = false;
+    this.confirmEdit = false;
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Rejected',
+      detail: 'You have rejected',
+    });
   }
 
   DeleteLink(link: LinkInfo) {
@@ -154,7 +181,6 @@ export class LinkComponent implements OnInit {
     const formData = this.updateForm.value;
     const linkId = formData.link_id;
 
-    // เรียกใช้ API สำหรับการลบข้อมูลการศึกษา
     this.http
       .delete(`${API_URL}/deleteLink?link_id=${linkId}`, {
         withCredentials: true,
@@ -162,8 +188,8 @@ export class LinkComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Link deleted successfully:', res);
-          this.fetchLinkData(); // รีเฟรชรายการการศึกษาหลังจากลบ
-          this.messageService.clear('confirm'); // ลบข้อความยืนยัน
+          this.fetchLinkData();
+          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'success',
             summary: 'Confirmed',
@@ -189,5 +215,11 @@ export class LinkComponent implements OnInit {
       summary: 'Rejected',
       detail: 'You have rejected',
     });
+  }
+
+  displayPartialURL(fullURL: string): string {
+    const urlParts = fullURL.split('/');
+    const displayURL = urlParts[urlParts.length - 1];
+    return displayURL;
   }
 }

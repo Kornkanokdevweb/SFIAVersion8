@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn, OneToMany, UpdateDateColumn } from "typeorm";
 import { Portfolio } from "./portfolio.entity";
 import { Datacollection } from "./datacollection.entity";
     
@@ -71,7 +71,7 @@ import { Datacollection } from "./datacollection.entity";
     })
     created_at: Date;
   
-    @CreateDateColumn({
+    @UpdateDateColumn({
       type: "timestamp"
     })
     updated_at: Date;
