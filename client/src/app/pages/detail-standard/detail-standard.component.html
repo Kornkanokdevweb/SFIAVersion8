@@ -1,171 +1,173 @@
-<div
-  class="container max-w-screen-xl mx-auto px-4 bg-sky-200 pb-8 pr-5 pl-5 border border-gray-200 rounded-lg shadow-md">
-  <div class="grid justify-items-center">
-    <div class="w-full p-6" *ngFor="let skill of skillDetails">
-      <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-        {{ skill.skill_name }}
-      </h5>
-      <div>
-        <p class="font-normal text-gray-700 dark:text-gray-400">
-          {{ skill.overall }}
+<div class="container max-w-screen-xl mx-auto mb-3 mt-8">
+  <div
+    class="px-4 bg-sky-200 pb-8 pr-5 pl-5 border border-gray-200 rounded-lg shadow-md">
+    <div class="grid justify-items-center">
+      <div class="w-full p-6" *ngFor="let skill of skillDetails">
+        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+          {{ skill.skill_name }}
+        </h5>
+        <div>
+          <p class="font-normal text-gray-700 dark:text-gray-400">
+            {{ skill.overall }}
+          </p>
+        </div>
+      </div>
+
+      <div class="w-full mx-5 md:mx-10 p-8 bg-white rounded-lg" *ngFor="let skill of skillDetails">
+        <p class="font-normal text-gray-700 dark:text-gray-400 text-sm">
+          {{ skill.note }}
         </p>
       </div>
     </div>
+  </div>
 
-    <div class="w-full mx-5 md:mx-10 p-8 bg-white rounded-lg" *ngFor="let skill of skillDetails">
-      <p class="font-normal text-gray-700 dark:text-gray-400 text-sm">
-        {{ skill.note }}
-      </p>
+  <div
+    class="container max-w-screen-xl mx-auto bg-sky-200 pb-8 pr-5 pl-5 pt-4 mt-4 border border-gray-200 rounded-lg shadow-md">
+    <div class="overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th *ngFor="let levelName of levelNames" scope="col" class="px-4 py-3">
+              {{ levelName }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <ng-container *ngFor="let levelName of levelNames; let i = index">
+              <td scope="row" class="px-6 py-4 text-gray-700 dark:text-gray-900 hover:underline">
+                <span (click)="showDetails(levelName)">
+                  {{ skillDetails[0]?.skill_name }}
+                  <br>
+                  Technical Skills: {{ percentageMap.get(levelName) }}%
+                </span>
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</div>
 
-<div
-  class="container max-w-screen-xl mx-auto bg-sky-200 pb-8 pr-5 pl-5 pt-4 mt-4 border border-gray-200 rounded-lg shadow-md">
-  <div class="overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+  <div class="px-6 py-3" *ngIf="selectedMetal">
+    <table
+      class="container max-w-screen-xl mx-auto text-sm text-left text-gray-500 dark:text-gray-400 border-collapse border border-slate-400">
+      <thead class="text-xs text-gray-700 uppercase bg-sky-200 dark:bg-gray-700 dark:text-gray-400">
         <tr>
-          <th *ngFor="let levelName of levelNames" scope="col" class="px-4 py-3">
-            {{ levelName }}
-          </th>
+          <th scope="col" class="px-6 py-3 text-center">Skill description</th>
         </tr>
       </thead>
       <tbody>
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-          <ng-container *ngFor="let levelName of levelNames; let i = index">
-            <td scope="row" class="px-6 py-4 text-gray-700 dark:text-gray-900 hover:underline">
-              <span (click)="showDetails(levelName)">
-                {{ skillDetails[0]?.skill_name }}
-                <br>
-                Technical Skills: {{ percentageMap.get(levelName) }}%
-              </span>
-            </td>
-          </ng-container>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="px-6 py-3" *ngIf="selectedMetal">
-  <table
-    class="container max-w-screen-xl mx-auto text-sm text-left text-gray-500 dark:text-gray-400 border-collapse border border-slate-400">
-    <thead class="text-xs text-gray-700 uppercase bg-sky-200 dark:bg-gray-700 dark:text-gray-400">
-      <tr>
-        <th scope="col" class="px-6 py-3 text-center">Skill description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngFor="let description of selectedLevelDescriptions; let i = index">
-        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-          <td class="grid grid-cols-3 gap-4 pt-6 px-6 py-4">
-            <div class="flex items-center">
-              <ng-container *ngIf="
+        <ng-container *ngFor="let description of selectedLevelDescriptions; let i = index">
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <td class="grid grid-cols-3 gap-4 pt-6 px-6 py-4">
+              <div class="flex items-center">
+                <ng-container *ngIf="
                   !getInformationByDescid(selectedLevelDescriptions[i].descid)
                 ">
-                <button (click)="addInformation(i); checkLoginStatus()"
-                  class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover-bg-gray-100 focus-ring-4 focus-outline-none focus-ring-gray-200 dark-bg-gray-800 dark-text-white dark-border-gray-600 dark-hover-bg-gray-700 dark-hover-border-gray-700 dark-focus-ring-gray-700">
-                  Add Data
-                </button>
-              </ng-container>
+                  <button (click)="addInformation(i); checkLoginStatus()"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover-bg-gray-100 focus-ring-4 focus-outline-none focus-ring-gray-200 dark-bg-gray-800 dark-text-white dark-border-gray-600 dark-hover-bg-gray-700 dark-hover-border-gray-700 dark-focus-ring-gray-700">
+                    Add Data
+                  </button>
+                </ng-container>
 
-              <div class="flex items-center ml-4">
-                <div *ngIf="
+                <div class="flex items-center ml-4">
+                  <div *ngIf="
                     information.length === 0 ||
                     !getInformationByDescid(selectedLevelDescriptions[i].descid)
                   "
-                  class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-4 py-0.5 p-2 rounded dark:bg-red-900 dark:text-red-300">
-                  <p>No information available.</p>
-                </div>
+                    class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-4 py-0.5 p-2 rounded dark:bg-red-900 dark:text-red-300">
+                    <p>No information available.</p>
+                  </div>
 
-                <div *ngIf="
+                  <div *ngIf="
                     information.length > 0 &&
                     getInformationByDescid(selectedLevelDescriptions[i].descid)
                   " class="flex space-x-2">
-                  <div
-                    class="flex space-x-4 w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
-                    <p>
-                      Information Detail:
-                      <ng-container *ngIf="isLink(getInformationByDescid(selectedLevelDescriptions[i].descid))">
-                        <a [href]="getInformationByDescid(selectedLevelDescriptions[i].descid)" target="_blank"
-                          class="text-blue-500 underline">
-                          {{ displayPartialURL(getInformationByDescid(selectedLevelDescriptions[i].descid)) }}
-                        </a>
-                      </ng-container>
-                      <ng-container *ngIf="!isLink(getInformationByDescid(selectedLevelDescriptions[i].descid))">
-                        {{ getInformationByDescid(selectedLevelDescriptions[i].descid) }}
-                      </ng-container>
-                    </p>
-                  </div>
-                  <div class="flex md:order-2 space-x-2">
-                    <!-- Edit button -->
-                    <div>
-                      <div *ngFor="let info of information; let i = index">
-                        <div *ngIf="info.descid === description.descid">
-                          <button name="edit" (click)="editInformation(info)">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 512 512">
-                              <path
-                                d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
-                            </svg>
-                          </button>
+                    <div
+                      class="flex space-x-4 w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                      <p>
+                        Information Detail:
+                        <ng-container *ngIf="isLink(getInformationByDescid(selectedLevelDescriptions[i].descid))">
+                          <a [href]="getInformationByDescid(selectedLevelDescriptions[i].descid)" target="_blank"
+                            class="text-blue-500 underline">
+                            {{ displayPartialURL(getInformationByDescid(selectedLevelDescriptions[i].descid)) }}
+                          </a>
+                        </ng-container>
+                        <ng-container *ngIf="!isLink(getInformationByDescid(selectedLevelDescriptions[i].descid))">
+                          {{ getInformationByDescid(selectedLevelDescriptions[i].descid) }}
+                        </ng-container>
+                      </p>
+                    </div>
+                    <div class="flex md:order-2 space-x-2">
+                      <!-- Edit button -->
+                      <div>
+                        <div *ngFor="let info of information; let i = index">
+                          <div *ngIf="info.descid === description.descid">
+                            <button name="edit" (click)="editInformation(info)">
+                              <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 512 512">
+                                <path
+                                  d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      <p-dialog header="Edit Information" [(visible)]="displayEditInformation" [style]="{
+                        <p-dialog header="Edit Information" [(visible)]="displayEditInformation" [style]="{
                           width: '50vw',
                           'font-family': 'Inter, sans-serif'
                         }" [draggable]="false">
-                        <form [formGroup]="updateForm">
-                          <div class="mb-6">
-                            <label for="information"
-                              class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">
-                              Information details:
-                            </label>
-                            <input formControlName="info_text" type="text" id="information"
-                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              placeholder="กรอกหลักฐานของคุณ" required />
-                          </div>
-                          <div class="grid justify-items-center">
-                            <button type="submit" (click)="saveEditInformation()"
-                              class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-                              Save
-                            </button>
-                          </div>
-                        </form>
-                      </p-dialog>
-                    </div>
-                    <div>
-                      <div class="flex justify-content-center">
-                        <!--Popup confirm -->
-                        <p-toast position="center" key="confirm" (onClose)="onReject()" [baseZIndex]="5000">
-                          <ng-template let-message pTemplate="message">
-                            <div class="flex flex-column" style="flex: 1">
-                              <div class="text-center">
-                                <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
-                                <h4>{{ message.summary }}</h4>
-                                <p>{{ message.detail }}</p>
-                              </div>
-                              <div class="flex p-fluid space-x-4 pt-3">
-                                <div class="col-6">
-                                  <button type="button" pButton (click)="onConfirm()" label="Yes"
-                                    class="p-button-success"></button>
-                                </div>
-                                <div class="col-6">
-                                  <button type="button" pButton (click)="onReject()" label="Cancel"
-                                    class="p-button-secondary"></button>
-                                </div>
-                              </div>
+                          <form [formGroup]="updateForm">
+                            <div class="mb-6">
+                              <label for="information"
+                                class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">
+                                Information details:
+                              </label>
+                              <input formControlName="info_text" type="text" id="information"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="กรอกหลักฐานของคุณ" required />
                             </div>
-                          </ng-template>
-                        </p-toast>
-                        <div *ngFor="let info of information; let i = index">
-                          <div *ngIf="info.descid === description.descid">
-                            <button name="delete" (click)="deleteInformation(info)">
-                              <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 448 512">
-                                <path
-                                  d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-                              </svg>
-                            </button>
+                            <div class="grid justify-items-center">
+                              <button type="submit" (click)="saveEditInformation()"
+                                class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
+                                Save
+                              </button>
+                            </div>
+                          </form>
+                        </p-dialog>
+                      </div>
+                      <div>
+                        <div class="flex justify-content-center">
+                          <!--Popup confirm -->
+                          <p-toast position="center" key="confirm" (onClose)="onReject()" [baseZIndex]="5000">
+                            <ng-template let-message pTemplate="message">
+                              <div class="flex flex-column" style="flex: 1">
+                                <div class="text-center">
+                                  <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+                                  <h4>{{ message.summary }}</h4>
+                                  <p>{{ message.detail }}</p>
+                                </div>
+                                <div class="flex p-fluid space-x-4 pt-3">
+                                  <div class="col-6">
+                                    <button type="button" pButton (click)="onConfirm()" label="Yes"
+                                      class="p-button-success"></button>
+                                  </div>
+                                  <div class="col-6">
+                                    <button type="button" pButton (click)="onReject()" label="Cancel"
+                                      class="p-button-secondary"></button>
+                                  </div>
+                                </div>
+                              </div>
+                            </ng-template>
+                          </p-toast>
+                          <div *ngFor="let info of information; let i = index">
+                            <div *ngIf="info.descid === description.descid">
+                              <button name="delete" (click)="deleteInformation(info)">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 448 512">
+                                  <path
+                                    d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -173,39 +175,39 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-span-3">
-              {{ selectedLevelDescriptions[i].description_text }}
-            </div>
+              <div class="col-span-3">
+                {{ selectedLevelDescriptions[i].description_text }}
+              </div>
 
-            <!-- ADD information -->
-            <form>
-              <p-dialog header="Link" [(visible)]="visible[i]" [style]="{ width: '50vw' }" [draggable]="false">
-                <form *ngIf="updateForm" [formGroup]="updateForm">
-                  <div class="pt-2">
-                    <input type="text" id="link" formControlName="info_text" placeholder="กรอกหลักฐาน"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      required />
+              <!-- ADD information -->
+              <form>
+                <p-dialog header="Link" [(visible)]="visible[i]" [style]="{ width: '50vw' }" [draggable]="false">
+                  <form *ngIf="updateForm" [formGroup]="updateForm">
+                    <div class="pt-2">
+                      <input type="text" id="link" formControlName="info_text" placeholder="กรอกหลักฐาน"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        required />
 
-                    <div *ngIf="updateForm.get('info_text')?.invalid" class="text-red-500 text-sm mt-1">
-                      Please enter your Information.
+                      <div *ngIf="updateForm.get('info_text')?.invalid" class="text-red-500 text-sm mt-1">
+                        Please enter your Information.
+                      </div>
+
+                      <div class="pt-3">
+                        <button *ngIf="selectedDescriptionIndex !== null" (click)="saveAddInformation()" type="button"
+                          [disabled]="updateForm.get('info_text')?.invalid"
+                          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                          Save
+                        </button>
+                      </div>
                     </div>
-
-                    <div class="pt-3">
-                      <button *ngIf="selectedDescriptionIndex !== null" (click)="saveAddInformation()" type="button"
-                        [disabled]="updateForm.get('info_text')?.invalid"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                        Save
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </p-dialog>
-            </form>
-          </td>
-        </tr>
-      </ng-container>
-    </tbody>
-  </table>
+                  </form>
+                </p-dialog>
+              </form>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
 </div>
 <p-toast></p-toast>
