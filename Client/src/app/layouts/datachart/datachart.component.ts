@@ -35,7 +35,7 @@ export class DatachartComponent {
   public chartOptions: ChartOptions = {
     series: [],
     chart: {
-      height: 380,
+      height: 350,
       type: "bar",
       events: {
         click: function (chart, w, e) {

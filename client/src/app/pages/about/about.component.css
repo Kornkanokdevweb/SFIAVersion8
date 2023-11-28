@@ -1,52 +1,7 @@
-
-.card1{
-    display: grid;
-    grid-template-columns: 280px;
-    grid-template-rows: 240px 180px 40px;
-    grid-template-areas: "image" "text" "stats";
-
-}
-.card-image1{
-    grid-area: image;
-    background: url("/assets/images/user.jpg");
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    background-size: cover;
+.gradient {
+    background: linear-gradient(90deg, rgba(14, 165, 233, 1) 0%, rgba(165, 243, 252, 1) 100%);
 }
 
-.card-image2{
-    grid-area: image;
-    background: url("/assets/images/user.jpg");
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    background-size: cover;
-}
-
-.card-image3{
-    grid-area: image;
-    background: url("/assets/images/user.jpg");
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    background-size: cover;
-}
-
-.card-image4{
-    grid-area: image;
-    background: url("/assets/images/user.jpg");
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    background-size: cover;
-}
-
-.card-stats1{
-    grid-area: stats;
-    background-color: #737373;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
-}
-
-.card1:hover{
+.col-span-1:hover {
     transform: scale(1.05);
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
 }
-

@@ -26,7 +26,7 @@ export class SpiderchartComponent {
   public chartOptions: ChartOptions = {
     series: [],
     chart: {
-      height: 300,
+      height: 250,
       type: "radar"
     },
     xaxis: {

@@ -1,8 +1,8 @@
 <div class="bg-gray-400">
-    <div class="flex flex-wrap items-center justify-between pt-2">
+    <div class="flex flex-wrap items-center justify-between">
         <div class="flex md:order-2">
-            <button type="button" (click)="exportToPDF()"
-                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-base px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+            <button type="button" (click)="handleExport()"
+                class="text-white text-sm bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                 Export PDF
             </button>
         </div>
@@ -15,13 +15,13 @@
         </div>
     </div>
 
-    <div class="grid min-h-screen place-items-center print:min-h-0">
-        <div
-            class="h-[297mm] w-[210mm] overflow-hidden rounded-md bg-white shadow-lg print:m-0 print:h-screen print:w-screen print:rounded-none print:shadow-none">
-            <div id="pdf-content">
-                <div class="grid grid-cols-5 pt-3 mb-2">
+    <div class="grid place-items-center">
+        <div class="h-[297mm] w-[210mm] overflow-hidden rounded-md bg-white shadow-lg">
+            <div id="pdf-content" class="bg-white">
+                <!-- <div class="h-9 mx-auto bg-blue-300 w-full my-0 py-0"></div> -->
+                <div class="grid grid-cols-5 pt-2 bg-white pb-3 pt-4">
                     <div class="row-span-1 pl-12">
-                        <img class="w-28 h-28 mb-3 rounded-full bg-slate-200"
+                        <img class="w-28 h-28 mb-3 rounded-full bg-slate-200 object-cover"
                             [src]="selectedImageURL ? selectedImageURL :'http://localhost:8080/uploads/' + user.profileImage"
                             *ngIf="user.profileImage">
                     </div>
@@ -29,67 +29,66 @@
                         <p class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
                             {{ user.firstNameTH }} {{ user.lastNameTH }}
                         </p>
-                        <p class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        <p class="mb-2 mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white uppercase">
                             {{ user.firstNameEN }} {{ user.lastNameEN }}
                         </p>
                     </div>
-                    <div class="row-span-2 col-span-2 text-sm pt-4 space-y-2">
+                    <div class="row-span-2 col-span-2 text-sm pt-4 space-y-1.5">
                         <p><span class="font-semibold">Email : </span> {{ user.email }}</p>
                         <p><span class="font-semibold">Line : </span> {{ user.line }}</p>
                         <p><span class="font-semibold">Phone Number : </span> {{ user.phone }}</p>
                     </div>
-                    <div class="col-span-5 pl-12 b-3">
+                    <div class="col-span-5 pl-12 text-sm">
                         <p>
                             <span class="font-semibold">Address : </span> {{ user.address }}
                         </p>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-
-                    <div class="row-span-2 max-h-96">
-                        <div class="bg-sky-200 font-medium rounded-lg text-sm py-1">
-                            <p class="text-center">Data Chart</p>
+                <div class="grid grid-cols-2 gap-3 p-3">
+                    <div class="rounded-lg shadow-md bg-gray-50 p-1 border border-slate-400">
+                        <div class="font-medium rounded-lg text-sm text-center font-semibold">Spider Chart</div>
+                        <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1"></div>
+                        <div class="max-h-80">
+                            <app-spiderchart></app-spiderchart>
                         </div>
+                    </div>
+                    <div class="rounded-lg shadow-md bg-gray-50 p-1 border border-slate-400">
+                        <div class="font-medium rounded-lg text-sm text-center font-semibold">Education</div>
+                        <div class="h-0.5 mx-auto gradient w-20 opacity-40 my-0 py-0 rounded-t mt-1 mb-2"></div>
+                        <div *ngFor="let edu of education" class="grid grid-cols-3 gap-4 text-xs pl-3 ml-5 pb-2">
+                            <div class="ml-3">
+                                <p class="font-semibold">{{ edu.syear }} - {{ edu.eyear}}</p>
+                                <p>{{ edu.level_edu }}</p>
+                            </div>
+                            <div class="col-span-2">
+                                <div class="pl-6">
+                                    <p>{{ edu.universe }}</p>
+                                    <p>{{ edu.faculty }}</p>
+                                    <p>{{ edu.branch }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rounded-lg shadow-md bg-gray-50 p-1 border border-slate-400">
+                        <div class="font-medium rounded-lg text-sm text-center font-semibold">Link</div>
+                        <div class="h-0.5 mx-auto gradient w-12 opacity-40 my-0 py-0 rounded-t mt-1 mb-2"></div>
+                        <div *ngFor="let linkItem of link" class="pl-3 ml-5 text-xs pb-2 ">
+                            <p><span class="font-semibold">{{ linkItem.link_name }} : </span>{{ linkItem.link_text }}</p>
+                        </div>
+                    </div>
+                    <div class="rounded-lg shadow-md bg-gray-50 p-1 border border-slate-400">
+                        <div class="font-medium rounded-lg text-sm text-center font-semibold">Experience</div>
+                        <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1 mb-2"></div>
+                        <div *ngFor="let experienceItem of experience" class="pl-3 ml-5 text-xs pb-2">
+                            <p><span class="mr-3">•</span>{{ experienceItem.exp_text }}</p>
+                        </div>
+                    </div>
+                    <div class="col-span-2 rounded-lg shadow-md bg-gray-50 p-1 border border-slate-400">
+                        <div class="font-medium rounded-lg text-sm text-center font-semibold">Data Chart</div>
+                        <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1"></div>
                         <app-datachart></app-datachart>
                     </div>
-                    <div class="row-span-2 max-h-80">
-                        <div class="bg-sky-200 font-medium rounded-lg text-sm py-1">
-                            <p class="text-center">Spider Chart</p>
-                        </div>
-                        <app-spiderchart></app-spiderchart>
-                    </div>
-                    <div class="row-span-2">
-                        <div class="bg-sky-200 font-medium rounded-lg text-sm py-1">
-                            <p class="text-center">Education</p>
-                        </div>
-                        <div *ngFor="let edu of education" class="pl-3 ml-5 mt-1 pt-1 text-xs ">
-                            <p><span class="font-semibold">Start Year : </span>{{ edu.syear }} - End Year: {{ edu.eyear
-                                }}</p>
-                            <p><span class="font-semibold">Level Education : </span>{{ edu.level_edu }}</p>
-                            <p><span class="font-semibold">University : </span>{{ edu.universe }}</p>
-                            <p><span class="font-semibold">Faculty : </span>{{ edu.faculty }}</p>
-                            <p><span class="font-semibold">Branch : </span>{{ edu.branch }}</p>
-                        </div>
-                    </div>
-                    <div class="row-span-2">
-                        <div class="bg-sky-200 font-medium rounded-lg text-sm py-1">
-                            <p class="text-center">Link</p>
-                        </div>
-                        <div *ngFor="let linkItem of link" class="pl-3 ml-5 mt-1 pt-1 text-xs">
-                            <p><span class="font-semibold">Link Name : </span>{{ linkItem.link_name }}</p>
-                            <p><span class="font-semibold">Link Detail : </span>{{ linkItem.link_text }}</p>
-                        </div>
-                    </div>
 
-
-                    <div class="col-span-2 pb-2">
-                        <div class="bg-sky-200 font-medium rounded-lg text-sm py-1">
-                            <p class="text-center">Experience</p>
-                        </div>
-                        <div *ngFor="let experienceItem of experience" class="pl-3 ml-5 mt-1 pt-1 text-xs">
-                            <p><span class="font-semibold">Experience Detail : </span>{{ experienceItem.exp_text }}</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

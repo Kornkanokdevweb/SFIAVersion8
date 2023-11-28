@@ -30,7 +30,7 @@ const routes: Routes = [
   {path:'detail-standard/:codeskill', component: DetailStandardComponent},
   {path:'recovery-password', component: RecoveryPasswordComponent},
   {path:'reset', component: ResetComponent},
-  {path:'portfolio-information', component: PortfolioInformationComponent}
+  {path:'portfolio-information', component: PortfolioInformationComponent},
 ];
 
 @NgModule({

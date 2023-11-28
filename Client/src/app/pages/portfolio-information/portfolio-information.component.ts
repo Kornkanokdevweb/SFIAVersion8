@@ -128,15 +128,15 @@ export class PortfolioInformationComponent implements OnInit {
     }
   }
 
-  exportToPDF() {
+  handleExport() {
     const options = {
-      margin: 1,
+      margin: 0,
       filename: 'Portfolio.pdf',
       image: { type: 'jpeg' },
       html2canvas: { useCORS: true },
       jsPDF: {
         format: 'a4',
-        orientation: 'portrait'
+        orientation: 'portrait',
       }
     };
 

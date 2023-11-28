@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Emitter } from 'src/app/emitters/emitter';
+import { MessageService } from 'primeng/api';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -16,20 +17,22 @@ interface UserProfile {
   lastNameEN: string;
   phone: string;
   address: string;
+  updated_at: Date;
 }
 
 const thaiNameValidator = /^[ก-๏\s]+$/;
 const thaiSurnameValidator = /^[ก-๏\s]+$/;
 const englishNameValidator = /^[A-Za-z\s]+$/;
 const englishSurnameValidator = /^[A-Za-z\s]+$/;
-const phoneValidator = /^[0-9]{10}$/; 
+const phoneValidator = /^[0-9]{10}$/;
 const addressValidator = /^[a-zA-Z0-9\sก-๏,.-/]+$/;
 const lineIdValidator = /^[\w-]{1,100}$/;
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css'],
+  providers: [MessageService],
 })
 export class ProfileComponent implements OnInit {
 
@@ -47,12 +50,14 @@ export class ProfileComponent implements OnInit {
     lastNameEN: '',
     phone: '',
     address: '',
+    updated_at: new Date(),
   };
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private formBuilder: FormBuilder,
+    private messageService: MessageService,
   ) {
     this.updateForm = this.formBuilder.group({
       profileImage: '',
@@ -63,6 +68,7 @@ export class ProfileComponent implements OnInit {
       lastNameEN: ['', [Validators.required, Validators.pattern(englishSurnameValidator)]],
       phone: ['', [Validators.required, Validators.pattern(phoneValidator)]],
       address: ['', [Validators.required, Validators.pattern(addressValidator)]],
+      updated_at: new Date(),
     });
   }
 
@@ -92,7 +98,7 @@ export class ProfileComponent implements OnInit {
       ...this.updateForm.value,
       phone: this.updateForm.value.phone ? this.updateForm.value.phone.replace(phoneRegex, '') : ''
     };
-  
+
     const formData = new FormData();
     if (this.images) {
       formData.append('file', this.images);
@@ -103,21 +109,24 @@ export class ProfileComponent implements OnInit {
         formData.append(key, updatedData[key]);
       }
     });
-  
+
     console.log('Updated Data:', updatedData);
-  
+
     this.http.put(`${API_URL}/updateUser`, formData, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile updated successfully' });
           console.log('Profile updated successfully', res);
           this.updateUserWithNewData(updatedData);
+
         },
         error: (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating profile' });
           console.error('Error updating profile', error);
         }
       });
   }
-  
+
   private setFormValuesFromUserData(): void {
     this.updateForm.patchValue({
       profileImage: this.user.profileImage,
@@ -135,13 +144,13 @@ export class ProfileComponent implements OnInit {
     this.user = { ...this.user, ...updatedData };
   }
 
-  selectImage(event: any){
-    if(event.target.files.length > 0){
+  selectImage(event: any) {
+    if (event.target.files.length > 0) {
       const file = event.target.files[0]
       console.log(file);
       this.images = file;
       this.selectedImageURL = URL.createObjectURL(file);
-    }else{
+    } else {
       const fileName = event.target.value
       console.log(fileName)
     }

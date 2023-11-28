@@ -4,17 +4,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&family=Kanit:ital,wght@0,100;0,200;0,300;1,300&display=swap');
 
 
-:root{
-    --primary-color: rgba(21, 114, 161, 1);
-    --secondary-color: rgba(190, 227, 246, 1);
-    --body-text-color: rgba(0, 0, 0, 1);
-    --toolbar-footer-color: rgb(0, 229, 255);
-}
-
 body{
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    color: var(--body-text-color);
 }
 
 @import 'tailwindcss/base';
@@ -26,8 +17,3 @@ body{
 
 @import "primeicons/primeicons.css";
 
-/* .background{
-    background-color: #ffffff;
-    background-image: radial-gradient(#94edff 1.1500000000000001px, #ffffff 1.1500000000000001px);
-    background-size: 23px 23px;
-} */

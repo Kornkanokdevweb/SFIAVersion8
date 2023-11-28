@@ -217,9 +217,24 @@ export class LinkComponent implements OnInit {
     });
   }
 
-  displayPartialURL(fullURL: string): string {
-    const urlParts = fullURL.split('/');
-    const displayURL = urlParts[urlParts.length - 1];
-    return displayURL;
+  isLink(url: string): boolean {
+    return url.includes('://');
   }
+  
+  displayPartialURL(fullURL: string, maxLength: number = 20): string {
+    const urlParts = fullURL.split('/');
+    let displayURL = urlParts[urlParts.length - 1];
+  
+    // Remove trailing spaces
+    displayURL = displayURL.trim();
+  
+    // Check if the displayURL is longer than the specified maxLength
+    if (displayURL.length > maxLength) {
+      return displayURL.substr(0, maxLength) + '...';
+    }
+  
+    // Check if displayURL is not empty or just spaces
+    return displayURL.trim() !== '' ? displayURL : fullURL;
+  }
+  
 }

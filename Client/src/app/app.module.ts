@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 
 // Component
 import { AppComponent } from './app.component';
-import { ToolbarComponent } from './layouts/toolbar/toolbar.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
@@ -53,7 +52,6 @@ import {MatMenuModule} from '@angular/material/menu';
 @NgModule({
   declarations: [
     AppComponent,
-    ToolbarComponent,
     NavbarComponent,
     FooterComponent,
     HomeComponent,

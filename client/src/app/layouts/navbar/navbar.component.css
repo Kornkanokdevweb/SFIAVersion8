@@ -1,0 +1,8 @@
+.active {
+    font-weight: bold;
+}
+
+li:hover{
+ color: #2563eb;
+ transform: scale(1.05);
+}
