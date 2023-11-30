@@ -1,30 +1,24 @@
-<footer
-    class="py-1 bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-sky-400 to-sky-200 xl:pt-20 dark:bg-gray-800 rounded-l-lg">
-    <div class="grid grid-cols-3 gap-2 p-2">
-        <div class="grid justify-items-center mt-2">
-            <img src="/assets/images/logo_sfia.png" class="h-8" />
+<footer class="bg-sky-200 rounded-lg">
+    <div class="w-full max-w-screen-xl mx-auto p-2 md:py-8">
+        <div class="sm:flex sm:items-center sm:justify-between pt-1">
+            <a href="https://flowbite.com/" class="flex items-center mb-2 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                <img src="/assets/images/logo_sfia.png" class="h-8" />
+            </a>
+            <ul class="flex flex-wrap items-center mb-4 text-xs font-medium text-gray-800 sm:mb-0 dark:text-gray-400">
+                <li>
+                    <a routerLinkActive="active" routerLink="" class="hover:underline me-4 md:me-6">Home</a>
+                </li>
+                <li>
+                    <a routerLinkActive="active" routerLink="/download" class="hover:underline me-4 md:me-6">Download</a>
+                </li>
+                <li>
+                    <a routerLinkActive="active" routerLink="/about" class="hover:underline">About
+                        us</a>
+                </li>
+            </ul>
         </div>
-        <div>
-            <p class="font-semibold">Menu</p>
-            <div class="text-xs mt-1">
-                <ul
-                    class="flex flex-col font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-transparent md:dark:bg-transparent dark:border-gray-700">
-                    <li>
-                        <a routerLinkActive="active" routerLink="" class="hover:underline">Home</a>
-                    </li>
-                    <li>
-                        <a routerLinkActive="active" routerLink="/download" class="hover:underline">Download</a>
-                    </li>
-                    <li>
-                        <a routerLinkActive="active" routerLink="/about" class="hover:underline">About
-                            us</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="text-xs p-2">
-            <p>Department of Electrical and Computer Engineering</p>
-            <p>Faculty of Engineering Naresuan University</p>
-        </div>
+        <hr class="my-2 border-1 border-gray-600 sm:mx-auto dark:border-gray-700 lg:my-4" />
+        <span class="block text-xs text-gray-800 sm:text-center dark:text-gray-400">© 2023 <a href="http://www.ecpe.nu.ac.th/web/#" target="_blank" class="hover:underline">Department of Electrical and Computer Engineering Faculty of Engineering Naresuan University</a></span>
     </div>
 </footer>
+

@@ -6,6 +6,7 @@ import { Emitter } from 'src/app/emitters/emitter';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import { Validators } from '@angular/forms';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -36,7 +37,7 @@ export class LinkComponent implements OnInit {
     this.updateForm = this.formBuilder.group({
       link_id: '',
       link_name: '',
-      link_text: '',
+      link_text: ['', [Validators.required, Validators.pattern('^(https?|ftp):\\/\\/(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(\\/[^\\s]*)?$')]],
     });
   }
 
@@ -220,21 +221,21 @@ export class LinkComponent implements OnInit {
   isLink(url: string): boolean {
     return url.includes('://');
   }
-  
+
   displayPartialURL(fullURL: string, maxLength: number = 20): string {
     const urlParts = fullURL.split('/');
     let displayURL = urlParts[urlParts.length - 1];
-  
+
     // Remove trailing spaces
     displayURL = displayURL.trim();
-  
+
     // Check if the displayURL is longer than the specified maxLength
     if (displayURL.length > maxLength) {
       return displayURL.substr(0, maxLength) + '...';
     }
-  
+
     // Check if displayURL is not empty or just spaces
     return displayURL.trim() !== '' ? displayURL : fullURL;
   }
-  
+
 }

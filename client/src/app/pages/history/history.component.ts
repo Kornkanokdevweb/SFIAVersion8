@@ -9,102 +9,116 @@ import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.css']
 })
-export class HistoryComponent implements OnInit{
+export class HistoryComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
     private router: Router,
   ) {
-
   }
 
   currentPage: number = 1;
   pageSize: number = 7;
 
-  selectedSkillData: any[] = [];
+  descId: string[] = [];
 
-  uniqueSkill: string[] = [];
-
-  allUniqueSkill: string[] = [];
-  filteredSkillsAndLevels: any[] = [];
-
-   get uniqueSkills(): string[] {
-    return Array.from(new Set(this.allSkillsAndLevels.map(skill => skill.skillName)));
-  }
-  
   allSkillsAndLevels: any[] = [];
-  selectedSkill: string = '';
-  skillNamesLevelNames: string[]= [];
-  skillNames: string[]= [];
 
-    ngOnInit() {
-      this.checkLogin();
-      Emitter.authEmitter.emit(true)
-      this.getHistory();
-      this.onSkillSelect();
-    }
+  lvAndDesc: string[] = [];
 
-    checkLogin(){
-      this.http.get('http://localhost:8080/api/user', {withCredentials: true})
+  // Declare groupedByLevel at the class level
+  groupedByLevel: Map<string, { codeSkill: string, skillName: string, levelName: string, description: string[], percentage: number }> = new Map();
+
+  ngOnInit() {
+    this.checkLogin();
+    Emitter.authEmitter.emit(true);
+    this.getHistory();
+  }
+
+  checkLogin() {
+    this.http.get('http://localhost:8080/api/user', { withCredentials: true })
       .subscribe({
         next: (res: any) => {
-          AuthInterceptor.accessToken
-          Emitter.authEmitter.emit(true)
+          AuthInterceptor.accessToken;
+          Emitter.authEmitter.emit(true);
         },
         error: () => {
-          this.router.navigate(['/login'])
-          Emitter.authEmitter.emit(false)
+          this.router.navigate(['/login']);
+          Emitter.authEmitter.emit(false);
         }
       });
-    }
+  }
 
-    getHistory() {
-      this.http.get('http://localhost:8080/api/getHistory', {withCredentials: true})
+  getHistory() {
+    this.http.get('http://localhost:8080/api/getHistory', { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           const descriptionsWithLevels = res.descriptionsWithLevel;
-          this.allSkillsAndLevels = descriptionsWithLevels.flatMap((description: any) => {
-            return description.uniqueSkills.map((skill: any) => ({
-              skillName: skill.skill_name,
-              levelName: description.level.level_name,
-              description: description.descriptionId
-            }));
+
+          descriptionsWithLevels.forEach((description: any) => {
+            const levelName = description.level.level_name;
+
+            if (!this.groupedByLevel.has(levelName)) {
+              this.groupedByLevel.set(levelName, {
+                codeSkill: description.uniqueSkills[0].codeskill,
+                skillName: description.uniqueSkills[0].skill_name,
+                levelName: levelName,
+                description: [description.descriptionId],
+                percentage: 0,
+              });
+            } else {
+              this.groupedByLevel.get(levelName)?.description.push(description.descriptionId);
+            }
           });
 
-          const levelNames = this.allSkillsAndLevels.map((entry) => entry.levelName);
-          const uniqueLevelNames = [...new Set(levelNames)];
+          this.groupedByLevel.forEach((value, key) => {
+            this.getPercentageSkillAndLevel(value.codeSkill, value.levelName);
+          });
 
-          const levelCounts = {};
-          this.filteredSkillsAndLevels = this.allSkillsAndLevels.filter((entry) => {
-            if (!levelCounts[entry.levelName]){
-              levelCounts[entry.levelName] = 1;
-              return true;
-            } else if (levelCounts[entry.levelName] < 2){
-              levelCounts[entry.levelName]++;
-              return true;
-            }
-            return false;
-          })
+          this.groupedByLevel.forEach((value, key) => {
+            const descriptionArray = value.description;
+            console.log(`Level: ${key}, Descriptions: ${descriptionArray.join(', ')}`);
+            return descriptionArray;
+          });
 
-          this.uniqueSkill = [...new Set(this.filteredSkillsAndLevels.map(entry => entry.skillName))];
-          this.selectedSkillData = this.filteredSkillsAndLevels;
-          console.log(this.filteredSkillsAndLevels)
-        }, error: () => {
-          console.log(`Error getting History`)
+          this.allSkillsAndLevels = Array.from(this.groupedByLevel.values());
+          
+          
+
+
+          console.log(this.allSkillsAndLevels);
+        },
+        error: () => {
+          console.log(`Error getting History`);
+        },
+      });
+  }
+
+  clickToDetail(codeSkill: string) {
+    console.log('Code Skill', codeSkill);
+    if (codeSkill) {
+      window.open(`/detail-standard/${codeSkill}`, '_blank');
+    }
+  }
+
+  getPercentageSkillAndLevel(codeSkill: string, levelName: string) {
+    this.http.get(`http://localhost:8080/api/search?codeskill=${codeSkill}&level_name=${levelName}`, { withCredentials: true })
+      .subscribe((data: any) => {
+        const selectedLevels = data[0]?.levels.filter((level: any) => level.level_name == levelName);
+  
+        if (selectedLevels && selectedLevels.length > 0) {
+          const descriptions = selectedLevels.map((level: any) => {
+            const descid = level.descriptions[0]?.id || '';
+            return { descid };
+          });
+  
+          const percentage = parseFloat(((this.groupedByLevel.get(levelName)?.description.length ?? 1) / descriptions.length * 100).toFixed(2));
+          this.groupedByLevel.get(levelName)!.percentage = percentage;
+          console.log(`desic ทั้งของเลเวล ${levelName}:`, descriptions);
+          console.log(`Percentage for Level ${levelName}: ${percentage}%`);
+          this.allSkillsAndLevels.sort((a, b) => b.percentage - a.percentage);
         }
       });
-    }
-
-    onSkillSelect() {
-      if (this.selectedSkill === '' || this.selectedSkill === 'All Skill') {
-        this.selectedSkillData = this.filteredSkillsAndLevels;
-        this.currentPage = 1
-        console.log(this.selectedSkill)
-      } else {
-        this.selectedSkillData = this.filteredSkillsAndLevels.filter(entry => entry.skillName === this.selectedSkill);
-        this.currentPage = 1;
-        console.log(this.selectedSkillData)
-      }
-    }
-    
-}    
+  }
+  
+}

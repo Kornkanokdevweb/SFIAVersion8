@@ -50,7 +50,7 @@
       <form class="flex flex-col justify-center items-center md:flex-row md:space-y-0 md:space-x-2">
 
         <div class="max-w-3xl">
-          <label for="categoryDropdown" class="mb-2 font-semibold">Category:</label>
+          <label for="categoryDropdown" class="mb-2 text-sm text-gray-900 dark:text-white font-semibold">Category:</label>
           <select id="categoryDropdown" [(ngModel)]="selectedCategory" (change)="onCategoryChange()"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             [ngModelOptions]="{standalone: true}">
@@ -61,7 +61,7 @@
 
 
         <div class="max-w-3xl">
-          <label for="subcategoryDropdown" class="mb-2 font-semibold">Subcategy:</label>
+          <label for="subcategoryDropdown" class="mb-2 text-sm text-gray-900 dark:text-white font-semibold">Subcategy:</label>
           <select id="subcategoryDropdown" [(ngModel)]="selectedSubcategory" (change)="onSubcategoryChange()"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pl-5 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             [ngModelOptions]="{standalone: true}" [disabled]="selectedCategory === ''">
@@ -74,7 +74,7 @@
 
         <!-- InputText and Submit Button -->
         <div class="md:w-full ">
-          <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white font-semibold">Search
+          <label class="block mb-2 text-sm text-gray-900 dark:text-white font-semibold">Search
             skill:</label>
           <div class="flex items-center">
             <label for="search" class="sr-only">Search</label>
@@ -102,7 +102,7 @@
 
   <!-- Result Data -->
   <div class="flex flex-col justify-center items-center">
-    <h2 class="my-1 text-xl font-bold text-center text-gray-800">
+    <h2 class="my-2 pt-3 text-xl font-bold text-center text-gray-800">
       All Skills
     </h2>
     <div class="w-full mb-2">
@@ -112,21 +112,21 @@
       class="w-full md:w-full p-4 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 my-2"
       *ngFor="let result of searchResults | paginate: { itemsPerPage: pageSize, currentPage: currentPage}">
       <!-- แสดงข้อมูลรายการที่ได้จาก paginateResults() -->
-      <h5 class="mb-1 ml-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ result.skill_name }}
+      <h5 class="mb-1 md:mb-4 ml-2 md:ml-0 text-xl font-bold tracking-tight text-gray-900 dark:text-white">{{ result.skill_name }}
       </h5>
       <div class="md:grid md:grid-cols-2">
         <div>
-          <p class="ml-2 font-normal text-gray-700 dark:text-gray-400">{{ result.overall }}</p>
+          <p class="font-normal text-gray-700 dark:text-gray-400">{{ result.overall }}</p>
         </div>
-        <div class="mt-4 ml-64 md:mt-0 md:col-start-2 md:col-end-3">
+        <div class="mt-4 md:mt-0 md:col-span-1 grid justify-items-end">
           <button type="button" (click)="viewSkillDetail(result.codeskill)"
-            class="w-full h-full text-white bg-blue-700 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300 font-medium rounded-lg text-base px-5 py-2.5 text-center dark:focus:ring-blue-800">Read
+            class="w-80 h-full text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Read
             more</button>
         </div>
       </div>
     </div>
     <div *ngIf="searchResults.length === 0"
-      class="w-full md:w-full py-8 bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500 my-2 text-center shadow-md">
+      class="w-full md:w-full py-8 bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5  rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500 my-2 text-center shadow-md">
       No data available in table.
     </div>
   </div>

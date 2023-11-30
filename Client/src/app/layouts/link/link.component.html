@@ -36,19 +36,22 @@
           <div class="mb-6">
             <label for="link_name" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Link
               Name</label>
-            <input formControlName="link_name" type="text" id="university"
+            <input formControlName="link_name" type="text" id="linkname"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="" required />
           </div>
           <div class="mb-6">
             <label for="link_text" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">URL
               link</label>
-            <input formControlName="link_text" type="text" id="faculty"
+            <input formControlName="link_text" type="text" id="urllink"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="" required />
+            <div *ngIf="updateForm.get('link_text')?.hasError('pattern')" class="text-red-500 text-xs pt-1">
+              Please enter a valid URL.
+            </div>
           </div>
           <div class="grid justify-items-center">
-            <button (click)="saveEditLink()" type="submit"
+            <button (click)="saveEditLink()" type="submit" [disabled]="!updateForm.valid"
               class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
               Save
             </button>
@@ -120,23 +123,27 @@
       <form [formGroup]="updateForm">
         <div class="grid gap-6 mb-6 md:grid-cols-2"></div>
         <div class="mb-6">
-          <label for="University" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Link
+          <label for="linkname" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Link
             Name</label>
-          <input formControlName="link_name" type="text" id="university"
+          <input formControlName="link_name" type="text" id="linkname"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="" required />
         </div>
         <div class="mb-6">
-          <label for="password" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">URL link</label>
-          <input formControlName="link_text" type="text" id="faculty"
+          <label for="urllink" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">URL link</label>
+          <input formControlName="link_text" type="text" id="urllink"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="" required />
+          <div *ngIf="updateForm.get('link_text')?.hasError('pattern')" class="text-red-500 text-xs pt-1">
+            Please enter a valid URL.
+          </div>
         </div>
         <div class="grid justify-items-center">
-          <button (click)="saveAddLink()" type="submit"
+          <button (click)="saveAddLink()" type="submit" [disabled]="!updateForm.valid"
             class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
             Save
           </button>
+
         </div>
       </form>
     </p-dialog>
