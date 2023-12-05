@@ -99,8 +99,9 @@
                         </ng-container>
                       </p>
                     </div>
+                    
+                    <!-- Edit button -->
                     <div class="flex md:order-2 space-x-2">
-                      <!-- Edit button -->
                       <div>
                         <div *ngFor="let info of information; let i = index">
                           <div *ngIf="info.descid === description.descid">
@@ -112,26 +113,28 @@
                             </button>
                           </div>
                         </div>
-                        <p-dialog header="Edit Information" [(visible)]="displayEditInformation" [style]="{
-                          width: '50vw',
-                          'font-family': 'Inter, sans-serif'
-                        }" [draggable]="false">
+                        <p-dialog header="Edit Information" [(visible)]="displayEditInformation" [style]="{width: '50vw','font-family': 'Inter, sans-serif'}" [draggable]="false">
                           <form [formGroup]="updateForm">
-                            <div class="mb-6">
+                            <div>
                               <label for="information"
                                 class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">
                                 Information details:
                               </label>
                               <input formControlName="info_text" type="text" id="information"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="กรอกหลักฐานของคุณ" required />
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                                <div *ngIf="updateForm.get('info_text')?.invalid" class="text-red-500 text-sm mt-1 ">
+                                  Please enter your Information.
+                                </div>
+                                <div class="grid justify-items-center mt-3">
+                                  <button type="submit" (click)="saveEditInformation()"  [disabled]="updateForm.get('info_text')?.invalid"
+                                    class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
+                                    Save
+                                  </button>
+                                </div>
+
+
                             </div>
-                            <div class="grid justify-items-center">
-                              <button type="submit" (click)="saveEditInformation()"
-                                class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-                                Save
-                              </button>
-                            </div>
+                            
                           </form>
                         </p-dialog>
                       </div>
@@ -181,10 +184,15 @@
 
               <!-- ADD information -->
               <form>
-                <p-dialog header="Link" [(visible)]="visible[i]" [style]="{ width: '50vw' }" [draggable]="false">
+                <p-dialog header="Add Information" [(visible)]="visible[i]" [style]="{ width: '50vw' }" [draggable]="false">
                   <form *ngIf="updateForm" [formGroup]="updateForm">
-                    <div class="pt-2">
-                      <input type="text" id="link" formControlName="info_text" placeholder="กรอกหลักฐาน"
+                    <div>
+                      <label for="information"
+                                class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">
+                                Information details:
+                              </label>
+
+                      <input type="text" id="link" formControlName="info_text" 
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         required />
 
@@ -192,10 +200,10 @@
                         Please enter your Information.
                       </div>
 
-                      <div class="pt-3">
+                      <div class="grid justify-items-center mt-3">
                         <button *ngIf="selectedDescriptionIndex !== null" (click)="saveAddInformation()" type="button"
                           [disabled]="updateForm.get('info_text')?.invalid"
-                          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                          class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
                           Save
                         </button>
                       </div>

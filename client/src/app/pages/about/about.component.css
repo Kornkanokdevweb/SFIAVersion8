@@ -1,7 +1,28 @@
-.gradient {
-    background: linear-gradient(90deg, rgba(14, 165, 233, 1) 0%, rgba(165, 243, 252, 1) 100%);
+.custom-background {
+    border-radius: 100% 20% 0 0 / 160px 10px 0 0; 
+    background-color: #facc15; 
+    padding: 90px; 
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
-.col-span-1:hover {
-    transform: scale(1.05);
+.about-us {
+    font-family: sans-serif;
 }
+
+.What-is-SFIA{
+    font-family: sans-serif;
+}
+
+.our-Team {
+    font-family: sans-serif;
+}
+
+
+
+
+
+
+
+
+
