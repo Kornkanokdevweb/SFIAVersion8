@@ -1,33 +1,51 @@
 <div class="container max-w-screen-xl mx-auto p-2 mb-3">
   <h5 class="text-lg font-semibold text-center">History</h5>
+
+  <!--dropdown select -->  
+
+  <div class="relative inline-block text-left">
+    <div>
+      <button (click)="toggleDropdown()" type="button" class="inline-flex w-60 justify-between gap-x-1.5 rounded-md bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        {{ selectedSkill || 'All Skills' }} <!-- แสดงค่าที่เลือก หรือ 'All Skills' ถ้ายังไม่มีการเลือก -->
+        <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+    <div *ngIf="isDropdownVisible" class="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+      <div (click)="selectSkill('')" class="text-gray-700 block px-4 py-2 text-sm active:bg-gray-100 text-gray-900 hover:bg-gray-100 text-gray-900 cursor-pointer">
+        All Skills
+      </div>
+      <div *ngFor="let skillAndLevel of dropdownSkillUnique" class="py-1" role="none" >
+        <!-- Use dropdownSkillUnique for filter dropdown -->
+        <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+        <div (click)="selectSkill(skillAndLevel.skillName === 'All Skills' ? 'All Skills' : skillAndLevel.skillName)" class="text-gray-700 block px-4 py-2 text-sm active:bg-gray-100 text-gray-900 hover:bg-gray-100 text-gray-900 cursor-pointer">
+          {{ skillAndLevel.skillName }}
+        </div>
+      </div>      
+    </div>
+  </div>
+
+  <!--table data -->
   <div class="grid grid-cols-12 gap-4 pt-4">
     <div class="col-span-12 rounded-sm bg-white xl:col-span-8 border border-slate-400">
       <div class="overflow-x-auto">
         <table
           class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-collapse border border-slate-400">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-sky-200 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" class="px-6 py-3">Skill</th>
               <th scope="col" class="px-6 py-3">Level</th>
               <th scope="col" class="px-6 py-3">Percentage</th>
-              <th scope="col" class="px-6 py-3">Option</th>
             </tr>
           </thead>
-          <tbody *ngFor="let skillAndLevel of allSkillsAndLevels | paginate: { itemsPerPage: pageSize, currentPage: currentPage}">
+          <tbody *ngFor="let skillAndLevel of (selectedSkill ? filteredSkillsAndLevels : allSkillsAndLevels) | paginate: { itemsPerPage: pageSize, currentPage: currentPage}">
             <tr>
-              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white hover:text-rose-600 cursor-pointer">
+              <th (click)="clickToDetail(skillAndLevel.codeSkill, skillAndLevel.levelName)" scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white hover:text-rose-600 cursor-pointer">
                 {{ skillAndLevel.skillName }} ({{skillAndLevel.codeSkill}})
               </th>
               <td class="px-6 py-4 ">{{ skillAndLevel.levelName }}</td>
               <td class="px-6 py-4 ">{{ skillAndLevel.percentage }}%</td>
-              <td class="px-6 py-4 space-x-3">
-                <button (click)="clickToDetail(skillAndLevel.codeSkill, skillAndLevel.levelName)">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-                    <path
-                      d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z" />
-                  </svg>
-                </button>
-              </td>
             </tr>
           </tbody>
         </table>
@@ -36,10 +54,12 @@
         <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
       </div>
     </div>
-
+    <!-- <div *ngFor="let skillAndLevel of allSkillsAndLevels">
+      ({{skillAndLevel.codeSkill}}), {{ skillAndLevel.levelName }}, {{ skillAndLevel.percentage }}
+    </div> -->
     <div id="chart"
       class="col-span-12 rounded-2xl border border-stroke bg-white xl:col-span-4 grid ">
-      <h5 class="text-base text-center font-semibold">Skill Analysis</h5>
+      <h5 class="text-base text-center font-semibold pt-3">Skill Analysis</h5>
         <apx-chart
         [series]="spiderChartOptions.series"
         [chart]="spiderChartOptions.chart"

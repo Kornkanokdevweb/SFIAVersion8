@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { StoreEmailService } from 'src/app/service/store-email.service';
+
+const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 @Component({
   selector: 'app-reset-password',
@@ -14,6 +16,7 @@ import { StoreEmailService } from 'src/app/service/store-email.service';
 export class ResetPasswordComponent implements OnInit {
 
   resetForm!: FormGroup;
+  isLoading: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,13 +29,14 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.resetForm = this.formBuilder.group({
-      email: ''
+      email:  ['', [Validators.required, Validators.pattern(emailValidator)]],
     })
   }
 
   resetPassword() {
     const email = this.resetForm.getRawValue().email; // รับค่าอีเมลจากฟอร์ม
     this.emailService.setEmail(email); // เซ็ตค่า email ด้วย Service
+    this.isLoading = true;
 
     // เข้าถึงค่า email จาก Service และ log ออกมา
     const storedEmail = this.emailService.getEmail();
@@ -44,6 +48,7 @@ export class ResetPasswordComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'OTP sent successfully.' });
         setTimeout(() => {
           this.router.navigate(['/recovery-password']);
+          this.isLoading = false;
         }, 3000); // Delay in milliseconds
 
         console.log('OTP sent successfully:');

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // เพิ่ม Validators เข้ามา
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { StoreEmailService } from 'src/app/service/store-email.service';
 import { MessageService } from 'primeng/api';
+
+const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
 
 @Component({
   selector: 'app-reset',
@@ -33,13 +35,16 @@ export class ResetComponent implements OnInit {
 
     this.resetForm = this.formBuilder.group(
       {
-        newPassword: '',
-        confirmPassword: ''
+        newPassword: ['', [Validators.required, Validators.pattern(passwordValidator)]],
+        confirmPassword: ['', Validators.required],
       },
     );
   }
 
   resetPassword() {
+    if (this.resetForm.invalid) {
+      return;
+    }
     const newPassword = this.resetForm.get('newPassword')?.value;
     const confirmPassword = this.resetForm.get('confirmPassword')?.value;
 

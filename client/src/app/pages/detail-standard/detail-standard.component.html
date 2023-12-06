@@ -1,19 +1,23 @@
 <div class="container max-w-screen-xl mx-auto mb-3 mt-8">
-  <div
-    class="px-4 bg-sky-200 pb-8 pr-5 pl-5 border border-gray-200 rounded-lg shadow-md">
-    <div class="grid justify-items-center">
-      <div class="w-full p-6" *ngFor="let skill of skillDetails">
-        <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-          {{ skill.skill_name }}
-        </h5>
-        <div>
-          <p class="font-normal text-gray-700 dark:text-gray-400">
-            {{ skill.overall }}
-          </p>
+  <div class="px-4 bg-sky-200 pb-8 pr-5 pl-5 border border-gray-200 rounded-lg shadow-md">
+    <div class="">
+      <div class="flex">
+        <div class="w-full py-6" *ngFor="let skill of skillDetails">
+          <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+            {{ skill.skill_name }}
+          </h5>
+          <div>
+            <p class="font-normal text-gray-700 dark:text-gray-400">
+              {{ skill.overall }}
+            </p>
+          </div>
+        </div>
+        <div class="flex justify-end items-center ">
+            <div class="bg-white h-12 w-20 rounded-lg text-center grid items-center">90%</div>
         </div>
       </div>
 
-      <div class="w-full mx-5 md:mx-10 p-8 bg-white rounded-lg" *ngFor="let skill of skillDetails">
+      <div class="w-full p-6 bg-white rounded-lg" *ngFor="let skill of skillDetails">
         <p class="font-normal text-gray-700 dark:text-gray-400 text-sm">
           {{ skill.note }}
         </p>
@@ -99,7 +103,7 @@
                         </ng-container>
                       </p>
                     </div>
-                    
+
                     <!-- Edit button -->
                     <div class="flex md:order-2 space-x-2">
                       <div>
@@ -113,7 +117,8 @@
                             </button>
                           </div>
                         </div>
-                        <p-dialog header="Edit Information" [(visible)]="displayEditInformation" [style]="{width: '50vw','font-family': 'Inter, sans-serif'}" [draggable]="false">
+                        <p-dialog header="Edit Information" [(visible)]="displayEditInformation"
+                          [style]="{width: '50vw','font-family': 'Inter, sans-serif'}" [draggable]="false">
                           <form [formGroup]="updateForm">
                             <div>
                               <label for="information"
@@ -121,20 +126,22 @@
                                 Information details:
                               </label>
                               <input formControlName="info_text" type="text" id="information"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
-                                <div *ngIf="updateForm.get('info_text')?.invalid" class="text-red-500 text-sm mt-1 ">
-                                  Please enter your Information.
-                                </div>
-                                <div class="grid justify-items-center mt-3">
-                                  <button type="submit" (click)="saveEditInformation()"  [disabled]="updateForm.get('info_text')?.invalid"
-                                    class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-                                    Save
-                                  </button>
-                                </div>
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required />
+                              <div *ngIf="updateForm.get('info_text')?.invalid" class="text-red-500 text-sm mt-1 ">
+                                Please enter your Information.
+                              </div>
+                              <div class="grid justify-items-center mt-3">
+                                <button type="submit" (click)="saveEditInformation()"
+                                  [disabled]="updateForm.get('info_text')?.invalid"
+                                  class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
+                                  Save
+                                </button>
+                              </div>
 
 
                             </div>
-                            
+
                           </form>
                         </p-dialog>
                       </div>
@@ -184,15 +191,15 @@
 
               <!-- ADD information -->
               <form>
-                <p-dialog header="Add Information" [(visible)]="visible[i]" [style]="{ width: '50vw' }" [draggable]="false">
+                <p-dialog header="Add Information" [(visible)]="visible[i]" [style]="{ width: '50vw' }"
+                  [draggable]="false">
                   <form *ngIf="updateForm" [formGroup]="updateForm">
                     <div>
-                      <label for="information"
-                                class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">
-                                Information details:
-                              </label>
+                      <label for="information" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">
+                        Information details:
+                      </label>
 
-                      <input type="text" id="link" formControlName="info_text" 
+                      <input type="text" id="link" formControlName="info_text"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         required />
 
