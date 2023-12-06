@@ -379,7 +379,7 @@ exports.createResetSession = async (req: Request, res: Response) => {
     req.app.locals.resetSession = false; // allow accees to this route only once
     return res.status(201).send({ msg: "Access granted!" });
   }
-  return res.status(440).send({ error: "Session has expired!" });
+  return res.status(404).send({ error: "Session has expired!" });
 };
 
 //update the password when we have valid session
@@ -396,6 +396,13 @@ exports.resetPassword = async (req: Request, res: Response) => {
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
+    }
+
+    //Check if the new password is the same as the old password
+    const isSamePassword = await matchPassword(password, user.password);
+
+    if(isSamePassword){
+      return res.status(404).json({ error: "New password must be different from the old password" });
     }
 
     // Hash the new password

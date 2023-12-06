@@ -74,10 +74,18 @@ export class ResetComponent implements OnInit {
 
       },
       (error) => {
-        // จัดการข้อผิดพลาดเมื่อการรีเซ็ตรหัสผ่านไม่สำเร็จ
-        console.error('Password reset failed:', error);
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Password reset failed' });
-        // คุณสามารถแสดงข้อความผิดพลาดหรือทำการจัดการเพิ่มเติมได้ตามความเหมาะสม
+        if (error.error && error.error.error === 'New password must be different from the old password') {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Password reset failed. New password must be different from the old password',
+          });
+        } else{
+          // จัดการข้อผิดพลาดเมื่อการรีเซ็ตรหัสผ่านไม่สำเร็จ
+          console.error('Password reset failed:', error);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Password reset failed' });
+          // คุณสามารถแสดงข้อความผิดพลาดหรือทำการจัดการเพิ่มเติมได้ตามความเหมาะสม
+        }
       }
     );
   }

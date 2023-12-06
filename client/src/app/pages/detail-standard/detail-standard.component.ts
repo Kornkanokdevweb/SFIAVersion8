@@ -4,6 +4,7 @@ import { Emitter } from 'src/app/emitters/emitter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 interface Information {
   info_id: number;
@@ -41,12 +42,15 @@ export class DetailStandardComponent implements OnInit {
 
   percentageMap: Map<string, number> = new Map(); // สร้าง Map เพื่อเก็บ percentageForLevel
 
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
+
   constructor(
     private messageService: MessageService,
     private route: ActivatedRoute,
     private http: HttpClient,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private envEndpointService: EnvEndpointService
   ) {
     this.updateForm = this.formBuilder.group({
       info_id: '',
@@ -64,7 +68,7 @@ export class DetailStandardComponent implements OnInit {
   }
 
   checkLoginStatus() {
-    this.http.get('http://localhost:8080/api/user').subscribe({
+    this.http.get(`${this.ENV_REST_API}/user`).subscribe({ 
       next: (res: any) => {
         Emitter.authEmitter.emit(true);
         this.isLoggedIn = true;
@@ -77,9 +81,8 @@ export class DetailStandardComponent implements OnInit {
 
   fetchSkillDetails() {
     let temporarySkillDetails: any[] = [];
-    console.log(temporarySkillDetails);
     this.http
-      .get(`http://localhost:8080/api/search?codeskill=${this.codeskill}`)
+      .get(`${this.ENV_REST_API}/search?codeskill=${this.codeskill}`)
       .subscribe(
         (details: any) => {
           console.log(details);
@@ -119,7 +122,7 @@ export class DetailStandardComponent implements OnInit {
 
               console.log(descLengthMap);
               console.log(
-                `Length of desc${ids} for ${levelName}: ${descLength}`
+                `Length of ${levelName} for desc${ids}: ${descLength}`
               );
 
               return {
@@ -132,12 +135,12 @@ export class DetailStandardComponent implements OnInit {
             }
           );
           console.log(descids); // ค่า descids ได้ถูกเก็บในตัวแปรนี้
-          console.log(this.skillDetails);
+
           temporarySkillDetails = this.skillDetails;
           console.log(this.skillDetails);
 
           this.http
-            .get(`http://localhost:8080/api/getDatacollection`, {
+            .get(`${this.ENV_REST_API}/getDatacollection`, {
               withCredentials: true,
             })
             .subscribe(
@@ -154,7 +157,7 @@ export class DetailStandardComponent implements OnInit {
 
                     return { info_id, info_text, descid };
                   });
-                console.log(this.information);
+                console.log('Have Data Current:', this.information);
                 this.information.sort((a, b) =>
                   a.descid.localeCompare(b.descid)
                 );
@@ -165,7 +168,7 @@ export class DetailStandardComponent implements OnInit {
                   const levelDetails = temporarySkillDetails.find(
                     (detail) => detail.level_name === levelName
                   );
-                  console.log(levelDetails);
+                  // console.log(levelDetails);
                   if (levelDetails) {
                     const descIdsForLevel = levelDetails.description.desc;
                     const descIdsWithInformationForLevel =
@@ -174,24 +177,23 @@ export class DetailStandardComponent implements OnInit {
                       );
                       const percentageForLevel = parseFloat(((descIdsWithInformationForLevel.length / descIdsForLevel.length) * 100).toFixed(2));
                       this.percentageMap.set(levelName, percentageForLevel);
-                      console.log(descIdsWithInformationForLevel.length, descIdsForLevel.length);
-                      console.log(`Percentage for ${levelName}: ${percentageForLevel}`);
-                      
+                      console.log(levelDetails, '=>', 'ข้อมูลทั้งหมดมีจำนวน: ',descIdsForLevel.length, 'มีข้อมูลแล้วจำนวน: ',descIdsWithInformationForLevel.length, `Percentage of ${levelName}: `, percentageForLevel);
+                      // console.log(`Percentage for ${levelName}: ${percentageForLevel}`);
                   }
                 });
 
                 // const descIdsWithInformation = this.getDescIdsWithInformation(this.information, descids);
                 this.percentage =
                   (descIdsWithInformation.length / descids.length) * 100;
-                console.log(descids.length);
-                console.log(this.information); // แสดงข้อมูล information ในคอนโซล
+                this.percentage = +this.percentage.toFixed(2);
+                console.log(`Percentage all of codeSkill:`, this.percentage)
+                console.log(`Value length of descIds is:`, descids.length);
+                console.log(`User Have Value length of descIds is:`, this.information);
               },
               (error) => {
                 console.error('Error fetching skill details:', error);
               }
             );
-
-          this.getInformation(descids);
 
           this.skillDetails = details;
           this.levelNames = details[0].levels.map(
@@ -208,7 +210,7 @@ export class DetailStandardComponent implements OnInit {
   showDetails(levelName: string) {
     this.http
       .get(
-        `http://localhost:8080/api/search?codeskill=${this.codeskill}&level_name=${levelName}`
+        `${this.ENV_REST_API}/search?codeskill=${this.codeskill}&level_name=${levelName}`
       )
       .subscribe((details: any) => {
         this.selectedMetal = levelName;
@@ -226,7 +228,7 @@ export class DetailStandardComponent implements OnInit {
             const descid = level.descriptions[0]?.id || '';
             return { description_text, descid };
           });
-          console.log(descriptions);
+
           // รวมข้อมูลใน descriptions และเขียนเป็นข้อความที่สามารถแสดงได้ใน HTML
           this.selectedLevelDescriptions = descriptions;
           console.log(this.selectedLevelDescriptions);
@@ -235,65 +237,13 @@ export class DetailStandardComponent implements OnInit {
           );
           console.log('descidssss', descids);
           console.log(this.selectedLevelDescriptions);
-          this.getInformation(descids);
+          // this.getInformation(descids);
         } else {
           this.selectedLevelDescriptions = [
             { description_text: 'Level not found', descid: '' },
           ];
         }
       });
-  }
-
-  //!!Edit Type information: any[] => information: Information[] */
-  getDescIdsWithInformation(information: Information[], descids: string[]): string[] {
-    const descIdsWithInformation = information.map((info) => info.descid);
-    console.log('descid ที่มีข้อมูลinfo', descIdsWithInformation);
-    console.log('descid ทั้งหมดของเลเวลนั้น', descids);
-    const percentage = (descIdsWithInformation.length / descids.length) * 100;
-    console.log(`Percentage for this level: ${percentage}%`);
-    return descIdsWithInformation;
-  }
-
-  getInformation(descids: string[]) {
-    console.log(descids);
-    this.http
-      .get(`http://localhost:8080/api/getDatacollection`, {
-        withCredentials: true,
-      })
-      .subscribe(
-        (data: any) => {
-          // กรองข้อมูล info_text โดยใช้ descids
-          console.log(data.descriptionsWithLevel);
-          this.information = data.information
-            .filter((info: { description: { id: string } }) =>
-              descids.includes(info.description.id.toString())
-            )
-            .map((info: any) => {
-              const info_id = info.id;
-              const info_text = info.info_text;
-              const descid = info.description.id.toString();
-
-              return { info_id, info_text, descid };
-            });
-          this.information.sort((a, b) => {
-            return a.descid.localeCompare(b.descid);
-          });
-
-          const descIdsWithInformation = this.getDescIdsWithInformation(
-            this.information,
-            descids
-          );
-          console.log(this.information);
-          this.percentage =
-            (descIdsWithInformation.length / descids.length) * 100;
-          console.log(descIdsWithInformation.length);
-          console.log(this.percentage);
-          console.log(this.information); // แสดงข้อมูล information ในคอนโซล
-        },
-        (error) => {
-          console.error('Error fetching skill details:', error);
-        }
-      );
   }
 
   getInformationByDescid(descid: string): string {
@@ -329,7 +279,7 @@ export class DetailStandardComponent implements OnInit {
         this.selectedLevelDescriptions[this.selectedDescriptionIndex].descid;
     
       this.http
-        .post(`http://localhost:8080/api/createDatacollection`, formData, {
+        .post(`${this.ENV_REST_API}/createDatacollection`, formData, {
           params: { descriptionId: descid },
           withCredentials: true,
         })
@@ -404,16 +354,14 @@ export class DetailStandardComponent implements OnInit {
 
     console.log(informationId);
     this.http
-      .put(`http://localhost:8080/api/updateDatacollection`, formData, {
+      .put(`${this.ENV_REST_API}/updateDatacollection`, formData, {
         params: { informationId: informationId },
         withCredentials: true,
       })
       .subscribe({
         next: (res: any) => {
           console.log('Information updated successfully:', res);
-          this.getInformation(
-            this.selectedLevelDescriptions.map((desc) => desc.descid)
-          );
+          this.fetchSkillDetails();
           this.displayEditInformation = false;
         },
         error: (err) => {
@@ -446,16 +394,14 @@ export class DetailStandardComponent implements OnInit {
     console.log(informationId);
 
     this.http
-      .delete(`http://localhost:8080/api/deleteDatacollection`, {
+      .delete(`${this.ENV_REST_API}/deleteDatacollection`, {
         params: { informationId: informationId },
         withCredentials: true,
       })
       .subscribe({
         next: (res) => {
           console.log('Information deleted successfully:', res);
-          this.getInformation(
-            this.selectedLevelDescriptions.map((desc) => desc.descid)
-          );
+          this.fetchSkillDetails();
           this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'success',

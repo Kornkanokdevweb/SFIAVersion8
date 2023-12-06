@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { initFlowbite } from 'flowbite';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import * as AOS from 'aos'
 
 @Component({
   selector: 'app-root',
@@ -20,5 +21,10 @@ export class AppComponent {
         this.hideNavbarAndFooter = event.url === '/portfolio-information';
       }
     });
+  }
+
+  ngOnInit(){
+    AOS.init()
+    window.addEventListener('load',AOS.refresh)
   }
 }

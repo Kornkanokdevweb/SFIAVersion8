@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Emitter } from 'src/app/emitters/emitter'; 
+import * as AOS from 'aos'
+
 
 @Component({
   selector: 'app-about',
@@ -13,6 +15,8 @@ export class AboutComponent implements OnInit {
   ) { }
   
   ngOnInit(): void {
+    AOS.init()
+    window.addEventListener('load',AOS.refresh)
     this.http.get('http://localhost:8080/api/user')
       .subscribe({
         next: (res: any) => {
