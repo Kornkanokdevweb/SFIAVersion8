@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { StoreEmailService } from 'src/app/service/store-email.service';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -17,6 +18,7 @@ export class ResetPasswordComponent implements OnInit {
 
   resetForm!: FormGroup;
   isLoading: boolean = false;
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
 
   constructor(
     private formBuilder: FormBuilder,
@@ -24,6 +26,7 @@ export class ResetPasswordComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private emailService: StoreEmailService,
+    private envEndpointService: EnvEndpointService
   ) {
   }
 
@@ -43,7 +46,7 @@ export class ResetPasswordComponent implements OnInit {
     console.log('Email stored in service:', storedEmail);
 
     // ต่อไปคุณสามารถเรียกใช้ this.emailService.getEmail() เพื่อเข้าถึงค่า email ที่เก็บไว้
-    this.http.get(`http://localhost:8080/api/generateOTP?email=${email}`).subscribe(
+    this.http.get(`${this.ENV_REST_API}/generateOTP?email=${email}`).subscribe(
       (response) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'OTP sent successfully.' });
         setTimeout(() => {

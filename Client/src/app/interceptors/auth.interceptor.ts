@@ -6,15 +6,18 @@ import {
   HttpInterceptor, HttpErrorResponse, HttpClient
 } from '@angular/common/http';
 import { catchError, Observable, throwError, switchMap } from 'rxjs';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
   static accessToken = '';
   refresh = false;
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private envEndpointService: EnvEndpointService
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
@@ -29,7 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
       if(err.status === 401 && !this.refresh){
         this.refresh = true;
 
-        return this.http.post('http://localhost:8080/api/refresh', {}, {withCredentials: true}).pipe(
+        return this.http.post(`${this.ENV_REST_API}/refresh`, {}, {withCredentials: true}).pipe(
           switchMap((res: any) => {
             AuthInterceptor.accessToken = res.token;
             return next.handle(request.clone({

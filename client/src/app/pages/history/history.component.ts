@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 import {
   ApexChart,
   ApexAxisChartSeries,
@@ -138,6 +139,7 @@ export class HistoryComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
+    private envEndpointService: EnvEndpointService
   ) {
     this.chartOptions.series = [
       {
@@ -146,6 +148,7 @@ export class HistoryComponent implements OnInit {
       }
     ];
   }
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
 
   currentPage: number = 1;
   pageSize: number = 7;
@@ -168,7 +171,7 @@ export class HistoryComponent implements OnInit {
   }
 
   checkLogin() {
-    this.http.get('http://localhost:8080/api/user', { withCredentials: true })
+    this.http.get(`${this.ENV_REST_API}/user`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           AuthInterceptor.accessToken;
@@ -182,7 +185,7 @@ export class HistoryComponent implements OnInit {
   }
 
   getHistory() {
-    this.http.get('http://localhost:8080/api/getHistory', { withCredentials: true })
+    this.http.get(`${this.ENV_REST_API}/getHistory`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           console.log(res);
@@ -247,7 +250,7 @@ export class HistoryComponent implements OnInit {
   getPercentageSkillAndLevel(codeSkill: string, levelName: string, descIds: string[]): Promise<number> {
     return new Promise((resolve) => {
       console.log(`Code Skill: ${codeSkill}, Level: ${levelName}, DescIds: ${descIds.join(', ')}`);
-      this.http.get(`http://localhost:8080/api/search?codeskill=${codeSkill}&level_name=${levelName}`, { withCredentials: true })
+      this.http.get(`${this.ENV_REST_API}/search?codeskill=${codeSkill}&level_name=${levelName}`, { withCredentials: true })
         .subscribe((data: any) => {
           const selectedLevels = data[0]?.levels.filter((level: any) => level.level_name === levelName);
           console.log(selectedLevels);
@@ -281,7 +284,7 @@ export class HistoryComponent implements OnInit {
     this.allSkillsAndLevels.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
 
     this.spiderChartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
-
+    console.log(this.spiderChartOptions.series[0].data.length);
     this.spiderChartOptions.xaxis = {
       categories: this.allSkillsAndLevels.map(item => `${item.codeSkill} - ${item.levelName}`)
     };
@@ -292,7 +295,7 @@ export class HistoryComponent implements OnInit {
 
     this.chartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
 
-    console.log(this.chartOptions.series[0].data)
+    console.log(this.chartOptions.series[0].data.length)
 
     this.chartOptions.xaxis = {
       categories: this.allSkillsAndLevels.map(item => `${item.codeSkill} - ${item.levelName}`)
@@ -341,6 +344,8 @@ export class HistoryComponent implements OnInit {
       categories: filteredSkills.map(skill => `${skill.codeSkill} - ${skill.levelName}`)
     };
 
+    console.log(this.spiderChartOptions.series[0].data.length);
+
     this.chartOptions.series[0].data = percentages;
     this.chartOptions.xaxis = {
       categories: filteredSkills.map(skill => `${skill.codeSkill} - ${skill.levelName}`)
@@ -358,7 +363,7 @@ export class HistoryComponent implements OnInit {
   }
 
   dropDownSkills() {
-    this.http.get('http://localhost:8080/api/getHistory', { withCredentials: true })
+    this.http.get(`${this.ENV_REST_API}/getHistory`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           console.log(res);

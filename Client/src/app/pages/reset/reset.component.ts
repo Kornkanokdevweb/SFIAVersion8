@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { StoreEmailService } from 'src/app/service/store-email.service';
 import { MessageService } from 'primeng/api';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
 
@@ -16,6 +17,7 @@ const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
 export class ResetComponent implements OnInit {
   resetForm!: FormGroup;
   storedEmail: string = ''; // สร้างตัวแปรเพื่อเก็บค่า email ที่มาจาก Service
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
 
   constructor(
     private formBuilder: FormBuilder,
@@ -23,6 +25,7 @@ export class ResetComponent implements OnInit {
     private router: Router,
     private emailService: StoreEmailService,
     private messageService: MessageService,
+    private envEndpointService: EnvEndpointService
   ) { }
 
   ngOnInit(): void {
@@ -62,7 +65,7 @@ export class ResetComponent implements OnInit {
       password: newPassword
     };
 
-    this.http.put('http://localhost:8080/api/resetPassword', resetData).subscribe(
+    this.http.put(`${this.ENV_REST_API}/resetPassword`, resetData).subscribe(
       (response: any) => {
         // รับข้อมูลการตอบสนองจาก API เมื่อรีเซ็ตรหัสผ่านสำเร็จ
         console.log('Password reset successfull:', response);

@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Emitter } from 'src/app/emitters/emitter';
 import { MessageService } from 'primeng/api';
-
-const API_URL = 'http://localhost:8080/api';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 interface UserProfile {
   profileImage: string;
@@ -36,6 +35,7 @@ const lineIdValidator = /^[\w-]{1,100}$/;
 })
 export class ProfileComponent implements OnInit {
 
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
   images: any;
   selectedImageURL: string | undefined;
 
@@ -58,6 +58,7 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
+    private envEndpointService: EnvEndpointService
   ) {
     this.updateForm = this.formBuilder.group({
       profileImage: '',
@@ -77,7 +78,7 @@ export class ProfileComponent implements OnInit {
   }
 
   fetchUserData(): void {
-    this.http.get<UserProfile>(`${API_URL}/user`, { withCredentials: true })
+    this.http.get<UserProfile>(`${this.ENV_REST_API}/user`, { withCredentials: true })
       .subscribe({
         next: (res) => {
           this.user = res;
@@ -112,7 +113,7 @@ export class ProfileComponent implements OnInit {
 
     console.log('Updated Data:', updatedData);
 
-    this.http.put(`${API_URL}/updateUser`, formData, { withCredentials: true })
+    this.http.put(`${this.ENV_REST_API}/updateUser`, formData, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile updated successfully' });

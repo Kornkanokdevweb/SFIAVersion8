@@ -54,7 +54,7 @@ export class DetailStandardComponent implements OnInit {
   ) {
     this.updateForm = this.formBuilder.group({
       info_id: '',
-      info_text: ['', Validators.required],
+      info_text: ['', [Validators.required, Validators.pattern('^(https?|ftp):\\/\\/(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(\\/[^\\s]*)?$')]],
       descid: '',
     });
   }
@@ -450,16 +450,29 @@ export class DetailStandardComponent implements OnInit {
     const urlParts = fullURL.split('/');
     let displayURL = urlParts[urlParts.length - 1];
   
-    // Remove trailing spaces
     displayURL = displayURL.trim();
-  
-    // Check if the displayURL is longer than the specified maxLength
+
     if (displayURL.length > maxLength) {
       return displayURL.substr(0, maxLength) + '...';
     }
-  
-    // Check if displayURL is not empty or just spaces
+
     return displayURL.trim() !== '' ? displayURL : fullURL;
   }
+
+
+  getSkillColorClass(percentage: number | undefined): string {
+    if (percentage !== undefined) {
+      if (percentage >= 0 && percentage <= 50) {
+        return 'bg-yellow-200';
+      } else if (percentage > 50 && percentage <= 99) {
+        return 'bg-orange-400';
+      } else {
+        return 'bg-green-500';
+      }
+    }
+    return ''; 
+  }
+  
+
   
 }

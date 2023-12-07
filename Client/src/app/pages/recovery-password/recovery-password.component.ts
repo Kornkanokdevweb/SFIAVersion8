@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { StoreEmailService } from 'src/app/service/store-email.service';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 @Component({
   selector: 'app-recovery-password',
@@ -15,6 +16,8 @@ export class RecoveryPasswordComponent implements OnInit {
   recoveryForm!: FormGroup;
   storedEmail: string = '';
 
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
+
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
@@ -22,7 +25,8 @@ export class RecoveryPasswordComponent implements OnInit {
     private messageService: MessageService,
     private emailService: StoreEmailService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private envEndpointService: EnvEndpointService
   ) { }
 
   ngOnInit(): void {
@@ -90,7 +94,7 @@ export class RecoveryPasswordComponent implements OnInit {
       email: this.storedEmail
     };
 
-    this.http.get('http://localhost:8080/api/verifyOTP', { params: recoveryData })
+    this.http.get(`${this.ENV_REST_API}/verifyOTP`, { params: recoveryData })
       .subscribe(
         (response: any) => {
           if (response.message === "Verify Success") {
@@ -112,7 +116,7 @@ export class RecoveryPasswordComponent implements OnInit {
 
   resendOTP() {
     const email = this.storedEmail; // ใช้ค่า email ที่เก็บไว้
-    this.http.get(`http://localhost:8080/api/generateOTP?email=${email}`).subscribe(
+    this.http.get(`${this.ENV_REST_API}/generateOTP?email=${email}`).subscribe(
       (response) => {
         console.log('OTP sent successfully:');
         // ทำสิ่งที่คุณต้องการเมื่อ OTP ถูกส่ง

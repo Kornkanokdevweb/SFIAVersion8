@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -19,17 +20,20 @@ export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
 
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
+
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router,
     private messageService: MessageService,
+    private envEndpointService: EnvEndpointService
   ) {
 
   }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:8080/api/user')
+    this.http.get(`${this.ENV_REST_API}/user`)
       .subscribe({
         next: (res: any) => {
           this.router.navigate(['/']);
@@ -45,7 +49,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.http.post('http://localhost:8080/api/login', this.loginForm.getRawValue(), { withCredentials: true })
+    this.http.post(`${this.ENV_REST_API}/login`, this.loginForm.getRawValue(), { withCredentials: true })
       .subscribe(
         (res: any) => {
           AuthInterceptor.accessToken = res.token;

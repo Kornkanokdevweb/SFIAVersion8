@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { Emitter } from 'src/app/emitters/emitter';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 @Component({
   selector: 'app-download',
@@ -9,12 +10,16 @@ import { Emitter } from 'src/app/emitters/emitter';
   styleUrls: ['./download.component.css']
 })
 export class DownloadComponent implements OnInit {
+
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
+
   constructor(
     private http: HttpClient,
+    private envEndpointService: EnvEndpointService
   ) { }
 
   ngOnInit(): void {
-    this.http.get('http://localhost:8080/api/user', { withCredentials: true })
+    this.http.get(`${this.ENV_REST_API}/user`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           Emitter.authEmitter.emit(true)

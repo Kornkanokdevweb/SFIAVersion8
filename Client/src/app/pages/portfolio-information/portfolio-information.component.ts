@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import * as html2pdf from 'html2pdf.js'
-
-const API_URL = 'http://localhost:8080/api';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 interface UserProfile {
   profileImage: string;
@@ -48,6 +47,8 @@ interface ExperienceInfo {
 
 export class PortfolioInformationComponent implements OnInit {
 
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
+
   images: any;
   selectedImageURL: string | undefined;
 
@@ -72,6 +73,7 @@ export class PortfolioInformationComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private formBuilder: FormBuilder,
+    private envEndpointService: EnvEndpointService
   ) {
     this.updateForm = this.formBuilder.group({
       education_id: '',
@@ -96,7 +98,7 @@ export class PortfolioInformationComponent implements OnInit {
 
   fetchData(): void {
     this.http
-      .get<any>(`${API_URL}/getExportPortfolio`, { withCredentials: true })
+      .get<any>(`${this.ENV_REST_API}/getExportPortfolio`, { withCredentials: true })
       .subscribe({
         next: (res) => {
           console.log(res);
