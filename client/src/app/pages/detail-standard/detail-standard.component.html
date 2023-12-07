@@ -47,7 +47,7 @@
                   <div class="flex justify-between mb-1">
                     <span class="text-sm font-medium text-gray-700 dark:text-gray-900">Technical Skills:</span>
                     <span class="text-sm font-medium text-blue-700 dark:text-blue-500">{{ percentageMap.get(levelName) ??
-                      "N/A" }}%</span>
+                      "0" }}%</span>
                   </div>
                   <div class="w-full bg-gray-100 rounded-full h-2.5 dark:bg-gray-700">
                     <div class="h-2.5 rounded-full" [ngStyle]="{ 'width.%': percentageMap.get(levelName) }"
@@ -75,7 +75,8 @@
           <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
             <td class="grid grid-cols-3 gap-4 pt-6 px-6 py-4">
               <div class="col-span-3">
-                {{ selectedLevelDescriptions[i].description_text }}
+                {{[i+1]}}.  {{ selectedLevelDescriptions[i].description_text }}
+                <div>
                 <div class="flex items-center mt-3">
                   <ng-container *ngIf="
                       !getInformationByDescid(selectedLevelDescriptions[i].descid)
@@ -177,9 +178,7 @@
                                   Please enter your URL information.
                                 </div>
                                 <div class="grid justify-items-center mt-3">
-                                  <button type="submit" (click)="saveEditInformation()" [disabled]="
-                                      updateForm.get('info_text')?.invalid
-                                    "
+                                  <button type="submit" (click)="saveEditInformation()" [disabled]="updateForm.get('info_text')?.invalid || isLoading"
                                     class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
                                     Save
                                   </button>
@@ -229,6 +228,7 @@
                   </div>
                 </div>
               </div>
+              </div>
 
               <!-- ADD information -->
               <form>
@@ -250,7 +250,7 @@
 
                       <div class="grid justify-items-center mt-3">
                         <button *ngIf="selectedDescriptionIndex !== null" (click)="saveAddInformation()" type="button"
-                          [disabled]="updateForm.get('info_text')?.invalid"
+                          [disabled]="updateForm.get('info_text')?.invalid || isLoading"
                           class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
                           Save
                         </button>

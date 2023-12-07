@@ -57,6 +57,8 @@ export class HistoryComponent implements OnInit {
 
   selectedSkill: string | null = null;
 
+  skillDetails: any;
+
   filteredSkillsAndLevels: SkillAndLevel[] = [];
 
   toggleDropdown() {
@@ -139,7 +141,7 @@ export class HistoryComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private envEndpointService: EnvEndpointService
+    private envEndpointService: EnvEndpointService,
   ) {
     this.chartOptions.series = [
       {
@@ -197,7 +199,7 @@ export class HistoryComponent implements OnInit {
             const codeSkill = description.uniqueSkills[0].codeskill;
             const levelName = description.level.level_name;
             console.log(codeSkill, levelName);
-
+            this.fetchSkillDetails(codeSkill);
             if (!groupedByCodeSkillAndLevel.has(codeSkill)) {
               groupedByCodeSkillAndLevel.set(codeSkill, new Map<string, SkillAndLevel>());
             }
@@ -239,7 +241,6 @@ export class HistoryComponent implements OnInit {
 
             this.updateSpiderChartData();
             this.updateChartData()
-
 
             console.log(this.spiderChartOptions.xaxis);
           });
@@ -284,10 +285,23 @@ export class HistoryComponent implements OnInit {
     this.allSkillsAndLevels.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
 
     this.spiderChartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
-    console.log(this.spiderChartOptions.series[0].data.length);
+    // console.log(this.spiderChartOptions.series[0].data.length);
+    if (this.spiderChartOptions.series[0].data.length < 6) {
+      const remainingLength = 6 - this.spiderChartOptions.series[0].data.length;
+      for (let i = 0; i < remainingLength; i++) {
+        this.spiderChartOptions.series[0].data.push('0' as any);
+      }
+    }
     this.spiderChartOptions.xaxis = {
       categories: this.allSkillsAndLevels.map(item => `${item.codeSkill} - ${item.levelName}`)
     };
+    // console.log(this.spiderChartOptions.xaxis.categories.length);
+    if(this.spiderChartOptions.xaxis.categories.length < 3){
+      const remainingLength = 6 - this.spiderChartOptions.xaxis.categories.length;
+      for (let i = 0; i < remainingLength; i++) {
+        this.spiderChartOptions.xaxis.categories.push('' as any);
+      }
+    }
   }
 
   updateChartData() {
@@ -322,7 +336,7 @@ export class HistoryComponent implements OnInit {
     this.selectedSkill = skillName;
     this.filterSkills();
     this.isDropdownVisible = false;
-    this.currentPage = 1;
+    this.currentPage = 1;   
 
     const filteredSkills = this.allSkillsAndLevels.filter(skill => skill.skillName === skillName);
   
@@ -392,4 +406,15 @@ export class HistoryComponent implements OnInit {
       });
   }
 
+  fetchSkillDetails(codeSkill: string) {
+    console.log(codeSkill);
+    this.http
+      .get(`${this.ENV_REST_API}/search?codeskill=${codeSkill}`)
+      .subscribe(
+        (details: any) => {
+          console.log(codeSkill);
+          const allDescids = (details[0].levels.length);
+          console.log(allDescids)
+        }
+      )}
 }
