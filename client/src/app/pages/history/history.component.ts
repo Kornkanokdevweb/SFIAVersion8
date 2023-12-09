@@ -113,7 +113,7 @@ export class HistoryComponent implements OnInit {
     },
     yaxis: {
       title: {
-        text: "Servings"
+        text: "DataChart of CodeSkill"
       }
     },
 
@@ -354,9 +354,22 @@ export class HistoryComponent implements OnInit {
     });
   
     this.spiderChartOptions.series[0].data = percentages;
+    if (this.spiderChartOptions.series[0].data.length < 6) {
+      const remainingLength = 6 - this.spiderChartOptions.series[0].data.length;
+      for (let i = 0; i < remainingLength; i++) {
+        this.spiderChartOptions.series[0].data.push('0' as any);
+      }
+    }
+
     this.spiderChartOptions.xaxis = {
       categories: filteredSkills.map(skill => `${skill.codeSkill} - ${skill.levelName}`)
     };
+    if(this.spiderChartOptions.xaxis.categories.length < 3){
+      const remainingLength = 6 - this.spiderChartOptions.xaxis.categories.length;
+      for (let i = 0; i < remainingLength; i++) {
+        this.spiderChartOptions.xaxis.categories.push('' as any);
+      }
+    }
 
     console.log(this.spiderChartOptions.series[0].data.length);
 
