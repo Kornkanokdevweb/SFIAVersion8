@@ -324,6 +324,8 @@ exports.updateUser = async (req: Request, res: Response) => {
       address,
     } = req.body;
 
+
+    
     user.firstNameTH = firstNameTH;
     user.lastNameTH = lastNameTH;
     user.firstNameEN = firstNameEN;

@@ -9,9 +9,9 @@
   </div>
   <div *ngFor="let educationItem of education" class="flex flex-wrap items-center justify-between pt-3 space-x-5">
     <div
-      class="w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-800">
+      class="w-64 md:w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-2 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-800">
       <p>
-        <span class="font-semibold">Start Year : </span> {{ educationItem.syear }} - <span class="font-semibold">End
+        <span class="font-semibold">Start Year : </span> {{ educationItem.syear }} <br><span class="font-semibold">End
           Year : </span>
         {{ educationItem.eyear }}
       </p>
@@ -37,25 +37,25 @@
                 Year</label>
               <input formControlName="syear" type="number" id="start_year" min="2000" max="2100"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="กรอกปีที่เข้าการศึกษา" required />
+                placeholder="Enter the year of study" required />
             </div>
             <div>
               <label for="end_year" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">End
                 year</label>
-              <input formControlName="eyear" type="number" id="start_year" min="2000" max="2100"
+              <input formControlName="eyear" type="number" id="end_year" min="2000" max="2100"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="กรอกปีที่จบการศึกษา" required />
+                placeholder="Enter the year of graduation" required />
             </div>
             <div>
-              <label for="company" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Level of
+              <label for="lavel_edu" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Level of
                 education</label>
               <select formControlName="level_edu" id="education"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required>
-                <option value="" disabled selected>เลือกวุฒิการศึกษา</option>
-                <option value="ปริญญาตรี">ปริญญาตรี</option>
-                <option value="ปริญญาโท">ปริญญาโท</option>
-                <option value="ปริญญาเอก">ปริญญาเอก</option>
+                <option value="" disabled selected>Choose your educational qualification</option>
+                <option value="Bachelor's degree">Bachelor's degree</option>
+                <option value="Master's degree">Master's degree</option>
+                <option value="Doctor's degree">Doctor's degree</option>
               </select>
             </div>
           </div>
@@ -64,22 +64,22 @@
               class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">University</label>
             <input formControlName="universe" type="text" id="university"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="กรอกมหาวิทยาลัย" required />
+              placeholder="Enter university information" required />
           </div>
           <div class="mb-6">
-            <label for="password" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Faculty</label>
+            <label for="faculty" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Faculty</label>
             <input formControlName="faculty" type="text" id="faculty"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="กรอกคณะ" required />
+              placeholder="Enter faculty information" required />
           </div>
           <div class="mb-6">
             <label for="branch" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Branch of</label>
             <input formControlName="branch" type="text" id="branch"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="กรอกสาขา" required />
+              placeholder="Enter branch information" required />
           </div>
           <div class="grid justify-items-center">
-            <button (click)="saveEditEducation()" type="submit"
+            <button (click)="saveEditEducation()" type="submit" [disabled]="updateForm.valid"
               class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
               Save
             </button>
@@ -144,7 +144,7 @@
   <!-- Add Education -->
   <div class="grid justify-items-center pt-3">
     <button (click)="AddEducation()" type="button"
-      class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-dashed border-2 border-gray-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+      class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-gray-50 hover:bg-gray-100 rounded-lg border-dashed border-2 border-gray-600 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700">
       Add Data
     </button>
     <p-dialog header="Add Education" [(visible)]="displayAddEducation" [modal]="true" [draggable]="false"
@@ -156,14 +156,14 @@
               Year</label>
             <input formControlName="syear" type="number" id="start_year" min="2000" max="2100"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="กรอกปีที่เข้าการศึกษา" required />
+              placeholder="Enter the year of study" required />
           </div>
           <div>
             <label for="end_year" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">End
               year</label>
             <input formControlName="eyear" type="number" id="start_year" min="2000" max="2100"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="กรอกปีที่จบการศึกษา" required />
+              placeholder="Enter the year of graduation" required />
           </div>
           <div>
             <label for="company" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Level of
@@ -171,31 +171,31 @@
             <select formControlName="level_edu" id="education"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               required>
-              <option value="" disabled selected>เลือกวุฒิการศึกษา</option>
-              <option value="ปริญญาตรี">ปริญญาตรี</option>
-              <option value="ปริญญาโท">ปริญญาโท</option>
-              <option value="ปริญญาเอก">ปริญญาเอก</option>
+              <option value="" disabled selected>Choose your educational qualification</option>
+              <option value="Bachelor's degree">Bachelor's degree</option>
+              <option value="Master's degree">Master's degree</option>
+              <option value="Doctor's degree">Doctor's degree</option>
             </select>
           </div>
         </div>
         <div class="mb-6">
-          <label for="University"
+          <label for="university"
             class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">University</label>
           <input formControlName="universe" type="text" id="university"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="กรอกมหาวิทยาลัย" required />
+            placeholder="Enter university information" required />
         </div>
         <div class="mb-6">
-          <label for="password" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Faculty</label>
+          <label for="faculty" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Faculty</label>
           <input formControlName="faculty" type="text" id="faculty"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="กรอกคณะ" required />
+            placeholder="Enter faculty information" required />
         </div>
         <div class="mb-6">
           <label for="branch" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Branch of</label>
           <input formControlName="branch" type="text" id="branch"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="กรอกสาขา" required />
+            placeholder="Enter branch information" required />
         </div>
         <div class="grid justify-items-center">
           <button (click)="saveAddEducation()" type="submit"

@@ -7,6 +7,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import { Validators } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
+
+import { PortfolioDataService } from 'src/app/service/portfolio-data.service';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -32,7 +35,8 @@ export class LinkComponent implements OnInit {
     private http: HttpClient,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private portfolioDataService: PortfolioDataService
   ) {
     this.updateForm = this.formBuilder.group({
       link_id: '',
@@ -47,19 +51,18 @@ export class LinkComponent implements OnInit {
   }
 
   fetchLinkData(): void {
-    this.http
-      .get<any>(`${API_URL}/getLink`, { withCredentials: true })
-      .subscribe({
-        next: (res) => {
-          this.link = res.data;
-        },
-        error: () => {
-          this.router.navigate(['/login']);
-          console.error('You are not logged in');
-          Emitter.authEmitter.emit(false);
-        },
-      });
+    this.portfolioDataService.getLinkData().subscribe({
+      next: (res) => {
+        this.link = res.data;
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+        console.error('You are not logged in');
+        Emitter.authEmitter.emit(false);
+      },
+    });
   }
+
   displayAddLink: boolean = false;
   displayEditLink: boolean = false;
   confirmEdit: boolean = false;
@@ -86,12 +89,11 @@ export class LinkComponent implements OnInit {
   saveAddLink(): void {
     const formData = this.updateForm.value;
 
-    this.http
-      .post(`${API_URL}/createLink`, formData, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .saveLink(formData)
+      .pipe(finalize(() => this.displayAddLink = false))
+      .subscribe(
+        (res) => {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -99,17 +101,17 @@ export class LinkComponent implements OnInit {
           });
           console.log('Link created successfully:', res);
           this.fetchLinkData();
-          this.displayAddLink = false;
 
+          // Clear the form after saving data
           this.updateForm.reset({
             link_name: '',
             link_text: '',
           });
         },
-        error: (err) => {
+        (err) => {
           console.error('Error creating link:', err);
-        },
-      });
+        }
+      );
   }
 
   saveEditLink(): void {
@@ -127,15 +129,14 @@ export class LinkComponent implements OnInit {
 
   onConfirmEdit() {
     const formData = this.updateForm.value;
-    const linkId = formData.link_id;
-
+    
     this.messageService.clear('confirm1');
-    this.http
-      .put(`${API_URL}/updateLink?link_id=${linkId}`, formData, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .updateLink(formData)
+      .pipe(finalize(() => (
+        this.confirmEdit = false)))
+      .subscribe(
+        (res) => {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -145,11 +146,15 @@ export class LinkComponent implements OnInit {
           this.fetchLinkData();
           this.displayEditLink = false;
         },
-        error: (err) => {
-          console.error('Error updating education:', err);
-        },
-      });
-    this.confirmEdit = false;
+        (err) => {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Warning',
+            detail: 'Entered education data is the same as existing data.',
+          });
+          console.error('Error updating link:', err);
+        }
+      );
   }
 
   onRejectEdit() {
@@ -182,31 +187,28 @@ export class LinkComponent implements OnInit {
     const formData = this.updateForm.value;
     const linkId = formData.link_id;
 
-    this.http
-      .delete(`${API_URL}/deleteLink?link_id=${linkId}`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .deleteLink(linkId)
+      .pipe(finalize(() => this.messageService.clear('confirm')))
+      .subscribe(
+        (res) => {
           console.log('Link deleted successfully:', res);
           this.fetchLinkData();
-          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'success',
             summary: 'Confirmed',
             detail: 'Link deleted successfully',
           });
         },
-        error: (err) => {
+        (err) => {
           console.error('Error deleting link:', err);
-          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to delete link',
           });
-        },
-      });
+        }
+      );
   }
 
   onReject() {

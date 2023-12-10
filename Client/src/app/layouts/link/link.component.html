@@ -7,9 +7,9 @@
       <p>No Link records available.</p>
     </div>
   </div>
-  <div *ngFor="let linkItem of link" class="flex flex-wrap items-center justify-between pt-3">
+  <div *ngFor="let linkItem of link" class="flex flex-wrap items-center justify-between pt-3 space-x-5">
     <div
-      class="w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-800">
+      class="w-64 md:w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-2 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-800">
       <p><span class="font-semibold">Link Name : </span> {{ linkItem.link_name }}</p>
       <p>
         <span class="font-semibold">Link Detail : </span>
@@ -38,14 +38,14 @@
               Name</label>
             <input formControlName="link_name" type="text" id="linkname"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="" required />
+              placeholder="Enter the link name information" required />
           </div>
           <div class="mb-6">
             <label for="link_text" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">URL
               link</label>
             <input formControlName="link_text" type="text" id="urllink"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="" required />
+              placeholder="Enter URL link information" required />
             <div *ngIf="updateForm.get('link_text')?.hasError('pattern')" class="text-red-500 text-xs pt-1">
               Please enter a valid URL.
             </div>
@@ -115,7 +115,7 @@
   <!-- Add Link -->
   <div class="grid justify-items-center pt-3">
     <button (click)="AddLink()" type="button"
-      class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-dashed border-2 border-gray-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+      class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-gray-50 hover:bg-gray-100 rounded-lg border-dashed border-2 border-gray-600 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
       Add Data
     </button>
     <p-dialog header="Add Link" [(visible)]="displayAddLink" [modal]="true" [draggable]="false" [resizable]="false"
@@ -127,13 +127,13 @@
             Name</label>
           <input formControlName="link_name" type="text" id="linkname"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="" required />
+            placeholder="Enter link name information" required />
         </div>
         <div class="mb-6">
           <label for="urllink" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">URL link</label>
           <input formControlName="link_text" type="text" id="urllink"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="" required />
+            placeholder="Enter URL link information" required />
           <div *ngIf="updateForm.get('link_text')?.hasError('pattern')" class="text-red-500 text-xs pt-1">
             Please enter a valid URL.
           </div>

@@ -4,7 +4,7 @@ import { Emitter } from 'src/app/emitters/emitter';
 import { Router } from '@angular/router';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { debounceTime } from 'rxjs/operators';
-
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 interface Category {
   category_text: string;
@@ -29,6 +29,8 @@ interface Skills {
 
 
 export class HomeComponent implements OnInit {
+  
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
 
   currentPage: number = 1;
   pageSize: number = 8;
@@ -45,6 +47,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private envEndpointService: EnvEndpointService
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +62,7 @@ export class HomeComponent implements OnInit {
   }
 
   checkLogin() {
-    this.http.get('http://localhost:8080/api/user', { withCredentials: true })
+    this.http.get(`${this.ENV_REST_API}/user`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           AuthInterceptor.accessToken
@@ -75,7 +78,7 @@ export class HomeComponent implements OnInit {
 
   //defaut ข้อมูลทั้งหมด
   fetchSkills() {
-    this.http.get<Skills[]>('http://localhost:8080/api/search').subscribe(
+    this.http.get<Skills[]>(`${this.ENV_REST_API}/search`).subscribe(
       (skills) => {
         this.searchResults = skills;
       },
@@ -88,7 +91,7 @@ export class HomeComponent implements OnInit {
   //ค้นหาข้อมูลจากการกรอก InputText
   searchSkills() {
     this.http
-      .get<Skills[]>('http://localhost:8080/api/search')
+      .get<Skills[]>(`${this.ENV_REST_API}/search`)
       .pipe(debounceTime(300))
       .subscribe(
         (skills) => {
@@ -107,7 +110,7 @@ export class HomeComponent implements OnInit {
 
   //การแสดงข้อมูลใน dropdown category
   fetchCategories() {
-    this.http.get<any>('http://localhost:8080/api/category').subscribe((response) => {
+    this.http.get<any>(`${this.ENV_REST_API}/category`).subscribe((response) => {
       const allCategories = response.skills.map((skill: any) => skill.category.category_text);
       this.categories = this.removeDuplicates(allCategories);
     });
@@ -116,7 +119,7 @@ export class HomeComponent implements OnInit {
   //เมื่อมีการเลือก dropdown category 
   onCategoryChange() {
     if (this.selectedCategory && this.selectedCategory !== 'all') {
-      this.http.get<any>('http://localhost:8080/api/category?categoryText=' + this.selectedCategory)
+      this.http.get<any>(`${this.ENV_REST_API}/category?categoryText=` + this.selectedCategory)
         .subscribe((response) => {
           const allSubcategories = response.subcategoryTexts;
           this.subcategories = this.removeDuplicates(allSubcategories);
@@ -142,7 +145,7 @@ export class HomeComponent implements OnInit {
       this.fetchSkills();
       return;
     }
-    this.http.get<any>(`http://localhost:8080/api/category?categoryText=${category}`).subscribe(
+    this.http.get<any>(`${this.ENV_REST_API}/category?categoryText=${category}`).subscribe(
       (response) => {
         this.searchResults = response.skills;
       },
@@ -155,7 +158,7 @@ export class HomeComponent implements OnInit {
 
   onSubcategoryChange() {
     if (this.selectedSubcategory && this.selectedSubcategory !== 'all') {
-      const apiUrl = `http://localhost:8080/api/category?categoryText=${this.selectedCategory}&subcategoryText=${this.selectedSubcategory}`;
+      const apiUrl = `${this.ENV_REST_API}/category?categoryText=${this.selectedCategory}&subcategoryText=${this.selectedSubcategory}`;
 
       this.http.get<any>(apiUrl).subscribe(
         (response) => {

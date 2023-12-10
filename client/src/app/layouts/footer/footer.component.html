@@ -1,12 +1,12 @@
 <footer class="bg-sky-200 rounded-lg">
     <div class="w-full max-w-screen-xl mx-auto p-2 md:py-8">
         <div class="sm:flex sm:items-center sm:justify-between pt-1">
-            <a href="https://flowbite.com/" class="flex items-center mb-2 sm:mb-0 space-x-3 rtl:space-x-reverse">
+            <a routerLink="/" (click)="reloadPage()" class="flex items-center mb-2 sm:mb-0 space-x-3 rtl:space-x-reverse">
                 <img src="/assets/images/logo_sfia.png" class="h-8" />
             </a>
             <ul class="flex flex-wrap items-center mb-4 text-xs font-medium text-gray-800 sm:mb-0 dark:text-gray-400">
                 <li>
-                    <a routerLinkActive="active" routerLink="" class="hover:underline me-4 md:me-6">Home</a>
+                    <a routerLinkActive="active" routerLink="/" (click)="reloadPage()" class="hover:underline me-4 md:me-6">Home</a>
                 </li>
                 <li>
                     <a routerLinkActive="active" routerLink="/download" class="hover:underline me-4 md:me-6">Download</a>

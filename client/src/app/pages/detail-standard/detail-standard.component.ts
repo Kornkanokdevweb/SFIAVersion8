@@ -3,7 +3,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators  } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 interface Information {
@@ -54,7 +54,7 @@ export class DetailStandardComponent implements OnInit {
   ) {
     this.updateForm = this.formBuilder.group({
       info_id: '',
-      info_text: ['', Validators.required],
+      info_text: ['', [Validators.required, Validators.pattern('^(https?|ftp):\\/\\/(www\\.)?[a-zA-Z0-9-]+(\\.[a-zA-Z]{2,})+(\\/[^\\s]*)?$')]],
       descid: '',
     });
   }
@@ -68,7 +68,7 @@ export class DetailStandardComponent implements OnInit {
   }
 
   checkLoginStatus() {
-    this.http.get(`${this.ENV_REST_API}/user`).subscribe({ 
+    this.http.get(`${this.ENV_REST_API}/user`).subscribe({
       next: (res: any) => {
         Emitter.authEmitter.emit(true);
         this.isLoggedIn = true;
@@ -175,10 +175,10 @@ export class DetailStandardComponent implements OnInit {
                       descIdsWithInformation.filter((descid) =>
                         descIdsForLevel.includes(descid)
                       );
-                      const percentageForLevel = parseFloat(((descIdsWithInformationForLevel.length / descIdsForLevel.length) * 100).toFixed(2));
-                      this.percentageMap.set(levelName, percentageForLevel);
-                      console.log(levelDetails, '=>', 'ข้อมูลทั้งหมดมีจำนวน: ',descIdsForLevel.length, 'มีข้อมูลแล้วจำนวน: ',descIdsWithInformationForLevel.length, `Percentage of ${levelName}: `, percentageForLevel);
-                      // console.log(`Percentage for ${levelName}: ${percentageForLevel}`);
+                    const percentageForLevel = parseFloat(((descIdsWithInformationForLevel.length / descIdsForLevel.length) * 100).toFixed(2));
+                    this.percentageMap.set(levelName, percentageForLevel);
+                    console.log(levelDetails, '=>', 'ข้อมูลทั้งหมดมีจำนวน: ', descIdsForLevel.length, 'มีข้อมูลแล้วจำนวน: ', descIdsWithInformationForLevel.length, `Percentage of ${levelName}: `, percentageForLevel);
+                    // console.log(`Percentage for ${levelName}: ${percentageForLevel}`);
                   }
                 });
 
@@ -271,13 +271,15 @@ export class DetailStandardComponent implements OnInit {
   }
 
   updatedDescStatus: boolean[] = [];
+  isLoading = false;
 
   saveAddInformation() {
-    if (this.selectedDescriptionIndex !== null) {
+    if (this.selectedDescriptionIndex !== null && !this.isLoading) {
+      this.isLoading = true;
       const formData = this.updateForm.value;
       const descid =
         this.selectedLevelDescriptions[this.selectedDescriptionIndex].descid;
-    
+
       this.http
         .post(`${this.ENV_REST_API}/createDatacollection`, formData, {
           params: { descriptionId: descid },
@@ -314,7 +316,7 @@ export class DetailStandardComponent implements OnInit {
             if (this.selectedDescriptionIndex !== null) {
               this.visible[this.selectedDescriptionIndex] = false;
             }
-            
+
 
             this.updateForm.reset({
               info_text: '',
@@ -325,9 +327,11 @@ export class DetailStandardComponent implements OnInit {
               summary: 'Success',
               detail: 'Add data successfully',
             });
+            this.isLoading = false;
           },
           error: (err) => {
             console.error('Error creating Information:', err);
+            this.isLoading = false;
           },
         });
     }
@@ -349,25 +353,32 @@ export class DetailStandardComponent implements OnInit {
   }
 
   saveEditInformation() {
-    const formData = this.updateForm.value;
-    const informationId = formData.info_id;
+    if (!this.isLoading) {
+      this.isLoading = true;
+      const formData = this.updateForm.value;
+      const informationId = formData.info_id;
 
-    console.log(informationId);
-    this.http
-      .put(`${this.ENV_REST_API}/updateDatacollection`, formData, {
-        params: { informationId: informationId },
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res: any) => {
-          console.log('Information updated successfully:', res);
-          this.fetchSkillDetails();
-          this.displayEditInformation = false;
-        },
-        error: (err) => {
-          console.error('Error updating Information:', err);
-        },
-      });
+      console.log(informationId);
+      this.http
+        .put(`${this.ENV_REST_API}/updateDatacollection`, formData, {
+          params: { informationId: informationId },
+          withCredentials: true,
+        })
+        .subscribe({
+          next: (res: any) => {
+            console.log('Information updated successfully:', res);
+            this.fetchSkillDetails();
+            this.displayEditInformation = false;
+            this.isLoading = false;
+          },
+          error: (err) => {
+            console.error('Error updating Information:', err);
+            this.isLoading = false;
+          },
+        });
+
+    }
+
   }
 
   // ในเมทอด deleteInformation
@@ -445,21 +456,31 @@ export class DetailStandardComponent implements OnInit {
   isLink(url: string): boolean {
     return url.includes('://');
   }
-  
-  displayPartialURL(fullURL: string, maxLength: number = 20): string {
-    const urlParts = fullURL.split('/');
+
+  displayPartialURL(fullURL: string, maxLength: number = 40): string {
+    const urlParts = fullURL.split('://');
     let displayURL = urlParts[urlParts.length - 1];
-  
-    // Remove trailing spaces
+
     displayURL = displayURL.trim();
-  
-    // Check if the displayURL is longer than the specified maxLength
+
     if (displayURL.length > maxLength) {
       return displayURL.substr(0, maxLength) + '...';
     }
-  
-    // Check if displayURL is not empty or just spaces
+
     return displayURL.trim() !== '' ? displayURL : fullURL;
   }
-  
+
+
+  getSkillColorClass(percentage: number | undefined): string {
+    if (percentage !== undefined) {
+      if (percentage >= 0 && percentage <= 50) {
+        return 'bg-yellow-200';
+      } else if (percentage > 50 && percentage <= 99) {
+        return 'bg-orange-400';
+      } else {
+        return 'bg-green-500';
+      }
+    }
+    return '';
+  }
 }

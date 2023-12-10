@@ -28,7 +28,6 @@ import { ResetComponent } from './pages/reset/reset.component';
 import { EducationComponent } from './layouts/education/education.component';
 import { ExperienceComponent } from './layouts/experience/experience.component';
 import { LinkComponent } from './layouts/link/link.component';
-import { JobComponent } from './layouts/job/job.component';
 import { PortfolioInformationComponent } from './pages/portfolio-information/portfolio-information.component';
 import { SpiderchartComponent } from './layouts/spiderchart/spiderchart.component';
 import { DatachartComponent } from './layouts/datachart/datachart.component';
@@ -71,7 +70,6 @@ import {MatMenuModule} from '@angular/material/menu';
     EducationComponent,
     ExperienceComponent,
     LinkComponent,
-    JobComponent,
     PortfolioInformationComponent,
     SpiderchartComponent,
     DatachartComponent,

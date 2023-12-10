@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Emitter } from 'src/app/emitters/emitter';
 import { MessageService } from 'primeng/api';
-
-const API_URL = 'http://localhost:8080/api';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 interface UserProfile {
   profileImage: string;
@@ -26,7 +25,7 @@ const englishNameValidator = /^[A-Za-z\s]+$/;
 const englishSurnameValidator = /^[A-Za-z\s]+$/;
 const phoneValidator = /^[0-9]{10}$/;
 const addressValidator = /^[a-zA-Z0-9\sก-๏,.-/]+$/;
-const lineIdValidator = /^[\w-]{1,100}$/;
+const lineIdValidator = /^[\w-.@]{1,100}$/;
 
 @Component({
   selector: 'app-profile',
@@ -36,6 +35,7 @@ const lineIdValidator = /^[\w-]{1,100}$/;
 })
 export class ProfileComponent implements OnInit {
 
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
   images: any;
   selectedImageURL: string | undefined;
 
@@ -58,6 +58,7 @@ export class ProfileComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
+    private envEndpointService: EnvEndpointService,
   ) {
     this.updateForm = this.formBuilder.group({
       profileImage: '',
@@ -77,7 +78,7 @@ export class ProfileComponent implements OnInit {
   }
 
   fetchUserData(): void {
-    this.http.get<UserProfile>(`${API_URL}/user`, { withCredentials: true })
+    this.http.get<UserProfile>(`${this.ENV_REST_API}/user`, { withCredentials: true })
       .subscribe({
         next: (res) => {
           this.user = res;
@@ -88,41 +89,6 @@ export class ProfileComponent implements OnInit {
           this.router.navigate(['/login']);
           console.error('You are not logged in');
           Emitter.authEmitter.emit(false);
-        }
-      });
-  }
-
-  updateProfile(): void {
-    const phoneRegex = /[^0-9]/g;
-    const updatedData = {
-      ...this.updateForm.value,
-      phone: this.updateForm.value.phone ? this.updateForm.value.phone.replace(phoneRegex, '') : ''
-    };
-
-    const formData = new FormData();
-    if (this.images) {
-      formData.append('file', this.images);
-    }
-
-    Object.keys(updatedData).forEach(key => {
-      if (updatedData[key] !== null && updatedData[key] !== undefined) {
-        formData.append(key, updatedData[key]);
-      }
-    });
-
-    console.log('Updated Data:', updatedData);
-
-    this.http.put(`${API_URL}/updateUser`, formData, { withCredentials: true })
-      .subscribe({
-        next: (res: any) => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile updated successfully' });
-          console.log('Profile updated successfully', res);
-          this.updateUserWithNewData(updatedData);
-
-        },
-        error: (error) => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating profile' });
-          console.error('Error updating profile', error);
         }
       });
   }
@@ -155,5 +121,77 @@ export class ProfileComponent implements OnInit {
       console.log(fileName)
     }
   }
+
+  visible: boolean = false;
+
+  showConfirm() {
+    if (!this.visible) {
+      this.messageService.add({ 
+      key: 'confirm', 
+      sticky: true, 
+      severity: 'warn', 
+      summary: 'Are you sure?', 
+      detail: 'Confirm to proceed' 
+    });
+      this.visible = true;
+    }
+  }
+
+  updateProfile() {
+    const phoneRegex = /[^0-9]/g;
+    const updatedData = {
+      ...this.updateForm.value,
+      phone: this.updateForm.value.phone ? this.updateForm.value.phone.replace(phoneRegex, '') : ''
+    };
+
+    const formData = new FormData();
+    if (this.images) {
+      formData.append('file', this.images);
+    }
+
+    Object.keys(updatedData).forEach(key => {
+      if (updatedData[key] !== null && updatedData[key] !== undefined) {
+        formData.append(key, updatedData[key]);
+      }
+    });
+
+    console.log('Updated Data:', updatedData);
+
+    this.http.put(`${this.ENV_REST_API}/updateUser`, formData, { withCredentials: true })
+      .subscribe({
+        next: (res: any) => {
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile updated successfully' });
+          console.log('Profile updated successfully', res);
+          this.updateUserWithNewData(updatedData);
+
+          this.user.updated_at = new Date();
+          console.log(this.user.updated_at)
+
+        },
+        error: (error) => {
+          if (error.error && error.error.message === "Can't update profile, data is the same") {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: "Can't update profile, data is the same" });
+          } else {
+            // Display a generic error toast
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating profile' });
+          }
+          console.error('Error updating profile', error);
+        }
+      });
+    this.messageService.clear('confirm');
+    this.visible = false;
+  }
+
+  onReject() {
+    this.messageService.clear('confirm');
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Rejected',
+      detail: 'Error updating profile',
+    });
+    this.visible = false;
+  }
+
+
 
 }

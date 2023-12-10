@@ -6,8 +6,9 @@ import { Emitter } from 'src/app/emitters/emitter';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import { finalize } from 'rxjs/operators';
 
-const API_URL = 'http://localhost:8080/api';
+import { PortfolioDataService } from 'src/app/service/portfolio-data.service';
 
 interface EducationInfo {
   education_id: string;
@@ -35,7 +36,8 @@ export class EducationComponent implements OnInit {
     private http: HttpClient,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private primengConfig: PrimeNGConfig
+    private primengConfig: PrimeNGConfig,
+    private portfolioDataService: PortfolioDataService
   ) {
     this.updateForm = this.formBuilder.group({
       education_id: '',
@@ -54,18 +56,16 @@ export class EducationComponent implements OnInit {
   }
 
   fetchEducationData(): void {
-    this.http
-      .get<any>(`${API_URL}/getEducation`, { withCredentials: true })
-      .subscribe({
-        next: (res) => {
-          this.education = res.data;
-        },
-        error: () => {
-          this.router.navigate(['/login']);
-          console.error('You are not logged in');
-          Emitter.authEmitter.emit(false);
-        },
-      });
+    this.portfolioDataService.getEducationData().subscribe({
+      next: (res) => {
+        this.education = res.data;
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+        console.error('You are not logged in');
+        Emitter.authEmitter.emit(false);
+      },
+    });
   }
 
   displayAddEducation: boolean = false;
@@ -102,34 +102,30 @@ export class EducationComponent implements OnInit {
   saveAddEducation(): void {
     const formData = this.updateForm.value;
 
-    this.http
-      .post(`${API_URL}/createEducation`, formData, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Education created successfully',
-          });
-          console.log('Education created successfully:', res);
-          this.fetchEducationData();
-          this.displayAddEducation = false;
+    this.portfolioDataService.saveEducation(formData).subscribe({
+      next: (res) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Education created successfully',
+        });
+        console.log('Education created successfully:', res);
+        this.fetchEducationData();
+        this.displayAddEducation = false;
 
-          this.updateForm.reset({
-            syear: '',
-            eyear: '',
-            level_edu: '',
-            universe: '',
-            faculty: '',
-            branch: '',
-          });
-        },
-        error: (err) => {
-          console.error('Error creating education:', err);
-        },
-      });
+        this.updateForm.reset({
+          syear: '',
+          eyear: '',
+          level_edu: '',
+          universe: '',
+          faculty: '',
+          branch: '',
+        });
+      },
+      error: (err) => {
+        console.error('Error creating education:', err);
+      },
+    });
   }
 
   saveEditEducation(): void {
@@ -147,29 +143,35 @@ export class EducationComponent implements OnInit {
 
   onConfirmEdit() {
     const formData = this.updateForm.value;
-    const educationId = formData.education_id;
 
     this.messageService.clear('confirm1');
-    this.http
-      .put(`${API_URL}/updateEducation?education_id=${educationId}`, formData, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .updateEducation(formData)
+      .pipe(finalize(() => (
+        this.confirmEdit = false)))
+      .subscribe(
+        (res) => {
+          if (res.success) {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Education updated successfully',
+            });
+            console.log('Education updated successfully:', res);
+            this.fetchEducationData();
+            this.displayEditEducation = false;
+          } else {
+          }
+        },
+        (err) => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Education updated successfully',
+            severity: 'warn',
+            summary: 'Warning',
+            detail: 'Entered education data is the same as existing data.',
           });
-          console.log('Education updated successfully:', res);
-          this.fetchEducationData();
-          this.displayEditEducation = false;
-        },
-        error: (err) => {
           console.error('Error updating education:', err);
-        },
-      });
-    this.confirmEdit = false;
+        }
+      );
   }
 
   onRejectEdit() {
@@ -206,31 +208,28 @@ export class EducationComponent implements OnInit {
     const formData = this.updateForm.value;
     const educationId = formData.education_id;
 
-    this.http
-      .delete(`${API_URL}/deleteEducation?education_id=${educationId}`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .deleteEducation(educationId)
+      .pipe(finalize(() => this.messageService.clear('confirm')))
+      .subscribe(
+        (res) => {
           console.log('Education deleted successfully:', res);
           this.fetchEducationData();
-          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'success',
             summary: 'Confirmed',
             detail: 'Education deleted successfully',
           });
         },
-        error: (err) => {
+        (err) => {
           console.error('Error deleting education:', err);
-          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to delete education',
           });
-        },
-      });
+        }
+      );
   }
 
   onReject() {

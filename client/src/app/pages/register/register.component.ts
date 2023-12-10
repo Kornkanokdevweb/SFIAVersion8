@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { matchPassword } from './matchPassword.validator';
 import { MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
@@ -17,16 +18,17 @@ const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
-
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private envEndpointService: EnvEndpointService
   ) {}
 
   ngOnInit(): void {
-    this.http.get('http://localhost:8080/api/user')
+    this.http.get(`${this.ENV_REST_API}/user`)
       .subscribe({
         next: (res: any) => {
           this.router.navigate(['/']);
@@ -47,9 +49,12 @@ export class RegisterComponent implements OnInit {
     );
   }
 
+  isLoading = false;
+
   register() {
-    if (this.registerForm.valid) { 
-      this.http.post('http://localhost:8080/api/register', this.registerForm.getRawValue(), {
+    if (this.registerForm.valid && !this.isLoading) { 
+      this.isLoading = true;
+      this.http.post(`${this.ENV_REST_API}/register`, this.registerForm.getRawValue(), {
         headers: new HttpHeaders({
           'Content-Type': 'application/json'
         }),
@@ -64,7 +69,7 @@ export class RegisterComponent implements OnInit {
             };
 
             // Call your API router.post('/registerMail', registerMail) here with emailData
-            this.http.post('http://localhost:8080/api/registerMail', emailData, {
+            this.http.post(`${this.ENV_REST_API}/registerMail`, emailData, {
               headers: new HttpHeaders({
                 'Content-Type': 'application/json'
               }),
@@ -78,12 +83,14 @@ export class RegisterComponent implements OnInit {
               }
             );
           }
+          
 
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Registration successful. Please log in.' });
 
           // Delay navigation to login by 2 seconds
           setTimeout(() => {
             this.router.navigate(['/login']);
+            this.isLoading = false;
           }, 2000); // Delay in milliseconds
         },
         (error) => {
@@ -92,9 +99,12 @@ export class RegisterComponent implements OnInit {
           } else {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred' });
           }
+          this.isLoading = false;
         }
       );
+      
     }else {
+      this.isLoading = false;
       // Add toast message for invalid form
       this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Please fill in all required fields.' });
     }

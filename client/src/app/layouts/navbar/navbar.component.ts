@@ -10,13 +10,9 @@ import { Emitter } from 'src/app/emitters/emitter';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-
   authenticated = false;
 
-  constructor(private http: HttpClient, 
-              private router: Router) {
-                
-              }
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     Emitter.authEmitter.subscribe((auth: boolean) => {

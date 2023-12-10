@@ -114,6 +114,16 @@ exports.updateLink = async (req: Request, res: Response) => {
             where: { id: link_id, portfolio: { user: { id: userId } } },
         });
 
+        if (
+           link.link_name === link_name &&
+           link.link_text === link_text 
+        ) {
+            return res.status(400).send({
+                success: false,
+                message: "Entered education data is the same as existing data",
+            });
+        }
+
         if (!link) {
             return res.status(404).send({
                 success: false,

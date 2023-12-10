@@ -5,8 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { finalize } from 'rxjs/operators';
 
-const API_URL = 'http://localhost:8080/api';
+import { PortfolioDataService } from 'src/app/service/portfolio-data.service';
 
 interface ExperienceInfo {
   exp_id: string;
@@ -28,7 +29,8 @@ export class ExperienceComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private formBuilder: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private portfolioDataService: PortfolioDataService
   ) {
     this.updateForm = this.formBuilder.group({
       exp_id: '',
@@ -41,18 +43,16 @@ export class ExperienceComponent implements OnInit {
   }
 
   fetchExperienceData(): void {
-    this.http
-      .get<any>(`${API_URL}/getExperience`, { withCredentials: true })
-      .subscribe({
-        next: (res) => {
-          this.experience = res.data;
-        },
-        error: () => {
-          this.router.navigate(['/login']);
-          console.error('You are not logged in');
-          Emitter.authEmitter.emit(false);
-        },
-      });
+    this.portfolioDataService.getExperienceData().subscribe({
+      next: (res) => {
+        this.experience = res.data;
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+        console.error('You are not logged in');
+        Emitter.authEmitter.emit(false);
+      },
+    });
   }
 
   displayAddExperience: boolean = false;
@@ -78,12 +78,11 @@ export class ExperienceComponent implements OnInit {
   saveAddExperience(): void {
     const formData = this.updateForm.value;
 
-    this.http
-      .post(`${API_URL}/createExperience`, formData, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .saveExperience(formData)
+      .pipe(finalize(() => this.displayAddExperience = false))
+      .subscribe(
+        (res) => {
           this.messageService.add({
             severity: 'success',
             summary: 'Success',
@@ -91,17 +90,16 @@ export class ExperienceComponent implements OnInit {
           });
           console.log('Experience created successfully:', res);
           this.fetchExperienceData();
-          this.displayAddExperience = false;
 
-          // เคลียร์ฟอร์มหลังจากบันทึกข้อมูล
+          // Clear the form after saving data
           this.updateForm.reset({
             exp_text: '',
           });
         },
-        error: (err) => {
+        (err) => {
           console.error('Error creating experience:', err);
-        },
-      });
+        }
+      );
   }
 
   saveEditExperience(): void {
@@ -119,29 +117,35 @@ export class ExperienceComponent implements OnInit {
 
   onConfirmEdit() {
     const formData = this.updateForm.value;
-    const experienceId = formData.exp_id;
 
     this.messageService.clear('confirm1');
-    this.http
-      .put(`${API_URL}/updateExperience?exp_id=${experienceId}`, formData, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .updateExperience(formData)
+      .pipe(finalize(() => {
+        this.confirmEdit = false;    
+      }))
+      .subscribe(
+        (res) => {
+          if(res.success){
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Experience updated successfully',
+            });
+            console.log('Experience updated successfully:', res);
+            this.fetchExperienceData();
+            this.displayEditExperience = false;
+          }       
+        },
+        (err) => {
           this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Experience updated successfully',
+            severity: 'warn',
+            summary: 'Warning',
+            detail: 'Entered experience data is the same as existing data.',
           });
-          console.log('Experience updated successfully:', res);
-          this.fetchExperienceData();
-          this.displayEditExperience = false;
-        },
-        error: (err) => {
-          console.error('Error updating education:', err);
-        },
-      });
-    this.confirmEdit = false;
+          console.error('Error updating experience:', err);
+        }
+      );
   }
 
   onRejectEdit() {
@@ -173,31 +177,28 @@ export class ExperienceComponent implements OnInit {
     const formData = this.updateForm.value;
     const experienceId = formData.exp_id;
 
-    this.http
-      .delete(`${API_URL}/deleteExperience?exp_id=${experienceId}`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (res) => {
+    this.portfolioDataService
+      .deleteExperience(experienceId)
+      .pipe(finalize(() => this.messageService.clear('confirm')))
+      .subscribe(
+        (res) => {
           console.log('Experience deleted successfully:', res);
           this.fetchExperienceData();
-          this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'success',
             summary: 'Confirmed',
             detail: 'Experience deleted successfully',
           });
         },
-        error: (err) => {
-          console.error('Error deleting experience:', err);
-          this.messageService.clear('confirm');
+        (err) => {
+          console.error('Error deleting Experience:', err);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Failed to delete experience',
+            detail: 'Failed to delete Experience',
           });
-        },
-      });
+        }
+      );
   }
 
   onReject() {

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { StoreEmailService } from 'src/app/service/store-email.service';
+import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
 @Component({
   selector: 'app-recovery-password',
@@ -15,6 +16,8 @@ export class RecoveryPasswordComponent implements OnInit {
   recoveryForm!: FormGroup;
   storedEmail: string = '';
 
+  ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
+
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
@@ -22,7 +25,8 @@ export class RecoveryPasswordComponent implements OnInit {
     private messageService: MessageService,
     private emailService: StoreEmailService,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private envEndpointService: EnvEndpointService
   ) { }
 
   ngOnInit(): void {
@@ -68,10 +72,17 @@ export class RecoveryPasswordComponent implements OnInit {
         this.renderer.selectRootElement(prevInput).focus();
         event.preventDefault(); // prevent the default Backspace behavior
       }
+    } else if (event.key !== 'Backspace' && value && nextField) {
+      console.log('Moving to next field:', nextField);
+      const nextInput = this.el.nativeElement.querySelector(`[formControlName="${nextField}"]`);
+      if (nextInput) {
+        this.renderer.selectRootElement(nextInput).focus();
+      }
     } else if (!nextField) {
       event.preventDefault(); // prevent moving to the next input if there is no next field
     }
   }
+  
 
   initRecoveryForm() {
     this.recoveryForm = this.formBuilder.group({
@@ -90,7 +101,7 @@ export class RecoveryPasswordComponent implements OnInit {
       email: this.storedEmail
     };
 
-    this.http.get('http://localhost:8080/api/verifyOTP', { params: recoveryData })
+    this.http.get(`${this.ENV_REST_API}/verifyOTP`, { params: recoveryData })
       .subscribe(
         (response: any) => {
           if (response.message === "Verify Success") {
@@ -109,18 +120,45 @@ export class RecoveryPasswordComponent implements OnInit {
         }
       );
   }
-
+  isLoading = false;
+  timeRemaining = 60; // จำนวนวินาทีที่ต้องการให้นับถอยหลัง
+  
   resendOTP() {
-    const email = this.storedEmail; // ใช้ค่า email ที่เก็บไว้
-    this.http.get(`http://localhost:8080/api/generateOTP?email=${email}`).subscribe(
-      (response) => {
-        console.log('OTP sent successfully:');
-        // ทำสิ่งที่คุณต้องการเมื่อ OTP ถูกส่ง
-      },
-      (error) => {
-        console.error('Failed to send OTP:', error);
-        // ทำสิ่งที่คุณต้องการเมื่อส่ง OTP ไม่สำเร็จ
-      }
-    );
+      this.isLoading = true;
+      const email = this.storedEmail;
+  
+      this.http.get(`${this.ENV_REST_API}/generateOTP?email=${email}`).subscribe(
+          (response) => {
+              console.log('OTP sent successfully:');
+              // ทำสิ่งที่คุณต้องการเมื่อ OTP ถูกส่ง
+              this.startCountdown();
+          },
+          (error) => {
+              console.error('Failed to send OTP:', error);
+              // ทำสิ่งที่คุณต้องการเมื่อส่ง OTP ไม่สำเร็จ
+              this.isLoading = false;
+          }
+      );
   }
+  
+  startCountdown() {
+      const countdownInterval = setInterval(() => {
+          this.timeRemaining--;
+          if (this.timeRemaining <= 0) {
+              clearInterval(countdownInterval);
+              this.isLoading = false;
+              this.timeRemaining = 60; // รีเซ็ตเวลาเมื่อนับถอยหลังเสร็จสิ้น
+          }
+      }, 1000); // นับถอยหลังทุก 1 วินาที
+  }
+  
+  formatTime(seconds: number): string {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      const formattedMinutes = String(minutes).padStart(2, '0');
+      const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+      return `${formattedMinutes}:${formattedSeconds}`;
+  }
+  
+
 }

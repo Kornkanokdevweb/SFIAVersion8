@@ -1,11 +1,13 @@
-<div class="container max-w-screen-xl mx-auto p-2 mb-3">
-  <h5 class="text-lg font-semibold text-center">History</h5>
-
+<div class="container max-w-screen-xl mx-auto mb-5 mt-8">
+  <h5 class="text-xl text-center font-extrabold pb-2">History</h5>
+  <div class="w-full mb-2">
+    <div class="h-1 mx-auto gradient w-44 opacity-40 my-0 py-0 rounded-t"></div>
+  </div>
   <!--dropdown select -->  
 
   <div class="relative inline-block text-left">
     <div>
-      <button (click)="toggleDropdown()" type="button" class="inline-flex w-60 justify-between gap-x-1.5 rounded-md bg-gray-50 px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+      <button (click)="toggleDropdown()" type="button" class="inline-flex w-64 justify-between gap-x-1.5 rounded-md bg-gray-50 px-3 py-2.5 text-sm font-semibold text-gray-900 border-1 border-gray-100 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
         {{ selectedSkill || 'All Skills' }} <!-- แสดงค่าที่เลือก หรือ 'All Skills' ถ้ายังไม่มีการเลือก -->
         <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
@@ -13,7 +15,7 @@
       </button>
     </div>
     <div *ngIf="isDropdownVisible" class="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-      <div (click)="selectSkill('')" class="text-gray-700 block px-4 py-2 text-sm active:bg-gray-100 text-gray-900 hover:bg-gray-100 text-gray-900 cursor-pointer">
+      <div (click)="selectSkill('')" class="text-gray-700 block px-4 py-2 text-sm active:bg-gray-100  hover:bg-gray-100 cursor-pointer">
         All Skills
       </div>
       <div *ngFor="let skillAndLevel of dropdownSkillUnique" class="py-1" role="none" >
@@ -59,7 +61,7 @@
     </div> -->
     <div id="chart"
       class="col-span-12 rounded-2xl border border-stroke bg-white xl:col-span-4 grid ">
-      <h5 class="text-base text-center font-semibold pt-3">Skill Analysis</h5>
+      <h5 class="text-base text-center font-semibold pt-3">Chart of CodeSkill</h5>
         <apx-chart
         [series]="spiderChartOptions.series"
         [chart]="spiderChartOptions.chart"

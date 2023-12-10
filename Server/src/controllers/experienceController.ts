@@ -107,6 +107,15 @@ exports.updateExperience = async (req: Request, res: Response) => {
             where: { id: exp_id, portfolio: { user: { id: userId } } },
         })
 
+        if (
+            experience.exp_text === exp_text 
+        ) {
+            return res.status(400).send({
+                success: false,
+                message: "Entered education data is the same as existing data",
+            });
+        }
+
         if (!experience) {
             return res.status(404).send({
                 success: false,

@@ -9,7 +9,7 @@
   </div>
   <div *ngFor="let experienceItem of experience" class="flex flex-wrap items-center justify-between pt-3 space-x-5">
     <div
-      class="w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+      class="w-64 md:w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-2 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
       <p><span class="font-semibold">Experience Detail : </span> {{ experienceItem.exp_text }}</p>
     </div>
     <!-- Edit Experience -->
@@ -28,10 +28,10 @@
               details</label>
             <input formControlName="exp_text" type="text" id="experience"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="กรอกประสบการณ์" required />
+              placeholder="Enter experience information" required />
           </div>
           <div class="grid justify-items-center">
-            <button (click)="saveEditExperience()" type="submit"
+            <button (click)="saveEditExperience()" type="submit" [disabled]="!updateForm.valid"
               class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
               Save
             </button>
@@ -94,8 +94,8 @@
   </div>
   <!-- Add Experience -->
   <div class="grid justify-items-center pt-3">
-    <button (click)="AddExperience()" type="button"
-      class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-dashed border-2 border-gray-600 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+    <button (click)="AddExperience()" type="button" 
+      class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-gray-50 hover:bg-gray-100 rounded-lg border-dashed border-2 border-gray-600 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
       Add Data
     </button>
     <p-dialog header="Add Experience" [(visible)]="displayAddExperience" [modal]="true" [draggable]="false"
@@ -106,10 +106,10 @@
             details</label>
           <input formControlName="exp_text" type="text" id="experience"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="กรอกประสบการณ์" required />
+            placeholder="Enter experience information" required />
         </div>
         <div (click)="saveAddExperience()" class="grid justify-items-center">
-          <button type="submit"
+          <button type="submit" [disabled]="!updateForm.valid"
             class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
             Save
           </button>

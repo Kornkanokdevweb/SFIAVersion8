@@ -167,7 +167,7 @@ exports.deleteEducation = async (req, res) => {
 exports.updateEducation = async (req: Request, res: Response) => {
     try {
         const userId = await getUserIdFromRefreshToken(req);
-        
+
         if (!userId) {
             return res.status(401).send({
                 success: false,
@@ -176,7 +176,7 @@ exports.updateEducation = async (req: Request, res: Response) => {
         }
 
         const {
-            education_id, 
+            education_id,
             syear,
             eyear,
             level_edu,
@@ -188,9 +188,9 @@ exports.updateEducation = async (req: Request, res: Response) => {
         const educationRepository = myDataSource.getRepository(Education);
 
         const education = await educationRepository.findOne({
-            where: { id: education_id , portfolio: { user: { id: userId } } },
+            where: { id: education_id, portfolio: { user: { id: userId } } },
         });
-        
+
         if (!education) {
             return res.status(404).send({
                 success: false,
@@ -198,22 +198,41 @@ exports.updateEducation = async (req: Request, res: Response) => {
             });
         }
 
-        // Update the education record with the new data
-        education.syear = syear;
-        education.eyear = eyear;
-        education.level_edu = level_edu;
-        education.universe = universe;
-        education.faculty = faculty;
-        education.branch = branch;
+        // Check if the entered data is the same as the existing data
+       // Check if the entered data is the same as the existing data
+if (
+    education.syear === syear &&
+    education.eyear === eyear &&
+    education.level_edu === level_edu &&
+    education.universe === universe &&
+    education.faculty === faculty &&
+    education.branch === branch
+) {
+    return res.status(400).send({
+        success: false,
+        message: "Entered education data is the same as existing data",
+    });
+}
 
-        // Save the updated education record
-        await educationRepository.save(education);
 
-        return res.status(200).json({
-            success: true,
-            message: "Education record updated successfully",
-            education: education,
-        });
+
+// Update the education record with the new data
+education.syear = syear;
+education.eyear = eyear;
+education.level_edu = level_edu;
+education.universe = universe;
+education.faculty = faculty;
+education.branch = branch;
+
+// Save the updated education record
+await educationRepository.save(education);
+
+return res.status(200).json({
+    success: true,
+    message: "Education record updated successfully",
+    education: education,
+});
+
     } catch (err) {
         console.error(err);
         return res.status(500).json({
