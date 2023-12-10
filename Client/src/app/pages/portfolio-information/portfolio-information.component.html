@@ -32,13 +32,16 @@
                         <p class="mb-2 mt-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white uppercase">
                             {{ user.firstNameEN }} {{ user.lastNameEN }}
                         </p>
+                        <p class="mb-2 mt-2 text-xltracking-tight text-sm text-gray-900 dark:text-white uppercase">
+                            {{selectedSkill }} 
+                        </p>
                     </div>
                     <div class="row-span-2 col-span-2 text-sm pt-4 space-y-1.5">
                         <p><span class="font-semibold">Email : </span> {{ user.email }}</p>
                         <p><span class="font-semibold">Line : </span> {{ user.line }}</p>
                         <p><span class="font-semibold">Phone Number : </span> {{ user.phone }}</p>
                     </div>
-                    <div class="col-span-5 pl-12 text-sm">
+                    <div class="col-span-5 pl-12 text-sm mt-2">
                         <p>
                             <span class="font-semibold">Address : </span> {{ user.address }}
                         </p>
