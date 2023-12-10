@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+ import { Component, OnInit } from '@angular/core';
 import { Emitter } from 'src/app/emitters/emitter';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -425,6 +425,26 @@ export class PortfolioInformationComponent implements OnInit {
       .from(content)
       .set(options)
       .save();
+  }
+
+  isLink(url: string): boolean {
+    return url.includes('://');
+  }
+
+  displayPartialURL(fullURL: string, maxLength: number = 35): string {
+    const urlParts = fullURL.split('://');
+    let displayURL = urlParts[urlParts.length - 1];
+
+    // Remove trailing spaces
+    displayURL = displayURL.trim();
+
+    // Check if the displayURL is longer than the specified maxLength
+    if (displayURL.length > maxLength) {
+      return displayURL.substr(0, maxLength) + '...';
+    }
+
+    // Check if displayURL is not empty or just spaces
+    return displayURL.trim() !== '' ? displayURL : fullURL;
   }
 
 }

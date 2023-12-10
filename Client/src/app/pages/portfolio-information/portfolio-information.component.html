@@ -45,16 +45,11 @@
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3 p-3">
-                    <div id="chart"
-                    class="border border-stroke grid rounded-lg bg-gray-50 p-1 border-slate-400">
-                    <div class="rounded-lg text-sm text-center font-semibold">Spider Chart</div>
-                    <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1"></div>
-                      <apx-chart
-                      class="mt-4"
-                      [series]="spiderChartOptions.series"
-                      [chart]="spiderChartOptions.chart"
-                      [xaxis]="spiderChartOptions.xaxis"
-                    />
+                    <div id="chart" class="border border-stroke grid rounded-lg bg-gray-50 p-1 border-slate-400">
+                        <div class="rounded-lg text-sm text-center font-semibold">Spider Chart</div>
+                        <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1"></div>
+                        <apx-chart class="mt-4" [series]="spiderChartOptions.series" [chart]="spiderChartOptions.chart"
+                            [xaxis]="spiderChartOptions.xaxis" />
                     </div>
                     <div class="rounded-lg bg-gray-50 p-1 border border-slate-400">
                         <div class="rounded-lg text-sm text-center font-semibold">Education</div>
@@ -77,7 +72,12 @@
                         <div class="rounded-lg text-sm text-center font-semibold">Link</div>
                         <div class="h-0.5 mx-auto gradient w-12 opacity-40 my-0 py-0 rounded-t mt-1 mb-2"></div>
                         <div *ngFor="let linkItem of link" class="pl-3 ml-5 text-xs pb-2 ">
-                            <p><span class="font-semibold">{{ linkItem.link_name }} : </span>{{ linkItem.link_text }}
+                            <p>
+                                <span class="font-semibold">{{ linkItem.link_name }} : </span>
+                                <a *ngIf="isLink(linkItem.link_text)" class="hover:text-blue-600"
+                                    href="{{ linkItem.link_text }}" target="_blank">
+                                    {{ displayPartialURL(linkItem.link_text) }}
+                                </a>
                             </p>
                         </div>
                     </div>
@@ -91,17 +91,10 @@
                     <div class=" grid col-span-2 rounded-lg bg-gray-50 p-1 border border-slate-400">
                         <div class="rounded-lg text-sm text-center font-semibold">Data Chart</div>
                         <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1"></div>
-                        <apx-chart
-                        [series]="chartOptions.series"
-                        [chart]="chartOptions.chart"
-                        [dataLabels]="chartOptions.dataLabels"
-                        [plotOptions]="chartOptions.plotOptions"
-                        [yaxis]="chartOptions.yaxis"
-                        [xaxis]="chartOptions.xaxis"
-                        [legend]="chartOptions.legend"
-                        [colors]="chartOptions.colors"
-                        [grid]="chartOptions.grid"
-                      ></apx-chart>
+                        <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                            [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
+                            [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis" [legend]="chartOptions.legend"
+                            [colors]="chartOptions.colors" [grid]="chartOptions.grid"></apx-chart>
                     </div>
 
                 </div>
@@ -109,4 +102,3 @@
         </div>
     </div>
 </div>
-
