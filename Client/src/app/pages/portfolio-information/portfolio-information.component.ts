@@ -69,10 +69,16 @@ interface EducationInfo {
   branch: string;
 }
 
-interface LinkInfo {
-  link_id: string;
-  link_name: string;
-  link_text: string;
+interface Information {
+  info_id: number;
+  info_text: string;
+  descid: string;
+}
+
+interface SelectedInfoItem {
+  skillName: string;
+  descId: string;
+  infoText: string;
 }
 
 interface ExperienceInfo {
@@ -91,6 +97,8 @@ export class PortfolioInformationComponent implements OnInit {
   allSkillsAndLevels: SkillAndLevel[] = [];
   filteredSkillsAndLevels: SkillAndLevel[] = [];
   selectedSkill: string = '';
+  selectedInfo: SelectedInfoItem[] = [];
+  
 
   skill!: string
 
@@ -98,8 +106,9 @@ export class PortfolioInformationComponent implements OnInit {
   selectedImageURL: string | undefined;
 
   education: EducationInfo[] = [];
-  link: LinkInfo[] = [];
+
   experience: ExperienceInfo[] = [];
+  information: Information[] = [];
   updateForm: FormGroup;
 
   ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
@@ -137,9 +146,9 @@ export class PortfolioInformationComponent implements OnInit {
       universe: '',
       faculty: '',
       branch: '',
-      link_id: '',
-      link_name: '',
-      link_text: '',
+      info_id: '',
+      info_text: '',
+      descid: '',
       exp_id: '',
       exp_text: '',
     });
@@ -217,6 +226,7 @@ export class PortfolioInformationComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
+    this.fetchLinkData();
     this.selectSkill();
     Emitter.authEmitter.emit(true);
     console.log(this.spiderChartOptions.chart);
@@ -316,7 +326,6 @@ export class PortfolioInformationComponent implements OnInit {
 
           this.user = res.data.users;
           this.education = res.data.education;
-          this.link = res.data.link;
           this.experience = res.data.experience;
         },
         error: () => {
@@ -326,6 +335,40 @@ export class PortfolioInformationComponent implements OnInit {
         },
       });
   }
+
+  fetchLinkData(): void {
+    this.portfolioDataService.getLinkData().subscribe({
+      next: (res: any) => {
+        console.log(res);
+  
+        const nameSkill = this.portfolioDataService.getNameSkills();
+        console.log(nameSkill);
+  
+        this.selectedInfo = res.descriptionsWithLevel
+          .filter(info => info.uniqueSkills && info.uniqueSkills.length > 0 && info.uniqueSkills[0].skill_name === nameSkill)
+          .map(info => {
+            const descId = info.descriptionId;
+            const matchingInfo = res.information.find(item => item.description.id === descId);
+            return matchingInfo
+              ? {
+                  skillName: nameSkill,
+                  descId,
+                  infoText: matchingInfo.info_text
+                }
+              : null;
+          });
+  
+        console.log(this.selectedInfo);
+      },
+      error: () => {
+        this.router.navigate(['/login']);
+        console.error('You are not logged in');
+        Emitter.authEmitter.emit(false);
+      },
+    });
+  }
+  
+
 
   selectImage(event: any) {
     if (event.target.files.length > 0) {

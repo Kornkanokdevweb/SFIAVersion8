@@ -2,151 +2,25 @@
 <div class="w-full p-4">
   <p class="text-center text-base font-semibold">Link</p>
   <div class="pt-3">
-    <div *ngIf="link.length === 0"
+    <div *ngIf="information.length === 0"
       class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-4 py-0.5 p-2 rounded dark:bg-red-900 dark:text-red-300">
       <p>No Link records available.</p>
     </div>
   </div>
-  <div *ngFor="let linkItem of link" class="flex flex-wrap items-center justify-between pt-3 space-x-5">
+  <div *ngFor="let info of information | paginate: { itemsPerPage: pageSize, currentPage: currentPage}" class="flex flex-wrap items-center justify-between pt-3 space-x-5">
     <div
       class="w-64 md:w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-2 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-800">
-      <p><span class="font-semibold">Link Name : </span> {{ linkItem.link_name }}</p>
       <p>
-        <span class="font-semibold">Link Detail : </span>
-        <ng-container *ngIf="!isLink(linkItem.link_text)">
-          {{ linkItem.link_text }}
-        </ng-container>
-        <a *ngIf="isLink(linkItem.link_text)" class="hover:text-blue-600" href="{{ linkItem.link_text }}"
+        <span class="font-semibold">Link Detail :  </span>
+        <a *ngIf="isLink(info.info_text )" class="hover:text-blue-600" href="{{ info.info_text  }}"
           target="_blank">
-          {{ displayPartialURL(linkItem.link_text) }}
+          {{ displayPartialURL(info.info_text ) }}
         </a>
       </p>
-    </div>
-    <div class="flex md:order-2 space-x-2">
-      <button (click)="EditLink(linkItem)">
-        <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 512 512">
-          <path
-            d="M471.6 21.7c-21.9-21.9-57.3-21.9-79.2 0L362.3 51.7l97.9 97.9 30.1-30.1c21.9-21.9 21.9-57.3 0-79.2L471.6 21.7zm-299.2 220c-6.1 6.1-10.8 13.6-13.5 21.9l-29.6 88.8c-2.9 8.6-.6 18.1 5.8 24.6s15.9 8.7 24.6 5.8l88.8-29.6c8.2-2.7 15.7-7.4 21.9-13.5L437.7 172.3 339.7 74.3 172.4 241.7zM96 64C43 64 0 107 0 160V416c0 53 43 96 96 96H352c53 0 96-43 96-96V320c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V160c0-17.7 14.3-32 32-32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96z" />
-        </svg>
-      </button>
-      <p-dialog header="Edit Link" [(visible)]="displayEditLink" [modal]="true" [draggable]="false" [resizable]="false"
-        [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }">
-        <form [formGroup]="updateForm">
-          <div class="grid gap-6 mb-6 md:grid-cols-2"></div>
-          <div class="mb-6">
-            <label for="link_name" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Link
-              Name</label>
-            <input formControlName="link_name" type="text" id="linkname"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Enter the link name information" required />
-          </div>
-          <div class="mb-6">
-            <label for="link_text" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">URL
-              link</label>
-            <input formControlName="link_text" type="text" id="urllink"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Enter URL link information" required />
-            <div *ngIf="updateForm.get('link_text')?.hasError('pattern')" class="text-red-500 text-xs pt-1">
-              Please enter a valid URL.
-            </div>
-          </div>
-          <div class="grid justify-items-center">
-            <button (click)="saveEditLink()" type="submit" [disabled]="!updateForm.valid"
-              class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-              Save
-            </button>
-          </div>
-          <p-toast position="center" key="confirm1" (onClose)="onRejectEdit()" [baseZIndex]="5000">
-            <ng-template let-message pTemplate="message">
-              <div class="flex flex-column" style="flex: 1">
-                <div class="text-center">
-                  <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
-                  <h4>{{ message.summary }}</h4>
-                  <p>{{ message.detail }}</p>
-                </div>
-                <div class="flex p-fluid space-x-4 pt-3">
-                  <div class="col-6">
-                    <button type="button" pButton (click)="onConfirmEdit()" label="Yes"
-                      class="p-button-success"></button>
-                  </div>
-                  <div class="col-6">
-                    <button type="button" pButton (click)="onRejectEdit()" label="Cancel"
-                      class="p-button-secondary"></button>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </p-toast>
-        </form>
-      </p-dialog>
-      <div>
-        <div class="flex justify-content-center">
-          <p-toast position="center" key="confirm" (onClose)="onReject()" [baseZIndex]="5000">
-            <ng-template let-message pTemplate="message">
-              <div class="flex flex-column" style="flex: 1">
-                <div class="text-center">
-                  <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
-                  <h4>{{ message.summary }}</h4>
-                  <p>{{ message.detail }}</p>
-                </div>
-                <div class="flex p-fluid space-x-4 pt-3">
-                  <div class="col-6">
-                    <button type="button" pButton (click)="onConfirm()" label="Yes" class="p-button-success"></button>
-                  </div>
-                  <div class="col-6">
-                    <button type="button" pButton (click)="onReject()" label="Cancel"
-                      class="p-button-secondary"></button>
-                  </div>
-                </div>
-              </div>
-            </ng-template>
-          </p-toast>
-          <button (click)="DeleteLink(linkItem)">
-            <svg xmlns="http://www.w3.org/2000/svg" height="1.2em" viewBox="0 0 448 512">
-              <path
-                d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
-            </svg>
-          </button>
-        </div>
-      </div>
+      
     </div>
   </div>
-
-  <!-- Add Link -->
-  <div class="grid justify-items-center pt-3">
-    <button (click)="AddLink()" type="button"
-      class="py-2 px-4 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-gray-50 hover:bg-gray-100 rounded-lg border-dashed border-2 border-gray-600 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-      Add Data
-    </button>
-    <p-dialog header="Add Link" [(visible)]="displayAddLink" [modal]="true" [draggable]="false" [resizable]="false"
-      [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }">
-      <form [formGroup]="updateForm">
-        <div class="grid gap-6 mb-6 md:grid-cols-2"></div>
-        <div class="mb-6">
-          <label for="linkname" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Link
-            Name</label>
-          <input formControlName="link_name" type="text" id="linkname"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Enter link name information" required />
-        </div>
-        <div class="mb-6">
-          <label for="urllink" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">URL link</label>
-          <input formControlName="link_text" type="text" id="urllink"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Enter URL link information" required />
-          <div *ngIf="updateForm.get('link_text')?.hasError('pattern')" class="text-red-500 text-xs pt-1">
-            Please enter a valid URL.
-          </div>
-        </div>
-        <div class="grid justify-items-center">
-          <button (click)="saveAddLink()" type="submit" [disabled]="!updateForm.valid"
-            class="focus:outline-none text-gray-800 bg-sky-200 focus:ring-4 font-semibold rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
-            Save
-          </button>
-
-        </div>
-      </form>
-    </p-dialog>
+  <div class="flex justify-center items-center mt-3">
+    <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
   </div>
 </div>
-<p-toast></p-toast>

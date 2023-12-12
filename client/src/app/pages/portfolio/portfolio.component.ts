@@ -425,21 +425,18 @@ export class PortfolioComponent implements OnInit {
   checkDataLength(): void {
     const educationData = this.portfolioDataService.getEducationData();
     const experienceData = this.portfolioDataService.getExperienceData();
-    const linkData = this.portfolioDataService.getLinkData();
 
     const skillSelected = this.selectedSkill !== '';
 
     forkJoin({
       education: educationData,
       experience: experienceData,
-      link: linkData,
     }).subscribe(
-      ({ education, experience, link }) => {
-        console.log(education.data.length, experience.data.length, link.data.length, skillSelected);
+      ({ education, experience}) => {
+        console.log(education.data.length, experience.data.length, skillSelected);
         if (
           education.data.length > 0 &&
           experience.data.length > 0 &&
-          link.data.length > 0 &&
           skillSelected
         ) {
           this.exportButtonDisabled = false;

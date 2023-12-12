@@ -16,7 +16,7 @@
         {{ educationItem.eyear }}
       </p>
       <p><span class="font-semibold">Level Education : </span> {{ educationItem.level_edu }}</p>
-      <p><span class="font-semibold">University : </span> {{ educationItem.universe }}</p>
+      <p><span class="font-semibold">Institution : </span> {{ educationItem.universe }}</p>
       <p><span class="font-semibold">Faculty : </span> {{ educationItem.faculty }}</p>
       <p><span class="font-semibold">Branch : </span> {{ educationItem.branch }}</p>
     </div>
@@ -38,6 +38,9 @@
               <input formControlName="syear" type="number" id="start_year" min="2000" max="2100"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter the year of study" required />
+              <div *ngIf="updateForm.hasError('yearRange')" class="mt-1">
+                <div class="text-red-500 text-xs">Start Year must be less than End Year.</div>
+              </div>
             </div>
             <div>
               <label for="end_year" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">End
@@ -46,22 +49,23 @@
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Enter the year of graduation" required />
             </div>
-            <div>
-              <label for="lavel_edu" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Level of
-                education</label>
-              <select formControlName="level_edu" id="education"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required>
-                <option value="" disabled selected>Choose your educational qualification</option>
-                <option value="Bachelor's degree">Bachelor's degree</option>
-                <option value="Master's degree">Master's degree</option>
-                <option value="Doctor's degree">Doctor's degree</option>
-              </select>
-            </div>
+          </div>
+          <div class="mb-6">
+            <label for="lavel_edu" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Level of
+              education</label>
+            <select formControlName="level_edu" id="education"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              required>
+              <option value="" disabled selected>Choose your educational qualification</option>
+              <option value="Bachelor's degree">High School Certificate</option>
+              <option value="Bachelor's degree">Bachelor Degrees</option>
+              <option value="Master's degree">Master Degrees</option>
+              <option value="Doctor's degree">Master Degrees</option>
+            </select>
           </div>
           <div class="mb-6">
             <label for="University"
-              class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">University</label>
+              class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Institution</label>
             <input formControlName="universe" type="text" id="university"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Enter university information" required />
@@ -107,7 +111,6 @@
           </p-toast>
         </form>
       </p-dialog>
-
       <div>
         <div class="flex justify-content-center">
           <p-toast position="center" key="confirm" (onClose)="onReject()" [baseZIndex]="5000">
@@ -150,13 +153,16 @@
     <p-dialog header="Add Education" [(visible)]="displayAddEducation" [modal]="true" [draggable]="false"
       [resizable]="false" [style]="{ width: '50vw', 'font-family': 'Inter, sans-serif' }">
       <form [formGroup]="updateForm">
-        <div class="grid gap-6 mb-6 md:grid-cols-2">
+        <div class="grid gap-4 mb-6 md:grid-cols-2">
           <div>
             <label for="start_year" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Start
               Year</label>
             <input formControlName="syear" type="number" id="start_year" min="2000" max="2100"
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Enter the year of study" required />
+            <div *ngIf="updateForm.hasError('yearRange')" class="mt-1">
+              <div class="text-red-500 text-xs">Start Year must be less than End Year.</div>
+            </div>
           </div>
           <div>
             <label for="end_year" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">End
@@ -165,22 +171,23 @@
               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Enter the year of graduation" required />
           </div>
-          <div>
-            <label for="company" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Level of
-              education</label>
-            <select formControlName="level_edu" id="education"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required>
-              <option value="" disabled selected>Choose your educational qualification</option>
-              <option value="Bachelor's degree">Bachelor's degree</option>
-              <option value="Master's degree">Master's degree</option>
-              <option value="Doctor's degree">Doctor's degree</option>
-            </select>
-          </div>
+        </div>
+        <div class="mb-6">
+          <label for="company" class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Level of
+            education</label>
+          <select formControlName="level_edu" id="education"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required>
+            <option value="" disabled selected>Choose your educational qualification</option>
+            <option value="Bachelor's degree">High School Certificate</option>
+            <option value="Bachelor's degree">Bachelor Degrees</option>
+            <option value="Master's degree">Master Degrees</option>
+            <option value="Doctor's degree">Master Degrees</option>
+          </select>
         </div>
         <div class="mb-6">
           <label for="university"
-            class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">University</label>
+            class="block mb-2 text-sm font-semibold text-gray-900 dark:text-white">Institution</label>
           <input formControlName="universe" type="text" id="university"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Enter university information" required />

@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
 import { myDataSource } from "../configs/connectDatabase";
 import { getUserIdFromRefreshToken } from "../utils/authUtil";
-
 import { Portfolio } from "../entitys/portfolio.entity";
 import { User } from "../entitys/user.entity";
 import { Education } from '../entitys/education.entity';
 import { Experience } from "../entitys/experience.entity";
-import { Link } from "../entitys/link.entity";
 
 //**GET Methods */
 exports.getExportPortfolio = async (req: Request, res: Response) => {
@@ -46,10 +44,6 @@ exports.getExportPortfolio = async (req: Request, res: Response) => {
             .getRepository(Experience)
             .find({ where: { portfolio: portfolio } });
 
-        // Get link data
-        const linkData = await myDataSource
-            .getRepository(Link)
-            .find({ where: { portfolio: portfolio } });
 
         const users = {
             id: user.id,
@@ -79,15 +73,9 @@ exports.getExportPortfolio = async (req: Request, res: Response) => {
             exp_text: experience.exp_text,
         }))
 
-        const link = linkData.map((link) => ({
-            link_id: link.id,
-            link_name: link.link_name,
-            link_text: link.link_text,
-        }))
-
         return res.status(200).json({
             success: true,
-            data: { users, education, experience, link }
+            data: { users, education, experience}
         });
 
     } catch (err) {

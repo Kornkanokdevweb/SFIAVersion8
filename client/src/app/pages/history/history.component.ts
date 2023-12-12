@@ -305,7 +305,18 @@ export class HistoryComponent implements OnInit {
   }
 
   updateChartData() {
-    this.allSkillsAndLevels.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
+    this.allSkillsAndLevels.sort((a, b) => {
+      const percentageDiff = (b.percentage || 0) - (a.percentage || 0);
+      // If percentages are equal, sort alphabetically by codeSkill and levelName
+      if (percentageDiff === 0) {
+        const codeSkillComparison = a.codeSkill.localeCompare(b.codeSkill);
+        if (codeSkillComparison === 0) {
+          return a.levelName.localeCompare(b.levelName);
+        }
+        return codeSkillComparison;
+      }
+      return percentageDiff;
+    });
 
     this.chartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
 

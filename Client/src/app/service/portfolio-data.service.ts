@@ -44,7 +44,7 @@ export class PortfolioDataService {
     });
   }
   getLinkData(): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/getLink`, {
+    return this.http.get<any>(`${this.API_URL}/getDatacollection`, {
       withCredentials: true,
     });
   }
@@ -77,13 +77,6 @@ export class PortfolioDataService {
       })
       .pipe(tap(() => this.newItemAddedSubject.next()));
   }
-  saveLink(formData: any): Observable<any> {
-    return this.http
-      .post(`${this.API_URL}/createLink`, formData, {
-        withCredentials: true,
-      })
-      .pipe(tap(() => this.newItemAddedSubject.next()));
-  }
 
   getNewItemAddedSubject(): Observable<void> {
     return this.newItemAddedSubject.asObservable();
@@ -110,16 +103,7 @@ export class PortfolioDataService {
       }
     );
   }
-  updateLink(formData: any): Observable<any> {
-    const linkId = formData.link_id;
-    return this.http.put(
-      `${this.API_URL}/updateLink?link_id=${linkId}`,
-      formData,
-      {
-        withCredentials: true,
-      }
-    );
-  }
+
 
   // DELETE
   deleteEducation(educationId: string): Observable<any> {
@@ -142,16 +126,7 @@ export class PortfolioDataService {
         tap(() => this.itemDeletedSubject.next())
       );
   }
-  deleteLink(linkId: string): Observable<any> {
-    return this.http
-      .delete(`${this.API_URL}/deleteLink?link_id=${linkId}`, {
-        withCredentials: true,
-      })
-      .pipe(
-        // Notify subscribers when an item is deleted
-        tap(() => this.itemDeletedSubject.next())
-      );
-  }
+
 
   getItemDeletedSubject(): Observable<void> {
     return this.itemDeletedSubject.asObservable();

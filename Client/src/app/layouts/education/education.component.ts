@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 
 import { PortfolioDataService } from 'src/app/service/portfolio-data.service';
 
@@ -41,19 +42,30 @@ export class EducationComponent implements OnInit {
   ) {
     this.updateForm = this.formBuilder.group({
       education_id: '',
-      syear: '',
-      eyear: '',
+      syear: ['', Validators.required],
+      eyear: ['', Validators.required],
       level_edu: '',
       universe: '',
       faculty: '',
       branch: '',
-    });
+    }, { validators: this.yearRangeValidator });
   }
 
   ngOnInit(): void {
     this.fetchEducationData();
     this.primengConfig.ripple = true;
   }
+
+  yearRangeValidator: ValidatorFn = (control: AbstractControl) => {
+    const startYear = control.get('syear')?.value;
+    const endYear = control.get('eyear')?.value;
+
+    if (startYear !== null && endYear !== null && startYear >= endYear) {
+      return { yearRange: true };
+    }
+
+    return null;
+  };
 
   fetchEducationData(): void {
     this.portfolioDataService.getEducationData().subscribe({
@@ -101,7 +113,15 @@ export class EducationComponent implements OnInit {
 
   saveAddEducation(): void {
     const formData = this.updateForm.value;
-
+    if (formData.syear >= formData.eyear) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Validation Error',
+        detail: 'Start Year must be less than End Year',
+      });
+      return;
+    }
+  
     this.portfolioDataService.saveEducation(formData).subscribe({
       next: (res) => {
         this.messageService.add({
@@ -142,7 +162,16 @@ export class EducationComponent implements OnInit {
   }
 
   onConfirmEdit() {
+
     const formData = this.updateForm.value;
+    if (formData.syear >= formData.eyear) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Validation Error',
+        detail: 'Start Year must be less than End Year',
+      });
+      return;
+    }
 
     this.messageService.clear('confirm1');
     this.portfolioDataService
