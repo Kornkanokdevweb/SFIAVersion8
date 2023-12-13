@@ -15,6 +15,7 @@ import { DetailStandardComponent } from './pages/detail-standard/detail-standard
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
 import { ResetComponent } from './pages/reset/reset.component'
 import { PortfolioInformationComponent } from './pages/portfolio-information/portfolio-information.component';
+import { ReferenceComponent } from './pages/reference/reference.component';
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -31,6 +32,7 @@ const routes: Routes = [
   {path:'recovery-password', component: RecoveryPasswordComponent},
   {path:'reset', component: ResetComponent},
   {path:'portfolio-information', component: PortfolioInformationComponent},
+  {path:'reference', component: ReferenceComponent},
 ];
 
 @NgModule({

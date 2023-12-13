@@ -67,7 +67,7 @@ export class LinkComponent implements OnInit {
     return url.includes('://');
   }
 
-  displayPartialURL(fullURL: string, maxLength: number = 25): string {
+  displayPartialURL(fullURL: string, maxLength: number = 35): string {
     const urlParts = fullURL.split('://');
     let displayURL = urlParts[urlParts.length - 1];
 

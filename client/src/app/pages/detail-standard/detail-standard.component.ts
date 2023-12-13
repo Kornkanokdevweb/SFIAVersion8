@@ -145,7 +145,6 @@ export class DetailStandardComponent implements OnInit {
             })
             .subscribe(
               (data: any) => {
-                console.log(data)
                 // กรองข้อมูล info_text โดยใช้ descids
                 this.information = data.information
                   .filter((info: { description: { id: string } }) =>
@@ -178,7 +177,7 @@ export class DetailStandardComponent implements OnInit {
                       );
                     const percentageForLevel = parseFloat(((descIdsWithInformationForLevel.length / descIdsForLevel.length) * 100).toFixed(2));
                     this.percentageMap.set(levelName, percentageForLevel);
-                    console.log('ข้อมูลทั้งหมดมีจำนวน: ', descIdsForLevel.length, 'มีข้อมูลแล้วจำนวน: ', descIdsWithInformationForLevel.length, `Percentage of ${levelName}: `, `${percentageForLevel}%`);
+                    console.log(levelDetails, '=>', 'ข้อมูลทั้งหมดมีจำนวน: ', descIdsForLevel.length, 'มีข้อมูลแล้วจำนวน: ', descIdsWithInformationForLevel.length, `Percentage of ${levelName}: `, percentageForLevel);
                     // console.log(`Percentage for ${levelName}: ${percentageForLevel}`);
                   }
                 });
@@ -187,7 +186,7 @@ export class DetailStandardComponent implements OnInit {
                 this.percentage =
                   (descIdsWithInformation.length / descids.length) * 100;
                 this.percentage = +this.percentage.toFixed(2);
-                console.log(`Percentage all of ${this.codeskill}:`, `${this.percentage}%`)
+                console.log(`Percentage all of codeSkill:`, this.percentage)
                 console.log(`Value length of descIds is:`, descids.length);
                 console.log(`User Have Value length of descIds is:`, this.information);
               },
@@ -245,7 +244,7 @@ export class DetailStandardComponent implements OnInit {
           ];
         }
       });
-  }z
+  }
 
   getInformationByDescid(descid: string): string {
     const informationRecord = this.information.find(
@@ -331,6 +330,13 @@ export class DetailStandardComponent implements OnInit {
             this.isLoading = false;
           },
           error: (err) => {
+            if (err.error.message === 'Error fetching data from info_text URL. Hostname not found.') {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Your link is undefined. Please try again',
+              });
+            }
             console.error('Error creating Information:', err);
             this.isLoading = false;
           },
@@ -373,6 +379,13 @@ export class DetailStandardComponent implements OnInit {
             this.isLoading = false;
           },
           error: (err) => {
+            if (err.error.message === 'Error fetching data from info_text URL. Hostname not found.') {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Your link is undefined. Please try again',
+              });
+            }
             console.error('Error updating Information:', err);
             this.isLoading = false;
           },

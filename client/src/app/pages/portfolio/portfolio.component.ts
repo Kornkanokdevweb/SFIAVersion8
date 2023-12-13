@@ -63,6 +63,7 @@ export class PortfolioComponent implements OnInit {
   skillDetails: any;
 
   filteredSkillsAndLevels: SkillAndLevel[] = [];
+  skillSelected: boolean = false;
 
   toggleDropdown() {
     this.isDropdownVisible = !this.isDropdownVisible;
@@ -170,21 +171,21 @@ export class PortfolioComponent implements OnInit {
     this.filterSkills();
     this.dropDownSkills();
 
-    this.checkDataLength();
+    this.checkExportButton();
 
     this.portfolioDataService
       .getItemDeletedSubject()
-      .subscribe(() => this.checkDataLength());
+      .subscribe(() => this.checkExportButton());
 
     this.portfolioDataService
       .getNewItemAddedSubject()
-      .subscribe(() => this.checkDataLength());
+      .subscribe(() => this.checkExportButton());
 
     this.portfolioDataService
       .getSelectedSkillSubject()
       .subscribe((selectedSkill) => {
         this.selectedSkill = selectedSkill;
-        this.checkDataLength();
+        this.checkExportButton();
       })
   }
   exportData(): void {
@@ -314,7 +315,18 @@ export class PortfolioComponent implements OnInit {
   }
 
   updateChartData() {
-    this.allSkillsAndLevels.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
+    this.allSkillsAndLevels.sort((a, b) => {
+      const percentageDiff = (b.percentage || 0) - (a.percentage || 0);
+      // If percentages are equal, sort alphabetically by codeSkill and levelName
+      if (percentageDiff === 0) {
+        const codeSkillComparison = a.codeSkill.localeCompare(b.codeSkill);
+        if (codeSkillComparison === 0) {
+          return a.levelName.localeCompare(b.levelName);
+        }
+        return codeSkillComparison;
+      }
+      return percentageDiff;
+    });
 
     this.chartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
 
@@ -329,8 +341,11 @@ export class PortfolioComponent implements OnInit {
 
   selectSkill(skillName: string) {
     if (skillName === '') {
+      this.skillSelected = false;
       this.getHistory();
+      return;
     }
+    this.skillSelected = true;
     this.selectedSkill = skillName;
     this.checkExportButton();
     this.filterSkills();
@@ -406,8 +421,43 @@ export class PortfolioComponent implements OnInit {
   }
 
   checkExportButton() {
-    this.checkExport = !!!this.selectedSkill ? true : false;
+    this.checkExport = !!!this.selectedSkill || this.exportButtonDisabled;
+
+    const educationData = this.portfolioDataService.getEducationData();
+    const experienceData = this.portfolioDataService.getExperienceData();
+
+    const skillSelected = this.selectedSkill !== '';
+
+    forkJoin({
+      education: educationData,
+      experience: experienceData,
+    }).subscribe(
+      ({ education, experience }) => {
+        console.log(education.data.length, experience.data.length, skillSelected);
+        if (education.data.length > 0 && experience.data.length > 0 && skillSelected) {
+          this.exportButtonDisabled = false;
+        } else {
+          this.exportButtonDisabled = true;
+        }
+
+        this.checkExport = !!!this.selectedSkill || this.exportButtonDisabled;
+      },
+      (error) => {
+        console.error('Error fetching data:', error);
+        this.exportButtonDisabled = true;
+        this.checkExport = !!!this.selectedSkill || this.exportButtonDisabled;
+      }
+    );
   }
+
+  getExportButtonStyle(): any {
+    return {
+      'background-color': this.checkExport ? 'gray' : 'blue', 
+      'cursor': this.checkExport ? 'not-allowed' : 'pointer',
+    };
+  }
+
+
 
   fetchSkillDetails(codeSkill: string) {
     console.log(codeSkill);
@@ -422,31 +472,4 @@ export class PortfolioComponent implements OnInit {
       )
   }
 
-  checkDataLength(): void {
-    const educationData = this.portfolioDataService.getEducationData();
-    const experienceData = this.portfolioDataService.getExperienceData();
-
-    const skillSelected = this.selectedSkill !== '';
-
-    forkJoin({
-      education: educationData,
-      experience: experienceData,
-    }).subscribe(
-      ({ education, experience}) => {
-        console.log(education.data.length, experience.data.length, skillSelected);
-        if (
-          education.data.length > 0 &&
-          experience.data.length > 0 &&
-          skillSelected
-        ) {
-          this.exportButtonDisabled = false;
-        } else {
-          this.exportButtonDisabled = true;
-        }
-      },
-      (error) => {
-        console.error('Error fetching data:', error);
-      }
-    );
-  }
 }

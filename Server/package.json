@@ -25,6 +25,7 @@
     "@types/node": "^20.4.5",
     "@types/nodemailer": "^6.4.9",
     "@types/otp-generator": "^4.0.0",
+    "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",

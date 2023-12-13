@@ -46,6 +46,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import {MatMenuModule} from '@angular/material/menu';
+import { ReferenceComponent } from './pages/reference/reference.component';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import {MatMenuModule} from '@angular/material/menu';
     PortfolioInformationComponent,
     SpiderchartComponent,
     DatachartComponent,
+    ReferenceComponent,
   ],
   imports: [
     BrowserModule,

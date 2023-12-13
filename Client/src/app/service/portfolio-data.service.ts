@@ -30,8 +30,6 @@ export class PortfolioDataService {
     return this.nameSkill;
   }
 
-  
-
   // GET
   getEducationData(): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/getEducation`, {

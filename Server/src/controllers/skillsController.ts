@@ -11,6 +11,7 @@ import {
   findInformationByDatacollectionId,
   getUserIdFromRefreshToken,
 } from "../utils/authUtil";
+import axios from "axios";
 
 //ข้อมูลskillทั้งหมด
 exports.searchSkills = async (req: Request, res: Response) => {
@@ -112,6 +113,15 @@ exports.createDatacollection = async (req: Request, res: Response) => {
     const descriptionId: any = req.query.descriptionId;
     const { info_text } = req.body; // รับ description id และ info_text จากข้อมูลที่ส่งมา
 
+    const infoTextResponse = await axios.get(info_text);
+
+    if(infoTextResponse.status !== 200) {
+      return res.status(500).send({
+        success: false,
+        message: `Error fetching data from info_text URL. Status code:`
+      });
+    }
+
     if (!info_text) {
       return res.status(401).send({
         success: false,
@@ -182,7 +192,12 @@ exports.createDatacollection = async (req: Request, res: Response) => {
       info_id: saveInformation.map((info) => info.id),
     });
   } catch (err) {
-    console.error(err);
+    if (err.code === 'ENOTFOUND') {
+      return res.status(500).send({
+        success: false,
+        message: `Error fetching data from info_text URL. Hostname not found.`,
+      });
+    }
     return res.status(500).send({
       success: false,
       message: "Server error",
@@ -271,7 +286,6 @@ exports.getDatacollection = async (req: Request, res: Response) => {
       descriptionsWithLevel: levelsData,
     });
   } catch (err) {
-    console.log(err);
     res.status(500).send({
       success: false,
       message: "Internal Server Error",
@@ -293,6 +307,15 @@ exports.updateDatacollection = async (req: Request, res: Response) => {
 
     const informationId: any = req.query.informationId;
     const { info_text } = req.body; // รับ ID ของข้อมูล Information และค่า info_text ที่ต้องการอัปเดตจากข้อมูลที่ส่งมา
+
+    const infoTextResponse = await axios.get(info_text);
+
+    if(infoTextResponse.status !== 200) {
+      return res.status(500).send({
+        success: false,
+        message: `Error fetching data from info_text URL. Status code:`
+      });
+    }
 
     const informationRepository = myDataSource.getRepository(Information);
 
@@ -348,7 +371,12 @@ exports.updateDatacollection = async (req: Request, res: Response) => {
       information,
     });
   } catch (err) {
-    console.error(err);
+    if (err.code === 'ENOTFOUND') {
+      return res.status(500).send({
+        success: false,
+        message: `Error fetching data from info_text URL. Hostname not found.`,
+      });
+    }
     return res.status(500).send({
       success: false,
       message: "Server error",
