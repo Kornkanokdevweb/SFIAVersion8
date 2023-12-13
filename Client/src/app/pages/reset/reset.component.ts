@@ -59,9 +59,10 @@ export class ResetComponent implements OnInit {
       // แสดงข้อความผิดพลาดหรือทำการจัดการเมื่อรหัสผ่านไม่ตรงกัน
       console.error('Passwords do not match');
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Passwords do not match' });
+      this.isLoading = false;
       return;
     }
-
+    this.isLoading = false;
     const storedEmail = this.emailService.getEmail(); // รับค่าอีเมลที่เก็บไว้ใน Service
 
     const resetData = {

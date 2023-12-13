@@ -112,7 +112,7 @@ export class RecoveryPasswordComponent implements OnInit {
         },
         (error) => {
           if (error.status === 400 && error.error && error.error.error === "Invalid OTP") {
-            // Handle the "Invalid OTP" error here (e.g., display an error message to the user).
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Wrong OTP! Check email again!' });
             console.log('Wrong OTP! Check email again!')
           } else {
             console.error('API Error:', error);

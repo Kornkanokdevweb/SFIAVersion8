@@ -60,7 +60,7 @@ export class ResetPasswordComponent implements OnInit {
       (error) => {
         console.error('Failed to send OTP:', error);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to send OTP' });
-        // ทำสิ่งที่คุณต้องการเมื่อส่ง OTP ไม่สำเร็จ
+        this.isLoading = false;
       }
     );
   }

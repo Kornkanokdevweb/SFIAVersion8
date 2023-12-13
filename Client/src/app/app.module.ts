@@ -12,7 +12,6 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
 import { DetailStandardComponent } from './pages/detail-standard/detail-standard.component';
-import { AddInformationComponent } from './pages/add-information/add-information.component';
 import { AboutComponent } from './pages/about/about.component';
 import { PortfolioComponent } from './pages/portfolio/portfolio.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -57,7 +56,6 @@ import { ReferenceComponent } from './pages/reference/reference.component';
     HomeComponent,
     PortfolioComponent,
     DetailStandardComponent,
-    AddInformationComponent,
     AboutComponent,
     LoginComponent,
     RegisterComponent,
