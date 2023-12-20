@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild } from '@angular/core';
 import {
   ApexChart,
   ApexAxisChartSeries,
@@ -8,8 +8,7 @@ import {
   ApexYAxis,
   ApexLegend,
   ApexGrid,
-} from "ng-apexcharts";
-
+} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -29,81 +28,78 @@ export type ChartOptions = {
   styleUrls: ['./datachart.component.css'],
 })
 export class DatachartComponent {
-  @ViewChild("chart")
+  @ViewChild('chart')
   chart!: ChartComponent;
 
   public chartOptions: ChartOptions = {
     series: [],
     chart: {
       height: 350,
-      type: "bar",
+      type: 'bar',
       events: {
-        click: function (chart, w, e) {
-          // console.log(chart, w, e)
-        }
-      }
+        click: function (chart, w, e) {},
+      },
     },
     colors: [
-      "#008FFB",
-      "#00E396",
-      "#FEB019",
-      "#FF4560",
-      "#775DD0",
-      "#546E7A",
-      "#26a69a",
-      "#D10CE8"
+      '#008FFB',
+      '#00E396',
+      '#FEB019',
+      '#FF4560',
+      '#775DD0',
+      '#546E7A',
+      '#26a69a',
+      '#D10CE8',
     ],
     plotOptions: {
       bar: {
-        columnWidth: "50%",
-        distributed: true
-      }
+        columnWidth: '50%',
+        distributed: true,
+      },
     },
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     legend: {
-      show: false
+      show: false,
     },
     grid: {
       row: {
-        colors: ["#fff", "#f2f2f2"]
-      }
+        colors: ['#fff', '#f2f2f2'],
+      },
     },
     xaxis: {
       labels: {
-        rotate: -45
+        rotate: -45,
       },
       categories: [
-        "Apples",
-        "Oranges",
-        "Strawberries",
-        "Pineapples",
-        "Mangoes",
-        "Bananas",
-        "Blackberries",
-        "Pears",
-        "Watermelons melons",
-        "Cherries",
-        "Pomegranates",
-        "Tangerines",
-        "Papayas"
+        'Apples',
+        'Oranges',
+        'Strawberries',
+        'Pineapples',
+        'Mangoes',
+        'Bananas',
+        'Blackberries',
+        'Pears',
+        'Watermelons melons',
+        'Cherries',
+        'Pomegranates',
+        'Tangerines',
+        'Papayas',
       ],
     },
     yaxis: {
       title: {
-        text: "Servings"
-      }
+        text: 'Servings',
+      },
     },
-
   };
 
   constructor() {
     this.chartOptions.series = [
       {
-        name: "distibuted",
-        data: [21, 22, 25, 28, 16, 21, 13, 30,21, 45, 10, 50, 55]
-      }
+        name: 'distibuted',
+        data: [21, 22, 25, 28, 16, 21, 13, 30, 21, 45, 10, 50, 55],
+      },
     ];
   }
 }

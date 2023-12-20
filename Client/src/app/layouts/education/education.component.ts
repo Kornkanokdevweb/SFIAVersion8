@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +7,6 @@ import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
-
 import { PortfolioDataService } from 'src/app/service/portfolio-data.service';
 
 interface EducationInfo {
@@ -34,21 +32,23 @@ export class EducationComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private router: Router,
-    private http: HttpClient,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private primengConfig: PrimeNGConfig,
     private portfolioDataService: PortfolioDataService
   ) {
-    this.updateForm = this.formBuilder.group({
-      education_id: '',
-      syear: ['', Validators.required],
-      eyear: ['', Validators.required],
-      level_edu: '',
-      universe: '',
-      faculty: '',
-      branch: '',
-    }, { validators: this.yearRangeValidator });
+    this.updateForm = this.formBuilder.group(
+      {
+        education_id: '',
+        syear: ['', Validators.required],
+        eyear: ['', Validators.required],
+        level_edu: '',
+        universe: '',
+        faculty: '',
+        branch: '',
+      },
+      { validators: this.yearRangeValidator }
+    );
   }
 
   ngOnInit(): void {
@@ -74,7 +74,6 @@ export class EducationComponent implements OnInit {
       },
       error: () => {
         this.router.navigate(['/login']);
-        console.error('You are not logged in');
         Emitter.authEmitter.emit(false);
       },
     });
@@ -106,7 +105,6 @@ export class EducationComponent implements OnInit {
       faculty: education.faculty,
       branch: education.branch,
     });
-    console.log(this.EditEducation);
 
     this.displayEditEducation = true;
   }
@@ -121,7 +119,7 @@ export class EducationComponent implements OnInit {
       });
       return;
     }
-  
+
     this.portfolioDataService.saveEducation(formData).subscribe({
       next: (res) => {
         this.messageService.add({
@@ -129,7 +127,11 @@ export class EducationComponent implements OnInit {
           summary: 'Success',
           detail: 'Education created successfully',
         });
-        console.log('Education created successfully:', res);
+
+        setTimeout(() => {
+          this.messageService.clear();
+        }, 2500);
+
         this.fetchEducationData();
         this.displayAddEducation = false;
 
@@ -143,7 +145,15 @@ export class EducationComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Error creating education:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to created Education',
+        });
+
+        setTimeout(() => {
+          this.messageService.clear();
+        }, 2500);
       },
     });
   }
@@ -162,7 +172,6 @@ export class EducationComponent implements OnInit {
   }
 
   onConfirmEdit() {
-
     const formData = this.updateForm.value;
     if (formData.syear >= formData.eyear) {
       this.messageService.add({
@@ -176,8 +185,7 @@ export class EducationComponent implements OnInit {
     this.messageService.clear('confirm1');
     this.portfolioDataService
       .updateEducation(formData)
-      .pipe(finalize(() => (
-        this.confirmEdit = false)))
+      .pipe(finalize(() => (this.confirmEdit = false)))
       .subscribe(
         (res) => {
           if (res.success) {
@@ -186,7 +194,11 @@ export class EducationComponent implements OnInit {
               summary: 'Success',
               detail: 'Education updated successfully',
             });
-            console.log('Education updated successfully:', res);
+
+            setTimeout(() => {
+              this.messageService.clear();
+            }, 2500);
+
             this.fetchEducationData();
             this.displayEditEducation = false;
           } else {
@@ -198,7 +210,10 @@ export class EducationComponent implements OnInit {
             summary: 'Warning',
             detail: 'Entered education data is the same as existing data.',
           });
-          console.error('Error updating education:', err);
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         }
       );
   }
@@ -242,21 +257,27 @@ export class EducationComponent implements OnInit {
       .pipe(finalize(() => this.messageService.clear('confirm')))
       .subscribe(
         (res) => {
-          console.log('Education deleted successfully:', res);
           this.fetchEducationData();
           this.messageService.add({
             severity: 'success',
             summary: 'Confirmed',
             detail: 'Education deleted successfully',
           });
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         },
         (err) => {
-          console.error('Error deleting education:', err);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to delete education',
           });
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         }
       );
   }

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { debounceTime } from 'rxjs/operators';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
+import { Title } from '@angular/platform-browser';
 
 interface Category {
   category_text: string;
@@ -47,10 +48,12 @@ export class HomeComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private envEndpointService: EnvEndpointService
+    private envEndpointService: EnvEndpointService,
+    private titleService: Title
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('SFIAV8 | Home');
     this.checkLogin()
     this.fetchSkills();
 
@@ -69,14 +72,12 @@ export class HomeComponent implements OnInit {
           Emitter.authEmitter.emit(true)
         },
         error: () => {
-          //handle error
           this.router.navigate(['/'])
           Emitter.authEmitter.emit(false)
         }
       });
   }
 
-  //defaut ข้อมูลทั้งหมด
   fetchSkills() {
     this.http.get<Skills[]>(`${this.ENV_REST_API}/search`).subscribe(
       (skills) => {
@@ -88,7 +89,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  //ค้นหาข้อมูลจากการกรอก InputText
   searchSkills() {
     this.http
       .get<Skills[]>(`${this.ENV_REST_API}/search`)
@@ -108,7 +108,6 @@ export class HomeComponent implements OnInit {
 
   }
 
-  //การแสดงข้อมูลใน dropdown category
   fetchCategories() {
     this.http.get<any>(`${this.ENV_REST_API}/category`).subscribe((response) => {
       const allCategories = response.skills.map((skill: any) => skill.category.category_text);
@@ -116,7 +115,6 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  //เมื่อมีการเลือก dropdown category 
   onCategoryChange() {
     if (this.selectedCategory && this.selectedCategory !== 'all') {
       this.http.get<any>(`${this.ENV_REST_API}/category?categoryText=` + this.selectedCategory)
@@ -176,7 +174,6 @@ export class HomeComponent implements OnInit {
     this.currentPage = 1;
   }
 
-  //ฟังก์ชันสำหรับการลบข้อมูลใน dropdown ที่ซ้ำกัน
   removeDuplicates(items: string[]): string[] {
     const uniqueItems: string[] = [];
     const seenItems = new Set();

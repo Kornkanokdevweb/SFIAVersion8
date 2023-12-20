@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Emitter } from 'src/app/emitters/emitter'; 
 import * as AOS from 'aos'
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-about',
@@ -15,10 +16,12 @@ export class AboutComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private envEndpointService: EnvEndpointService
+    private envEndpointService: EnvEndpointService,
+    private titleService: Title
   ) { }
   
   ngOnInit(): void {
+    this.titleService.setTitle('SFIAV8 | About us');
     AOS.init()
     window.addEventListener('load',AOS.refresh)
     this.http.get(`${this.ENV_REST_API}/user`)
@@ -27,7 +30,6 @@ export class AboutComponent implements OnInit {
           Emitter.authEmitter.emit(true)
         },
         error: () => {
-          console.log(`You are not logged in`)
           Emitter.authEmitter.emit(false)
         }
       });

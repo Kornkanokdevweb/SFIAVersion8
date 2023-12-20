@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
+import { Title } from '@angular/platform-browser';
 
 interface Information {
   info_id: number;
@@ -50,7 +51,8 @@ export class DetailStandardComponent implements OnInit {
     private http: HttpClient,
     private formBuilder: FormBuilder,
     private router: Router,
-    private envEndpointService: EnvEndpointService
+    private envEndpointService: EnvEndpointService,
+    private titleService: Title
   ) {
     this.updateForm = this.formBuilder.group({
       info_id: '',
@@ -60,6 +62,7 @@ export class DetailStandardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('SFIAV8 | Detail');
     this.route.params.subscribe((params) => {
       this.codeskill = params['codeskill']; // Get the skill code from route parameters
       this.fetchSkillDetails();
@@ -85,18 +88,15 @@ export class DetailStandardComponent implements OnInit {
       .get(`${this.ENV_REST_API}/search?codeskill=${this.codeskill}`)
       .subscribe(
         (details: any) => {
-          console.log(details);
           const levelNameMap = new Map<string, number[]>();
 
           details[0].levels.forEach((level: any) => {
             const levelName = level.level_name;
             const id = level.id;
 
-            // ถ้า level_name ยังไม่ถูกเพิ่มใน Map
             if (!levelNameMap.has(levelName)) {
               levelNameMap.set(levelName, [id]);
             } else {
-              // ถ้า level_name ถูกเพิ่มแล้ว
               levelNameMap.get(levelName)?.push(id);
             }
           });
@@ -120,24 +120,16 @@ export class DetailStandardComponent implements OnInit {
 
               const levelName = level_name;
 
-              console.log(descLengthMap);
-              console.log(
-                `Length of ${levelName} for desc${ids}: ${descLength}`
-              );
-
               return {
                 level_name: level_name,
                 description: {
-                  //id: ids,
                   desc: ids.map((id) => `desc${id}`),
                 },
               };
             }
           );
-          console.log(descids); // ค่า descids ได้ถูกเก็บในตัวแปรนี้
 
           temporarySkillDetails = this.skillDetails;
-          console.log(this.skillDetails);
 
           this.http
             .get(`${this.ENV_REST_API}/getDatacollection`, {
@@ -157,7 +149,7 @@ export class DetailStandardComponent implements OnInit {
 
                     return { info_id, info_text, descid };
                   });
-                console.log('Have Data Current:', this.information);
+                
                 this.information.sort((a, b) =>
                   a.descid.localeCompare(b.descid)
                 );
@@ -168,7 +160,7 @@ export class DetailStandardComponent implements OnInit {
                   const levelDetails = temporarySkillDetails.find(
                     (detail) => detail.level_name === levelName
                   );
-                  // console.log(levelDetails);
+                  
                   if (levelDetails) {
                     const descIdsForLevel = levelDetails.description.desc;
                     const descIdsWithInformationForLevel =
@@ -177,21 +169,13 @@ export class DetailStandardComponent implements OnInit {
                       );
                     const percentageForLevel = parseFloat(((descIdsWithInformationForLevel.length / descIdsForLevel.length) * 100).toFixed(2));
                     this.percentageMap.set(levelName, percentageForLevel);
-                    console.log(levelDetails, '=>', 'ข้อมูลทั้งหมดมีจำนวน: ', descIdsForLevel.length, 'มีข้อมูลแล้วจำนวน: ', descIdsWithInformationForLevel.length, `Percentage of ${levelName}: `, percentageForLevel);
-                    // console.log(`Percentage for ${levelName}: ${percentageForLevel}`);
                   }
                 });
 
-                // const descIdsWithInformation = this.getDescIdsWithInformation(this.information, descids);
-                this.percentage =
-                  (descIdsWithInformation.length / descids.length) * 100;
+                this.percentage = (descIdsWithInformation.length / descids.length) * 100;
                 this.percentage = +this.percentage.toFixed(2);
-                console.log(`Percentage all of codeSkill:`, this.percentage)
-                console.log(`Value length of descIds is:`, descids.length);
-                console.log(`User Have Value length of descIds is:`, this.information);
               },
               (error) => {
-                console.error('Error fetching skill details:', error);
               }
             );
 
@@ -202,7 +186,7 @@ export class DetailStandardComponent implements OnInit {
           this.levelNames = this.getUniqueItems(this.levelNames);
         },
         (error) => {
-          console.error('Error fetching skill details:', error);
+          console.error('Error fetching skill details:');
         }
       );
   }
@@ -214,14 +198,11 @@ export class DetailStandardComponent implements OnInit {
       )
       .subscribe((details: any) => {
         this.selectedMetal = levelName;
-        console.log(this.selectedMetal);
-        console.log(this.codeskill);
         const selectedLevels = details[0]?.levels.filter(
           (level: any) => level.level_name === levelName
         );
 
         if (selectedLevels && selectedLevels.length > 0) {
-          // สร้างอาร์เรย์ของคำอธิบายของทุก level ที่เกี่ยวข้อง
           const descriptions = selectedLevels.map((level: any) => {
             const description_text =
               level.descriptions[0]?.description_text || '';
@@ -229,15 +210,10 @@ export class DetailStandardComponent implements OnInit {
             return { description_text, descid };
           });
 
-          // รวมข้อมูลใน descriptions และเขียนเป็นข้อความที่สามารถแสดงได้ใน HTML
           this.selectedLevelDescriptions = descriptions;
-          console.log(this.selectedLevelDescriptions);
           const descids = this.selectedLevelDescriptions.map((description) =>
             description.descid.trim()
           );
-          console.log('descidssss', descids);
-          console.log(this.selectedLevelDescriptions);
-          // this.getInformation(descids);
         } else {
           this.selectedLevelDescriptions = [
             { description_text: 'Level not found', descid: '' },
@@ -253,7 +229,6 @@ export class DetailStandardComponent implements OnInit {
     return informationRecord ? informationRecord.info_text : '';
   }
 
-
   addInformation(i: number) {
     if (this.isLoggedIn) {
       this.visible[i] = true;
@@ -267,7 +242,6 @@ export class DetailStandardComponent implements OnInit {
 
     const selectedDescription = this.selectedLevelDescriptions[i];
     const descid = selectedDescription.descid;
-    console.log('Selected descid:', selectedDescription.descid);
   }
 
   updatedDescStatus: boolean[] = [];
@@ -287,19 +261,9 @@ export class DetailStandardComponent implements OnInit {
         })
         .subscribe({
           next: (res: any) => {
-            // ระบุประเภทของ 'res' เป็น 'any' เพื่อให้มีคุณสมบัติ 'info_id' ใช้ได้
-            console.log(
-              'Information created successfully:',
-              res,
-              this.information
-            );
-
-            // อัปเดตสถานะของ descid เพื่อบอกว่ามีข้อมูลใหม่สำหรับ descid นี้
             if (this.selectedDescriptionIndex !== null) {
               this.updatedDescStatus[this.selectedDescriptionIndex] = true;
             }
-
-            // อัปเดตหรือเพิ่มข้อมูลที่ถูกบันทึกไปที่ information array
 
             const info_text = formData.info_text;
 
@@ -312,11 +276,10 @@ export class DetailStandardComponent implements OnInit {
 
             this.getInformationByDescid(descid);
             this.fetchSkillDetails();
-            // หลังจากจบการทำงาน ตั้งค่า visible ให้เป็น false เพื่อปิด dialog
+
             if (this.selectedDescriptionIndex !== null) {
               this.visible[this.selectedDescriptionIndex] = false;
             }
-
 
             this.updateForm.reset({
               info_text: '',
@@ -327,6 +290,11 @@ export class DetailStandardComponent implements OnInit {
               summary: 'Success',
               detail: 'Add data successfully',
             });
+
+            setTimeout(() => {
+              this.messageService.clear();
+            }, 2500);
+
             this.isLoading = false;
           },
           error: (err) => {
@@ -336,8 +304,11 @@ export class DetailStandardComponent implements OnInit {
                 summary: 'Error',
                 detail: 'Your link is undefined. Please try again',
               });
+              setTimeout(() => {
+                this.messageService.clear();
+              }, 2500);
             }
-            console.error('Error creating Information:', err);
+
             this.isLoading = false;
           },
         });
@@ -352,9 +323,6 @@ export class DetailStandardComponent implements OnInit {
       info_text: information.info_text,
       descid: information.descid,
     });
-    console.log(information);
-    console.log("Form Values after patchValue:", this.updateForm.value);
-    console.log(this.editInformation);
 
     this.displayEditInformation = true;
   }
@@ -365,7 +333,6 @@ export class DetailStandardComponent implements OnInit {
       const formData = this.updateForm.value;
       const informationId = formData.info_id;
 
-      console.log(informationId);
       this.http
         .put(`${this.ENV_REST_API}/updateDatacollection`, formData, {
           params: { informationId: informationId },
@@ -373,9 +340,19 @@ export class DetailStandardComponent implements OnInit {
         })
         .subscribe({
           next: (res: any) => {
-            console.log('Information updated successfully:', res);
             this.fetchSkillDetails();
             this.displayEditInformation = false;
+
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Edit data successfully',
+            });
+
+            setTimeout(() => {
+              this.messageService.clear();
+            }, 2500);
+
             this.isLoading = false;
           },
           error: (err) => {
@@ -385,25 +362,24 @@ export class DetailStandardComponent implements OnInit {
                 summary: 'Error',
                 detail: 'Your link is undefined. Please try again',
               });
+  
+              setTimeout(() => {
+                this.messageService.clear();
+              }, 2500);
+
             }
-            console.error('Error updating Information:', err);
             this.isLoading = false;
           },
         });
-
     }
-
   }
 
-  // ในเมทอด deleteInformation
   deleteInformation(information: any) {
     this.updateForm.patchValue({
-      info_id: information.info_id, // เพิ่ม informationId ลงในฟอร์ม
+      info_id: information.info_id,
       info_text: information.info_text,
       descid: information.descid,
     });
-    console.log(information);
-    console.log("Form Values after patchValue:", this.updateForm.value);
     this.messageService.add({
       key: 'confirm',
       sticky: true,
@@ -416,7 +392,6 @@ export class DetailStandardComponent implements OnInit {
   onConfirm() {
     const formData = this.updateForm.value;
     const informationId = formData.info_id;
-    console.log(informationId);
 
     this.http
       .delete(`${this.ENV_REST_API}/deleteDatacollection`, {
@@ -425,7 +400,6 @@ export class DetailStandardComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {
-          console.log('Information deleted successfully:', res);
           this.fetchSkillDetails();
           this.messageService.clear('confirm');
           this.messageService.add({
@@ -433,17 +407,24 @@ export class DetailStandardComponent implements OnInit {
             summary: 'Confirmed',
             detail: 'Information deleted successfully',
           });
-          console.log("🚀 ~ file: detail-standard.component.ts:453 ~ DetailStandardComponent ~ onConfirm ~ informationId:", informationId)
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
+
           this.fetchSkillDetails();
         },
         error: (err) => {
-          console.error('Error deleting Information:', err);
           this.messageService.clear('confirm');
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to delete Information',
           });
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         },
       });
   }

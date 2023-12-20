@@ -37,24 +37,18 @@ export class RecoveryPasswordComponent implements OnInit {
     }
 
     this.initRecoveryForm();
-    console.log('Stored Email:', this.storedEmail);
   }
 
   onInput(event: Event, currentField: string, nextField: string | null, prevField: string | null) {
-    console.log('Input event triggered:', currentField);
     const input = event.target as HTMLInputElement;
     const value = input.value;
 
-    console.log('Value:', value);
-  
     if (value && nextField) {
-      console.log('Moving to next field:', nextField);
       const nextInput = this.el.nativeElement.querySelector(`[formControlName="${nextField}"]`);
       if (nextInput) {
         this.renderer.selectRootElement(nextInput).focus();
       }
     } else if (!value && prevField) {
-      console.log('Moving to previous field:', prevField);
       const prevInput = this.el.nativeElement.querySelector(`[formControlName="${prevField}"]`);
       if (prevInput) {
         this.renderer.selectRootElement(prevInput).focus();
@@ -70,16 +64,15 @@ export class RecoveryPasswordComponent implements OnInit {
       const prevInput = this.el.nativeElement.querySelector(`[formControlName="${prevField}"]`);
       if (prevInput) {
         this.renderer.selectRootElement(prevInput).focus();
-        event.preventDefault(); // prevent the default Backspace behavior
+        event.preventDefault();
       }
     } else if (event.key !== 'Backspace' && value && nextField) {
-      console.log('Moving to next field:', nextField);
       const nextInput = this.el.nativeElement.querySelector(`[formControlName="${nextField}"]`);
       if (nextInput) {
         this.renderer.selectRootElement(nextInput).focus();
       }
     } else if (!nextField) {
-      event.preventDefault(); // prevent moving to the next input if there is no next field
+      event.preventDefault();
     }
   }
   
@@ -113,7 +106,6 @@ export class RecoveryPasswordComponent implements OnInit {
         (error) => {
           if (error.status === 400 && error.error && error.error.error === "Invalid OTP") {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Wrong OTP! Check email again!' });
-            console.log('Wrong OTP! Check email again!')
           } else {
             console.error('API Error:', error);
           }
@@ -121,7 +113,7 @@ export class RecoveryPasswordComponent implements OnInit {
       );
   }
   isLoading = false;
-  timeRemaining = 60; // จำนวนวินาทีที่ต้องการให้นับถอยหลัง
+  timeRemaining = 60;
   
   resendOTP() {
       this.isLoading = true;
@@ -129,13 +121,10 @@ export class RecoveryPasswordComponent implements OnInit {
   
       this.http.get(`${this.ENV_REST_API}/generateOTP?email=${email}`).subscribe(
           (response) => {
-              console.log('OTP sent successfully:');
-              // ทำสิ่งที่คุณต้องการเมื่อ OTP ถูกส่ง
               this.startCountdown();
           },
           (error) => {
               console.error('Failed to send OTP:', error);
-              // ทำสิ่งที่คุณต้องการเมื่อส่ง OTP ไม่สำเร็จ
               this.isLoading = false;
           }
       );
@@ -147,9 +136,9 @@ export class RecoveryPasswordComponent implements OnInit {
           if (this.timeRemaining <= 0) {
               clearInterval(countdownInterval);
               this.isLoading = false;
-              this.timeRemaining = 60; // รีเซ็ตเวลาเมื่อนับถอยหลังเสร็จสิ้น
+              this.timeRemaining = 60;
           }
-      }, 1000); // นับถอยหลังทุก 1 วินาที
+      }, 1000);
   }
   
   formatTime(seconds: number): string {
@@ -159,6 +148,4 @@ export class RecoveryPasswordComponent implements OnInit {
       const formattedSeconds = String(remainingSeconds).padStart(2, '0');
       return `${formattedMinutes}:${formattedSeconds}`;
   }
-  
-
 }

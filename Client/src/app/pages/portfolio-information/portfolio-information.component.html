@@ -21,9 +21,11 @@
                 <!-- <div class="h-9 mx-auto bg-blue-300 w-full my-0 py-0"></div> -->
                 <div class="grid grid-cols-5 bg-white pb-3 pt-4">
                     <div class="row-span-1 pl-12">
-                        <img class="w-28 h-28 mb-3 rounded-full bg-slate-200 object-cover"
-                            [src]="selectedImageURL ? selectedImageURL :'http://localhost:8080/uploads/' + user.profileImage"
-                            *ngIf="user.profileImage">
+                        <img class="w-28 h-28 mb-3 rounded-full bg-slate-200 object-cover" [src]="
+                selectedImageURL
+                  ? selectedImageURL
+                  : 'http://localhost:8080/uploads/' + user.profileImage
+              " *ngIf="user.profileImage" />
                     </div>
                     <div class="row-span-2 col-span-2 pt-7 ml-4">
                         <p class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -33,13 +35,16 @@
                             {{ user.firstNameEN }} {{ user.lastNameEN }}
                         </p>
                         <p class="mb-2 mt-2 text-xltracking-tight text-sm text-gray-900 dark:text-white uppercase">
-                            {{selectedSkill }} 
+                            {{ selectedSkill }}
                         </p>
                     </div>
                     <div class="row-span-2 col-span-2 text-sm pt-4 space-y-1.5">
                         <p><span class="font-semibold">Email : </span> {{ user.email }}</p>
                         <p><span class="font-semibold">Line : </span> {{ user.line }}</p>
-                        <p><span class="font-semibold">Phone Number : </span> {{ user.phone }}</p>
+                        <p>
+                            <span class="font-semibold">Phone Number : </span>
+                            {{ user.phone }}
+                        </p>
                     </div>
                     <div class="col-span-5 pl-12 text-sm mt-2">
                         <p>
@@ -49,17 +54,21 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3 p-3">
                     <div id="chart" class="border border-stroke grid rounded-lg bg-gray-50 p-1 border-slate-400">
-                        <div class="rounded-lg text-sm text-center font-semibold">Spider Chart</div>
+                        <div class="rounded-lg text-sm text-center font-semibold">
+                            Spider Chart
+                        </div>
                         <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1"></div>
                         <apx-chart class="mt-4" [series]="spiderChartOptions.series" [chart]="spiderChartOptions.chart"
                             [xaxis]="spiderChartOptions.xaxis" />
                     </div>
                     <div class="rounded-lg bg-gray-50 p-1 border border-slate-400">
-                        <div class="rounded-lg text-sm text-center font-semibold">Education</div>
+                        <div class="rounded-lg text-sm text-center font-semibold">
+                            Education
+                        </div>
                         <div class="h-0.5 mx-auto gradient w-20 opacity-40 my-0 py-0 rounded-t mt-1 mb-2"></div>
                         <div *ngFor="let edu of education" class="grid grid-cols-3 gap-4 text-xs pl-3 ml-5 pb-2">
                             <div class="ml-3">
-                                <p class="font-semibold">{{ edu.syear }} - {{ edu.eyear}}</p>
+                                <p class="font-semibold">{{ edu.syear }} - {{ edu.eyear }}</p>
                                 <p>{{ edu.level_edu }}</p>
                             </div>
                             <div class="col-span-2">
@@ -75,31 +84,36 @@
                         <div class="rounded-lg text-sm text-center font-semibold">Link</div>
                         <div class="h-0.5 mx-auto gradient w-12 opacity-40 my-0 py-0 rounded-t mt-1 mb-2"></div>
                         <div *ngFor="let info of selectedInfo" class="pl-3 ml-5 text-xs pb-2">
-                          <p>
-                            <span class="font-semibold"> Link : </span>
-                            <a *ngIf="isLink(info.infoText)" class="hover:text-blue-600" href="{{ info.infoText }}" target="_blank">
-                              {{ displayPartialURL(info.infoText) }}
-                            </a>
-                          </p>
+                            <p>
+                                <span class="font-semibold"> Link : </span>
+                                <a *ngIf="isLink(info.infoText)" class="hover:text-blue-600" href="{{ info.infoText }}"
+                                    target="_blank">
+                                    {{ displayPartialURL(info.infoText) }}
+                                </a>
+                            </p>
                         </div>
-                      </div>
-                      
+                    </div>
+
                     <div class="rounded-lg bg-gray-50 p-1 border border-slate-400">
-                        <div class="rounded-lg text-sm text-center font-semibold">Experience</div>
+                        <div class="rounded-lg text-sm text-center font-semibold">
+                            Experience
+                        </div>
                         <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1 mb-2"></div>
                         <div *ngFor="let experienceItem of experience" class="pl-3 ml-5 text-xs pb-2">
                             <p><span class="mr-3">•</span>{{ experienceItem.exp_text }}</p>
                         </div>
                     </div>
-                    <div class=" grid col-span-2 rounded-lg bg-gray-50 p-1 border border-slate-400">
-                        <div class="rounded-lg text-sm text-center font-semibold">Data Chart</div>
+                    <div class="grid col-span-2 rounded-lg bg-gray-50 p-1 border border-slate-400">
+                        <div class="rounded-lg text-sm text-center font-semibold">
+                            Data Chart
+                        </div>
                         <div class="h-0.5 mx-auto gradient w-24 opacity-40 my-0 py-0 rounded-t mt-1"></div>
                         <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
                             [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
                             [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis" [legend]="chartOptions.legend"
-                            [colors]="chartOptions.colors" [grid]="chartOptions.grid"></apx-chart>
+                            [colors]="chartOptions.colors" [grid]="chartOptions.grid"
+                            [title]="chartOptions.title"></apx-chart>
                     </div>
-
                 </div>
             </div>
         </div>

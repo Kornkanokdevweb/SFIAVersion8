@@ -17,7 +17,8 @@ import {
   ApexYAxis,
   ApexLegend,
   ApexGrid,
-  ApexXAxis
+  ApexXAxis,
+  ApexTitleSubtitle,
 } from "ng-apexcharts";
 
 type SkillAndLevel = {
@@ -44,6 +45,7 @@ export type dataChartOptions = {
   grid: ApexGrid;
   colors: string[];
   legend: ApexLegend;
+  title: ApexTitleSubtitle;
 };
 
 
@@ -157,11 +159,10 @@ export class PortfolioInformationComponent implements OnInit {
   public chartOptions: dataChartOptions = {
     series: [],
     chart: {
-      height: 250,
+      height: 350,
       type: "bar",
       events: {
         click: function (chart, w, e) {
-          // console.log(chart, w, e)
         }
       }
     },
@@ -205,7 +206,15 @@ export class PortfolioInformationComponent implements OnInit {
         text: "DataChart of CodeSkill"
       }
     },
-
+    title: {
+      text: "Job-Level",
+      offsetY: 336,
+      align: "center",
+      style: {
+        color: "#444",
+        fontSize: "12px"
+      }
+    }
   };
 
   public spiderChartOptions: spiderChartOptions = {
@@ -229,18 +238,14 @@ export class PortfolioInformationComponent implements OnInit {
     this.fetchLinkData();
     this.selectSkill();
     Emitter.authEmitter.emit(true);
-    console.log(this.spiderChartOptions.chart);
-
   }
 
 
   getPercentageSkillAndLevel(codeSkill: string, levelName: string, descIds: string[]): Promise<number> {
     return new Promise((resolve) => {
-      console.log(`Code Skill: ${codeSkill}, Level: ${levelName}, DescIds: ${descIds.join(', ')}`);
       this.http.get(`${this.ENV_REST_API}/search?codeskill=${codeSkill}&level_name=${levelName}`, { withCredentials: true })
         .subscribe((data: any) => {
           const selectedLevels = data[0]?.levels.filter((level: any) => level.level_name === levelName);
-          console.log(selectedLevels);
 
           if (selectedLevels && selectedLevels.length > 0) {
             const descriptions = selectedLevels.map((level: any) => {
@@ -249,12 +254,9 @@ export class PortfolioInformationComponent implements OnInit {
             });
 
             const percentage = parseFloat(((descIds.length || 1) / descriptions.length * 100).toFixed(2));
-            console.log(`Code Skill: ${codeSkill}, Level: ${levelName}, percentage: ${percentage}`);
 
-            // Use type assertion to ensure TypeScript recognizes the type
             const skillAndLevel = this.allSkillsAndLevels.find(item => item.codeSkill === codeSkill && item.levelName === levelName) as SkillAndLevel;
 
-            // Update the skillAndLevel object with the percentage property
             if (skillAndLevel) {
               skillAndLevel.percentage = percentage;
             }
@@ -271,7 +273,6 @@ export class PortfolioInformationComponent implements OnInit {
     this.allSkillsAndLevels.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
 
     this.spiderChartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
-    // console.log(this.spiderChartOptions.series[0].data);
     if (this.spiderChartOptions.series[0].data.length < 6) {
       const remainingLength = 6 - this.spiderChartOptions.series[0].data.length;
       for (let i = 0; i < remainingLength; i++) {
@@ -281,7 +282,6 @@ export class PortfolioInformationComponent implements OnInit {
     this.spiderChartOptions.xaxis = {
       categories: this.allSkillsAndLevels.map(item => `${item.codeSkill} - ${item.levelName}`)
     };
-    // console.log(this.spiderChartOptions.xaxis.categories.length);
     if (this.spiderChartOptions.xaxis.categories.length < 3) {
       const remainingLength = 6 - this.spiderChartOptions.xaxis.categories.length;
       for (let i = 0; i < remainingLength; i++) {
@@ -292,27 +292,19 @@ export class PortfolioInformationComponent implements OnInit {
 
   updateChartData() {
     this.allSkillsAndLevels.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
-
     this.chartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
-
-    console.log(this.chartOptions.series[0]?.data.length);
 
     this.chartOptions.xaxis = {
       categories: this.allSkillsAndLevels.map(item => `${item.codeSkill} - ${item.levelName}`)
     };
-
-    console.log(this.chartOptions.xaxis?.categories.length);
   }
 
   fetchSkillDetails(codeSkill: string) {
-    console.log(codeSkill);
     this.http
       .get(`${this.ENV_REST_API}/search?codeskill=${codeSkill}`)
       .subscribe(
         (details: any) => {
-          console.log(codeSkill);
           const allDescids = (details[0].levels.length);
-          console.log(allDescids)
         }
       )
   }
@@ -322,15 +314,12 @@ export class PortfolioInformationComponent implements OnInit {
       .get<any>(`${this.ENV_REST_API}/getExportPortfolio`, { withCredentials: true })
       .subscribe({
         next: (res) => {
-          console.log(res);
-
           this.user = res.data.users;
           this.education = res.data.education;
           this.experience = res.data.experience;
         },
         error: () => {
           this.router.navigate(['/login']);
-          console.error('You are not logged in');
           Emitter.authEmitter.emit(false);
         },
       });
@@ -339,11 +328,7 @@ export class PortfolioInformationComponent implements OnInit {
   fetchLinkData(): void {
     this.portfolioDataService.getLinkData().subscribe({
       next: (res: any) => {
-        console.log(res);
-  
         const nameSkill = this.portfolioDataService.getNameSkills();
-        console.log(nameSkill);
-  
         this.selectedInfo = res.descriptionsWithLevel
           .filter(info => info.uniqueSkills && info.uniqueSkills.length > 0 && info.uniqueSkills[0].skill_name === nameSkill)
           .map(info => {
@@ -357,49 +342,36 @@ export class PortfolioInformationComponent implements OnInit {
                 }
               : null;
           });
-  
-        console.log(this.selectedInfo);
       },
       error: () => {
         this.router.navigate(['/login']);
-        console.error('You are not logged in');
         Emitter.authEmitter.emit(false);
       },
     });
   }
   
-
-
   selectImage(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0]
-      console.log(file);
       this.images = file;
       this.selectedImageURL = URL.createObjectURL(file);
       console.log(this.selectedImageURL)
 
     } else {
       const fileName = event.target.value
-      console.log(fileName)
     }
   }
 
   selectSkill() {
     const nameSkill = this.portfolioDataService.getNameSkills()
     this.allSkillsAndLevels = this.portfolioDataService.getFilteredSkills()
-
     this.selectedSkill = nameSkill
     this.filterSkills();
 
     const filteredSkills = this.allSkillsAndLevels.filter(skill => skill.skillName === nameSkill);
-
     const percentages: number[] = [];
-
     filteredSkills.forEach(skill => {
-      console.log('Code Skill:', skill.codeSkill, 'Level Name:', skill.levelName, 'Percentage:', skill.percentage);
-
       const validPercentage: number = skill.percentage ?? 0;
-
       percentages.push(validPercentage);
     });
 
@@ -408,8 +380,6 @@ export class PortfolioInformationComponent implements OnInit {
     this.spiderChartOptions.xaxis = {
       categories: filteredSkills.map(skill => `${skill.codeSkill} - ${skill.levelName}`)
     };
-
-    console.log(this.spiderChartOptions.series[0].data.length);
 
     this.spiderChartOptions.series[0].data = percentages;
     if (this.spiderChartOptions.series[0].data.length < 6) {
@@ -429,16 +399,11 @@ export class PortfolioInformationComponent implements OnInit {
       }
     }
 
-    console.log(this.spiderChartOptions.series[0].data.length);
-
     this.chartOptions.series[0].data = percentages;
     this.chartOptions.xaxis = {
       categories: filteredSkills.map(skill => `${skill.codeSkill} - ${skill.levelName}`)
     };
-
   }
-
-
 
   filterSkills() {
     if (!this.selectedSkill) {
@@ -478,16 +443,12 @@ export class PortfolioInformationComponent implements OnInit {
     const urlParts = fullURL.split('://');
     let displayURL = urlParts[urlParts.length - 1];
 
-    // Remove trailing spaces
     displayURL = displayURL.trim();
 
-    // Check if the displayURL is longer than the specified maxLength
     if (displayURL.length > maxLength) {
       return displayURL.substr(0, maxLength) + '...';
     }
 
-    // Check if displayURL is not empty or just spaces
     return displayURL.trim() !== '' ? displayURL : fullURL;
   }
-
 }

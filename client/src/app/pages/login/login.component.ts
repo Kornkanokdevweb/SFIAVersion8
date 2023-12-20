@@ -6,6 +6,7 @@ import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
+import { Title } from '@angular/platform-browser';
 
 const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -27,12 +28,14 @@ export class LoginComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private messageService: MessageService,
-    private envEndpointService: EnvEndpointService
+    private envEndpointService: EnvEndpointService,
+    private titleService: Title
   ) {
 
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('SFIAV8 | Login');
     this.http.get(`${this.ENV_REST_API}/user`)
       .subscribe({
         next: (res: any) => {
@@ -54,12 +57,14 @@ export class LoginComponent implements OnInit {
         (res: any) => {
           AuthInterceptor.accessToken = res.token;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Login successful.' });
+
           setTimeout(() => {
             this.router.navigate(['/']);
-          }, 2000); // Delay in milliseconds
+          }, 1500);
+
+          this.titleService.setTitle('SFIAV8 | Home');
         },
         (error) => {
-          console.error('Login failed:', error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Incorrect email or password.' });
         }
       );

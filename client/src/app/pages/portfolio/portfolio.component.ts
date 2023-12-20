@@ -5,6 +5,7 @@ import { Emitter } from 'src/app/emitters/emitter';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 import { HttpClient } from '@angular/common/http';
 import { PortfolioDataService } from 'src/app/service/portfolio-data.service';
+import { Title } from '@angular/platform-browser';
 
 import {
   ApexChart,
@@ -76,7 +77,6 @@ export class PortfolioComponent implements OnInit {
       type: "bar",
       events: {
         click: function (chart, w, e) {
-          // console.log(chart, w, e)
         }
       }
     },
@@ -143,6 +143,8 @@ export class PortfolioComponent implements OnInit {
     private http: HttpClient,
     private envEndpointService: EnvEndpointService,
     private portfolioDataService: PortfolioDataService,
+    private titleService: Title
+    
   ) {
     this.chartOptions.series = [
       {
@@ -166,6 +168,7 @@ export class PortfolioComponent implements OnInit {
   groupedByLevel: Map<string, { codeSkill: string, skillName: string, levelName: string, description: string[], percentage: number }> = new Map();
 
   ngOnInit() {
+    this.titleService.setTitle('SFIAV8 | Portfolio');
     Emitter.authEmitter.emit(true);
     this.getHistory();
     this.filterSkills();
@@ -189,9 +192,7 @@ export class PortfolioComponent implements OnInit {
       })
   }
   exportData(): void {
-    console.log('Portfolio for selected skill:', this.selectedSkill);
     const filteredSkills = this.portfolioDataService.getFilteredSkills();
-    console.log('Filtered Skills:', filteredSkills);
   }
 
 
@@ -200,7 +201,6 @@ export class PortfolioComponent implements OnInit {
     this.http.get(`${this.ENV_REST_API}/getHistory`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
-          console.log(res);
           const descriptionsWithLevels = res.descriptionsWithLevel;
 
           const groupedByCodeSkillAndLevel = new Map<string, Map<string, SkillAndLevel>>();
@@ -208,7 +208,6 @@ export class PortfolioComponent implements OnInit {
           descriptionsWithLevels.forEach((description: any) => {
             const codeSkill = description.uniqueSkills[0].codeskill;
             const levelName = description.level.level_name;
-            console.log(codeSkill, levelName);
             this.fetchSkillDetails(codeSkill);
             if (!groupedByCodeSkillAndLevel.has(codeSkill)) {
               groupedByCodeSkillAndLevel.set(codeSkill, new Map<string, SkillAndLevel>());
@@ -247,12 +246,8 @@ export class PortfolioComponent implements OnInit {
             this.allSkillsAndLevels = Array.from(groupedByCodeSkillAndLevel.values())
               .reduce((acc: SkillAndLevel[], innerMap) => acc.concat(Array.from(innerMap.values())), []);
 
-            console.log(this.allSkillsAndLevels);
-
             this.updateSpiderChartData();
             this.updateChartData()
-
-            console.log(this.spiderChartOptions.xaxis);
           });
         },
       });
@@ -260,11 +255,9 @@ export class PortfolioComponent implements OnInit {
 
   getPercentageSkillAndLevel(codeSkill: string, levelName: string, descIds: string[]): Promise<number> {
     return new Promise((resolve) => {
-      console.log(`Code Skill: ${codeSkill}, Level: ${levelName}, DescIds: ${descIds.join(', ')}`);
       this.http.get(`${this.ENV_REST_API}/search?codeskill=${codeSkill}&level_name=${levelName}`, { withCredentials: true })
         .subscribe((data: any) => {
           const selectedLevels = data[0]?.levels.filter((level: any) => level.level_name === levelName);
-          console.log(selectedLevels);
 
           if (selectedLevels && selectedLevels.length > 0) {
             const descriptions = selectedLevels.map((level: any) => {
@@ -273,19 +266,16 @@ export class PortfolioComponent implements OnInit {
             });
 
             const percentage = parseFloat(((descIds.length || 1) / descriptions.length * 100).toFixed(2));
-            console.log(`Code Skill: ${codeSkill}, Level: ${levelName}, percentage: ${percentage}`);
 
-            // Use type assertion to ensure TypeScript recognizes the type
             const skillAndLevel = this.allSkillsAndLevels.find(item => item.codeSkill === codeSkill && item.levelName === levelName) as SkillAndLevel;
 
-            // Update the skillAndLevel object with the percentage property
             if (skillAndLevel) {
               skillAndLevel.percentage = percentage;
             }
 
             resolve(percentage);
           } else {
-            resolve(0); // Handle the case when selectedLevels is empty
+            resolve(0);
           }
         });
     });
@@ -295,7 +285,6 @@ export class PortfolioComponent implements OnInit {
     this.allSkillsAndLevels.sort((a, b) => (b.percentage || 0) - (a.percentage || 0));
 
     this.spiderChartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
-    // console.log(this.spiderChartOptions.series[0].data.length);
     if (this.spiderChartOptions.series[0].data.length < 6) {
       const remainingLength = 6 - this.spiderChartOptions.series[0].data.length;
       for (let i = 0; i < remainingLength; i++) {
@@ -305,7 +294,6 @@ export class PortfolioComponent implements OnInit {
     this.spiderChartOptions.xaxis = {
       categories: this.allSkillsAndLevels.map(item => `${item.codeSkill} - ${item.levelName}`)
     };
-    // console.log(this.spiderChartOptions.xaxis.categories.length);
     if (this.spiderChartOptions.xaxis.categories.length < 3) {
       const remainingLength = 6 - this.spiderChartOptions.xaxis.categories.length;
       for (let i = 0; i < remainingLength; i++) {
@@ -329,14 +317,9 @@ export class PortfolioComponent implements OnInit {
     });
 
     this.chartOptions.series[0].data = this.allSkillsAndLevels.map(item => item.percentage || 0);
-
-    console.log(this.chartOptions.series[0].data.length)
-
     this.chartOptions.xaxis = {
       categories: this.allSkillsAndLevels.map(item => `${item.codeSkill} - ${item.levelName}`)
     };
-
-    console.log(this.chartOptions.xaxis)
   }
 
   selectSkill(skillName: string) {
@@ -353,20 +336,14 @@ export class PortfolioComponent implements OnInit {
     this.currentPage = 1;
 
     const filteredSkills = this.allSkillsAndLevels.filter(skill => skill.skillName === skillName);
-    console.log(skillName);
 
     this.portfolioDataService.setFilteredSkills(filteredSkills);
     this.portfolioDataService.setNameSkills(skillName);
-    console.log('Selected Skill:', skillName);
-    console.log('Filtered Skills:', filteredSkills);
 
     const percentages: number[] = [];
 
     filteredSkills.forEach(skill => {
-      console.log('Code Skill:', skill.codeSkill, 'Level Name:', skill.levelName, 'Percentage:', skill.percentage);
-
       const validPercentage: number = skill.percentage ?? 0;
-
       percentages.push(validPercentage);
     });
 
@@ -374,8 +351,6 @@ export class PortfolioComponent implements OnInit {
     this.spiderChartOptions.xaxis = {
       categories: filteredSkills.map(skill => `${skill.codeSkill} - ${skill.levelName}`)
     };
-
-    console.log(this.spiderChartOptions.series[0].data.length);
 
     this.chartOptions.series[0].data = percentages;
     this.chartOptions.xaxis = {
@@ -397,25 +372,19 @@ export class PortfolioComponent implements OnInit {
     this.http.get(`${this.ENV_REST_API}/getHistory`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
-          console.log(res);
           const descriptionsWithLevels = res.descriptionsWithLevel;
 
-          // Set to store unique skill_name
           const uniqueSkills = new Set<string>();
 
           descriptionsWithLevels.forEach((description: any) => {
             const skillName = description.uniqueSkills[0].skill_name;
             const codeSkill = description.uniqueSkills[0].codeskill;
             const levelName = description.level.level_name;
-            console.log(skillName, codeSkill, levelName);
 
             uniqueSkills.add(skillName);
           });
 
-          console.log(uniqueSkills);
-
           this.dropdownSkillUnique = Array.from(uniqueSkills).map(skillName => ({ skillName }));
-          console.log(this.dropdownSkillUnique);
         },
       });
   }
@@ -433,7 +402,6 @@ export class PortfolioComponent implements OnInit {
       experience: experienceData,
     }).subscribe(
       ({ education, experience }) => {
-        console.log(education.data.length, experience.data.length, skillSelected);
         if (education.data.length > 0 && experience.data.length > 0 && skillSelected) {
           this.exportButtonDisabled = false;
         } else {
@@ -443,7 +411,6 @@ export class PortfolioComponent implements OnInit {
         this.checkExport = !!!this.selectedSkill || this.exportButtonDisabled;
       },
       (error) => {
-        console.error('Error fetching data:', error);
         this.exportButtonDisabled = true;
         this.checkExport = !!!this.selectedSkill || this.exportButtonDisabled;
       }
@@ -460,14 +427,11 @@ export class PortfolioComponent implements OnInit {
 
 
   fetchSkillDetails(codeSkill: string) {
-    console.log(codeSkill);
     this.http
       .get(`${this.ENV_REST_API}/search?codeskill=${codeSkill}`)
       .subscribe(
         (details: any) => {
-          console.log(codeSkill);
           const allDescids = (details[0].levels.length);
-          console.log(allDescids)
         }
       )
   }

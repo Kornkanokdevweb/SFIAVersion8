@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor, HttpErrorResponse, HttpClient
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { catchError, Observable, throwError, switchMap } from 'rxjs';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
 
@@ -31,7 +26,6 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(catchError((err: HttpErrorResponse) => {
       if(err.status === 401 && !this.refresh){
         this.refresh = true;
-
         return this.http.post(`${this.ENV_REST_API}/refresh`, {}, {withCredentials: true}).pipe(
           switchMap((res: any) => {
             AuthInterceptor.accessToken = res.token;

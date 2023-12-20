@@ -10,12 +10,11 @@ import * as AOS from 'aos'
 })
 export class AppComponent {
   title = 'SFIAV8';
-  hideNavbarAndFooter = false; // Initialize as false
+  hideNavbarAndFooter = false;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     initFlowbite();
 
-    // Subscribe to route changes to check if you are on the portfolio-information page
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.hideNavbarAndFooter = event.url === '/portfolio-information';

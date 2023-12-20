@@ -1,6 +1,6 @@
 <!-- Link -->
 <div class="w-full p-4">
-  <p class="text-center text-base font-semibold">Link</p>
+  <p class="text-center text-base font-semibold">Skills</p>
   <div class="pt-3">
     <div *ngIf="information.length === 0"
       class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-4 py-0.5 p-2 rounded dark:bg-red-900 dark:text-red-300">
@@ -11,7 +11,7 @@
     <div
       class="w-64 md:w-96 bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-4 py-2 rounded dark:bg-gray-700 dark:text-gray-400 border border-gray-800">
       <p>
-        <span class="font-semibold">Link : </span>
+        <span class="font-semibold">Skill : </span>
         <a *ngIf="isLink(info.info_text )" class="hover:text-blue-600" href="{{ info.info_text  }}"
           target="_blank">
           {{ displayPartialURL(info.info_text ) }}

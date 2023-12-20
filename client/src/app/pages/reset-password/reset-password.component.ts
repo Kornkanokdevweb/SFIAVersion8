@@ -37,28 +37,20 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   resetPassword() {
-    const email = this.resetForm.getRawValue().email; // รับค่าอีเมลจากฟอร์ม
-    this.emailService.setEmail(email); // เซ็ตค่า email ด้วย Service
+    const email = this.resetForm.getRawValue().email;
+    this.emailService.setEmail(email);
     this.isLoading = true;
-
-    // เข้าถึงค่า email จาก Service และ log ออกมา
     const storedEmail = this.emailService.getEmail();
-    console.log('Email stored in service:', storedEmail);
 
-    // ต่อไปคุณสามารถเรียกใช้ this.emailService.getEmail() เพื่อเข้าถึงค่า email ที่เก็บไว้
     this.http.get(`${this.ENV_REST_API}/generateOTP?email=${email}`).subscribe(
       (response) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'OTP sent successfully.' });
         setTimeout(() => {
           this.router.navigate(['/recovery-password']);
           this.isLoading = false;
-        }, 3000); // Delay in milliseconds
-
-        console.log('OTP sent successfully:');
-        // ทำสิ่งที่คุณต้องการเมื่อ OTP ถูกส่ง
+        }, 3000);
       },
       (error) => {
-        console.error('Failed to send OTP:', error);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to send OTP' });
         this.isLoading = false;
       }

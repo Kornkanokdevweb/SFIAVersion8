@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // เพิ่ม Validators เข้ามา
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { matchPassword } from './matchPassword.validator';
 import { MessageService } from 'primeng/api';
 import { Emitter } from 'src/app/emitters/emitter';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
+import { Title } from '@angular/platform-browser';
 
 const emailValidator = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
@@ -16,6 +17,7 @@ const passwordValidator = /^(?=.*[a-z])(?=.*[A-Z]).{8,16}$/;
   styleUrls: ['./register.component.css'],
   providers: [MessageService]
 })
+
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   ENV_REST_API = `${this.envEndpointService.ENV_REST_API}`
@@ -24,10 +26,12 @@ export class RegisterComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private messageService: MessageService,
-    private envEndpointService: EnvEndpointService
+    private envEndpointService: EnvEndpointService,
+    private titleService: Title
   ) {}
 
   ngOnInit(): void {
+    this.titleService.setTitle('SFIAV8 | Sign up');
     this.http.get(`${this.ENV_REST_API}/user`)
       .subscribe({
         next: (res: any) => {

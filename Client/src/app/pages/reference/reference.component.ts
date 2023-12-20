@@ -3,6 +3,7 @@ import { Emitter } from 'src/app/emitters/emitter';
 import { HttpClient } from '@angular/common/http';
 import { AuthInterceptor } from 'src/app/interceptors/auth.interceptor';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-reference',
@@ -15,10 +16,12 @@ export class ReferenceComponent {
 
   constructor(
     private http: HttpClient,
-    private envEndpointService: EnvEndpointService
+    private envEndpointService: EnvEndpointService,
+    private titleService: Title
   ) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('SFIAV8 | Reference');
     this.http.get(`${this.ENV_REST_API}/user`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {

@@ -24,7 +24,7 @@ const routes: Routes = [
   {path:'login', component: LoginComponent},
   {path:'register', component: RegisterComponent},
   {path:'download', component: DownloadComponent},
-  {path:'history', component: HistoryComponent},
+  {path:'summary', component: HistoryComponent},
   {path:'reset-password', component: ResetPasswordComponent},
   {path:'detail-standard/:codeskill', component: DetailStandardComponent},
   {path:'recovery-password', component: RecoveryPasswordComponent},

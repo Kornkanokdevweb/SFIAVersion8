@@ -1,5 +1,5 @@
 <div class="container max-w-screen-xl mx-auto mb-5 mt-8">
-  <h5 class="text-xl text-center font-extrabold pb-2">History</h5>
+  <h5 class="text-xl text-center font-extrabold pb-2">Summary</h5>
   <div class="w-full mb-2">
     <div class="h-1 mx-auto gradient w-44 opacity-40 my-0 py-0 rounded-t"></div>
   </div>
@@ -36,15 +36,15 @@
           class="w-full text-sm text-left text-gray-500 dark:text-gray-400 border-collapse border border-slate-400">
           <thead class="text-xs text-gray-700 uppercase bg-sky-200 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" class="px-6 py-3">Skill</th>
-              <th scope="col" class="px-6 py-3">Level</th>
-              <th scope="col" class="px-6 py-3">Percentage</th>
+              <th scope="col" class="px-6 py-3">JOBS</th>
+              <th scope="col" class="px-6 py-3">LEVEL</th>
+              <th scope="col" class="px-6 py-3">PERCENTAGE</th>
             </tr>
           </thead>
           <tbody *ngFor="let skillAndLevel of (selectedSkill ? filteredSkillsAndLevels : allSkillsAndLevels) | paginate: { itemsPerPage: pageSize, currentPage: currentPage}">
             <tr>
               <th (click)="clickToDetail(skillAndLevel.codeSkill, skillAndLevel.levelName)" scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white hover:text-rose-600 cursor-pointer">
-                {{ skillAndLevel.skillName }} ({{skillAndLevel.codeSkill}})
+                {{skillAndLevel.codeSkill}} - {{ skillAndLevel.skillName }} 
               </th>
               <td class="px-6 py-4 ">{{ skillAndLevel.levelName }}</td>
               <td class="px-6 py-4 ">{{ skillAndLevel.percentage }}%</td>
@@ -56,12 +56,9 @@
         <pagination-controls (pageChange)="currentPage = $event"></pagination-controls>
       </div>
     </div>
-    <!-- <div *ngFor="let skillAndLevel of allSkillsAndLevels">
-      ({{skillAndLevel.codeSkill}}), {{ skillAndLevel.levelName }}, {{ skillAndLevel.percentage }}
-    </div> -->
     <div id="chart"
       class="col-span-12 rounded-2xl border border-stroke bg-white xl:col-span-4 grid ">
-      <h5 class="text-base text-center font-semibold pt-3">Chart of CodeSkill</h5>
+      <h5 class="text-base text-center font-semibold pt-3">Spiderchart of Jobs</h5>
         <apx-chart
         [series]="spiderChartOptions.series"
         [chart]="spiderChartOptions.chart"
@@ -69,7 +66,7 @@
       ></apx-chart>
     </div>
 
-    <div class="col-span-12 p-3 rounded-sm border border-stroke bg-white grid">
+    <div class="grid col-span-12 p-3 h-full rounded-sm border border-stroke bg-white">
       <apx-chart
       [series]="chartOptions.series"
       [chart]="chartOptions.chart"
@@ -80,8 +77,15 @@
       [legend]="chartOptions.legend"
       [colors]="chartOptions.colors"
       [grid]="chartOptions.grid"
+      [title]="chartOptions.title"
     ></apx-chart>
-    
+    <div>
+      <h5 class="text-xs text-center text-gray-600 pt-3">
+        <ng-container>
+          {{ labelOfDataChart.join(', ') }}
+        </ng-container>
+      </h5>
+    </div>
     </div>
   </div>
 </div>

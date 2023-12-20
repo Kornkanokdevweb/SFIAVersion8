@@ -1,0 +1,46 @@
+/* Add this to your CSS */
+.toggle-button {
+  display: none; /* Hide the button by default on larger screens */
+}
+
+.active-menu {
+  background-color: #eef2ff;
+  color: #4f46e5;
+}
+
+@media screen and (max-width: 768px) {
+  /* Show the button on smaller screens */
+  .toggle-button {
+    display: block;
+    position: fixed;
+    left: 10px;
+    z-index: 21; /* Ensure the button appears above the sidebar */
+  }
+
+  /* Adjust the sidebar styles for smaller screens */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px; /* Adjust the width as needed */
+    background-color: #fff;
+    /* Add other styles as needed */
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .toggle-button {
+    display: none; /* Hide the button on larger screens */
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px; /* Adjust the width as needed */
+    background-color: #fff;
+    /* Add other styles as needed */
+  }
+}

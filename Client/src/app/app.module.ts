@@ -46,6 +46,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import {MatMenuModule} from '@angular/material/menu';
 import { ReferenceComponent } from './pages/reference/reference.component';
+import { QuickSidebarComponent } from './layouts/quick-sidebar/quick-sidebar.component';
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { ReferenceComponent } from './pages/reference/reference.component';
     SpiderchartComponent,
     DatachartComponent,
     ReferenceComponent,
+    QuickSidebarComponent,
   ],
   imports: [
     BrowserModule,

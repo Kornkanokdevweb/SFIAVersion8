@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Emitter } from 'src/app/emitters/emitter';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs/operators';
-
 import { PortfolioDataService } from 'src/app/service/portfolio-data.service';
 
 interface ExperienceInfo {
@@ -27,7 +25,6 @@ export class ExperienceComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private router: Router,
-    private http: HttpClient,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private portfolioDataService: PortfolioDataService
@@ -49,7 +46,6 @@ export class ExperienceComponent implements OnInit {
       },
       error: () => {
         this.router.navigate(['/login']);
-        console.error('You are not logged in');
         Emitter.authEmitter.emit(false);
       },
     });
@@ -80,7 +76,7 @@ export class ExperienceComponent implements OnInit {
 
     this.portfolioDataService
       .saveExperience(formData)
-      .pipe(finalize(() => this.displayAddExperience = false))
+      .pipe(finalize(() => (this.displayAddExperience = false)))
       .subscribe(
         (res) => {
           this.messageService.add({
@@ -88,16 +84,27 @@ export class ExperienceComponent implements OnInit {
             summary: 'Success',
             detail: 'Experience created successfully',
           });
-          console.log('Experience created successfully:', res);
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
+
           this.fetchExperienceData();
 
-          // Clear the form after saving data
           this.updateForm.reset({
             exp_text: '',
           });
         },
         (err) => {
-          console.error('Error creating experience:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to created Experience',
+          });
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         }
       );
   }
@@ -121,21 +128,26 @@ export class ExperienceComponent implements OnInit {
     this.messageService.clear('confirm1');
     this.portfolioDataService
       .updateExperience(formData)
-      .pipe(finalize(() => {
-        this.confirmEdit = false;    
-      }))
+      .pipe(
+        finalize(() => {
+          this.confirmEdit = false;
+        })
+      )
       .subscribe(
         (res) => {
-          if(res.success){
+          if (res.success) {
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
               detail: 'Experience updated successfully',
             });
-            console.log('Experience updated successfully:', res);
+
+            setTimeout(() => {
+              this.messageService.clear();
+            }, 2500);
             this.fetchExperienceData();
             this.displayEditExperience = false;
-          }       
+          }
         },
         (err) => {
           this.messageService.add({
@@ -143,7 +155,10 @@ export class ExperienceComponent implements OnInit {
             summary: 'Warning',
             detail: 'Entered experience data is the same as existing data.',
           });
-          console.error('Error updating experience:', err);
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         }
       );
   }
@@ -182,21 +197,27 @@ export class ExperienceComponent implements OnInit {
       .pipe(finalize(() => this.messageService.clear('confirm')))
       .subscribe(
         (res) => {
-          console.log('Experience deleted successfully:', res);
           this.fetchExperienceData();
           this.messageService.add({
             severity: 'success',
             summary: 'Confirmed',
             detail: 'Experience deleted successfully',
           });
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         },
         (err) => {
-          console.error('Error deleting Experience:', err);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
             detail: 'Failed to delete Experience',
           });
+
+          setTimeout(() => {
+            this.messageService.clear();
+          }, 2500);
         }
       );
   }
@@ -208,5 +229,9 @@ export class ExperienceComponent implements OnInit {
       summary: 'Rejected',
       detail: 'You have rejected',
     });
+
+    setTimeout(() => {
+      this.messageService.clear();
+    }, 2500);
   }
 }

@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Emitter } from 'src/app/emitters/emitter';
 import { MessageService } from 'primeng/api';
 import { EnvEndpointService } from 'src/app/service/env.endpoint.service';
+import { Title } from '@angular/platform-browser';
 
 interface UserProfile {
   profileImage: string;
@@ -59,6 +60,7 @@ export class ProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private envEndpointService: EnvEndpointService,
+    private titleService: Title
   ) {
     this.updateForm = this.formBuilder.group({
       profileImage: '',
@@ -74,6 +76,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.titleService.setTitle('SFIAV8 | Profile');
     this.fetchUserData();
   }
 
@@ -87,7 +90,6 @@ export class ProfileComponent implements OnInit {
         },
         error: () => {
           this.router.navigate(['/login']);
-          console.error('You are not logged in');
           Emitter.authEmitter.emit(false);
         }
       });
@@ -113,12 +115,10 @@ export class ProfileComponent implements OnInit {
   selectImage(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0]
-      console.log(file);
       this.images = file;
       this.selectedImageURL = URL.createObjectURL(file);
     } else {
       const fileName = event.target.value
-      console.log(fileName)
     }
   }
 
@@ -155,18 +155,12 @@ export class ProfileComponent implements OnInit {
       }
     });
 
-    console.log('Updated Data:', updatedData);
-
     this.http.put(`${this.ENV_REST_API}/updateUser`, formData, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Profile updated successfully' });
-          console.log('Profile updated successfully', res);
           this.updateUserWithNewData(updatedData);
-
           this.user.updated_at = new Date();
-          console.log(this.user.updated_at)
-
         },
         error: (error) => {
           if (error.error && error.error.message === "Can't update profile, data is the same") {
@@ -175,7 +169,6 @@ export class ProfileComponent implements OnInit {
             // Display a generic error toast
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error updating profile' });
           }
-          console.error('Error updating profile', error);
         }
       });
     this.messageService.clear('confirm');
@@ -191,7 +184,4 @@ export class ProfileComponent implements OnInit {
     });
     this.visible = false;
   }
-
-
-
 }

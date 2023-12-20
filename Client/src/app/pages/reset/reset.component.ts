@@ -30,10 +30,9 @@ export class ResetComponent implements OnInit {
 
   ngOnInit(): void {
     this.storedEmail = this.emailService.getEmail();
-    // ตรวจสอบว่าถ้าไม่มีค่า storedEmail ให้กลับไปที่หน้า resetPassword
     if (!this.storedEmail) {
-      this.router.navigate(['/reset-password']); // เปลี่ยนเส้นทางไปยังหน้า resetPassword
-      return; // ออกจาก ngOnInit เพื่อไม่ให้ดำเนินการต่อ
+      this.router.navigate(['/reset-password']);
+      return;
     }
 
     this.resetForm = this.formBuilder.group(
@@ -56,30 +55,24 @@ export class ResetComponent implements OnInit {
     const confirmPassword = this.resetForm.get('confirmPassword')?.value;
 
     if (newPassword !== confirmPassword) {
-      // แสดงข้อความผิดพลาดหรือทำการจัดการเมื่อรหัสผ่านไม่ตรงกัน
-      console.error('Passwords do not match');
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Passwords do not match' });
       this.isLoading = false;
       return;
     }
     this.isLoading = false;
-    const storedEmail = this.emailService.getEmail(); // รับค่าอีเมลที่เก็บไว้ใน Service
+    const storedEmail = this.emailService.getEmail();
 
     const resetData = {
-      email: storedEmail, // ใช้ค่าอีเมลจาก Service
+      email: storedEmail,
       password: newPassword
     };
 
     this.http.put(`${this.ENV_REST_API}/resetPassword`, resetData).subscribe(
       (response: any) => {
-        // รับข้อมูลการตอบสนองจาก API เมื่อรีเซ็ตรหัสผ่านสำเร็จ
-        console.log('Password reset successfull:', response);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Password reset successfull.' });
         setTimeout(() => {
-          // ทำการเรียกใช้งาน Router เพื่อเปลี่ยนหน้าหลังจากการรีเซ็ตรหัสผ่าน
-          this.router.navigate(['/login']); // เปลี่ยนเส้นทางไปยังหน้า login หรือหน้าอื่นๆ ตามที่คุณต้องการ
-          this.isLoading = false;
-        }, 2000); // Delay in milliseconds
+          this.router.navigate(['/login']);
+        }, 2000);
 
       },
       (error) => {
@@ -90,14 +83,9 @@ export class ResetComponent implements OnInit {
             detail: 'Password reset failed. New password must be different from the old password',
           });
         } else{
-          // จัดการข้อผิดพลาดเมื่อการรีเซ็ตรหัสผ่านไม่สำเร็จ
-          console.error('Password reset failed:', error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Password reset failed' });
-          // คุณสามารถแสดงข้อความผิดพลาดหรือทำการจัดการเพิ่มเติมได้ตามความเหมาะสม
         }
       }
     );
   }
-
-
 }
