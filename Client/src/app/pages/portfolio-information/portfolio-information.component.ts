@@ -101,7 +101,7 @@ export class PortfolioInformationComponent implements OnInit {
   selectedSkill: string = '';
   selectedInfo: SelectedInfoItem[] = [];
   
-
+  matchingDescriptionText: string[] = [];
   skill!: string
 
   images: any;
@@ -325,7 +325,7 @@ export class PortfolioInformationComponent implements OnInit {
       });
   }
 
-  fetchLinkData(): void {
+fetchLinkData(): void {
     this.portfolioDataService.getLinkData().subscribe({
       next: (res: any) => {
         const nameSkill = this.portfolioDataService.getNameSkills();
@@ -334,14 +334,19 @@ export class PortfolioInformationComponent implements OnInit {
           .map(info => {
             const descId = info.descriptionId;
             const matchingInfo = res.information.find(item => item.description.id === descId);
+            const matchingDescription = res.descriptionsWithLevel.find(desc => desc.descriptionId === descId);
+            if (matchingDescription) {
+              this.matchingDescriptionText.push(matchingDescription.descriptionText);
+            }
             return matchingInfo
               ? {
                   skillName: nameSkill,
                   descId,
-                  infoText: matchingInfo.info_text
+                  infoText: matchingInfo.info_text,
+                  descriptionText: matchingDescription.descriptionText
                 }
               : null;
-          });
+        });
       },
       error: () => {
         this.router.navigate(['/login']);
