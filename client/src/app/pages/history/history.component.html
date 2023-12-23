@@ -8,7 +8,7 @@
   <div class="relative inline-block text-left">
     <div>
       <button (click)="toggleDropdown()" type="button" class="inline-flex w-64 justify-between gap-x-1.5 rounded-md bg-gray-50 px-3 py-2.5 text-sm font-semibold text-gray-900 border-1 border-gray-100 ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-        {{ selectedSkill || 'All Skills' }} <!-- แสดงค่าที่เลือก หรือ 'All Skills' ถ้ายังไม่มีการเลือก -->
+        {{ selectedSkill || 'All Jobs' }} <!-- แสดงค่าที่เลือก หรือ 'All Skills' ถ้ายังไม่มีการเลือก -->
         <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
         </svg>
@@ -16,7 +16,7 @@
     </div>
     <div *ngIf="isDropdownVisible" class="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
       <div (click)="selectSkill('')" class="text-gray-700 block px-4 py-2 text-sm active:bg-gray-100  hover:bg-gray-100 cursor-pointer">
-        All Skills
+        All Jobs
       </div>
       <div *ngFor="let skillAndLevel of dropdownSkillUnique" class="py-1" role="none" >
         <!-- Use dropdownSkillUnique for filter dropdown -->
@@ -67,6 +67,7 @@
     </div>
 
     <div class="grid col-span-12 p-3 h-full rounded-sm border border-stroke bg-white">
+      <h5 class="text-base text-center font-semibold pt-3">Datachart of Jobs</h5>
       <apx-chart
       [series]="chartOptions.series"
       [chart]="chartOptions.chart"
@@ -81,8 +82,9 @@
     ></apx-chart>
     <div>
       <h5 class="text-xs text-center text-gray-600 pt-3">
-        <ng-container>
-          {{ labelOfDataChart.join(', ') }}
+        <ng-container *ngFor="let skill of labelOfDataChart; let last = last">
+          <span class="font-semibold">{{ skill.codeSkill }}</span> - {{ skill.skillName }}
+          <ng-container *ngIf="!last"> , </ng-container>
         </ng-container>
       </h5>
     </div>

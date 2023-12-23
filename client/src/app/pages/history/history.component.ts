@@ -170,7 +170,7 @@ export class HistoryComponent implements OnInit {
 
   dropdownSkillUnique: any[] = [];
 
-  labelOfDataChart: string[] = [];
+  labelOfDataChart: any[] = [];
 
   // Declare groupedByLevel at the class level
   groupedByLevel: Map<string, { codeSkill: string, skillName: string, levelName: string, description: string[], percentage: number }> = new Map();
@@ -201,7 +201,6 @@ export class HistoryComponent implements OnInit {
     this.http.get(`${this.ENV_REST_API}/getHistory`, { withCredentials: true })
       .subscribe({
         next: (res: any) => {
-          console.log(res)
           const descriptionsWithLevels = res.descriptionsWithLevel;
 
           const groupedByCodeSkillAndLevel = new Map<string, Map<string, SkillAndLevel>>();
@@ -224,7 +223,6 @@ export class HistoryComponent implements OnInit {
                 description: [description.descriptionId],
                 percentage: 0, // Initialize percentage here
               });
-
 
             } else {
               innerMap.get(levelName)?.description.push(description.descriptionId);
@@ -254,8 +252,7 @@ export class HistoryComponent implements OnInit {
                 const [codeSkill, skillName] = entry.split('-');
                 return { codeSkill, skillName };
               });
-            
-              this.labelOfDataChart = dataOfLabel.map(skill => `${skill.codeSkill} - ${skill.skillName}`);
+              this.labelOfDataChart = dataOfLabel
             });
         },
       });
@@ -351,7 +348,6 @@ export class HistoryComponent implements OnInit {
       uniqueSkills.add(key);
     });
     const uniqueSkillsArray = Array.from(uniqueSkills);
-    console.log(uniqueSkillsArray);
     
     this.selectedSkill = skillName;
     this.filterSkills();
@@ -359,14 +355,13 @@ export class HistoryComponent implements OnInit {
     this.currentPage = 1;   
 
     const filteredSkills = this.allSkillsAndLevels.filter(skill => skill.skillName === skillName);
-    console.log(filteredSkills);
-    const skillNamesAndCodes = filteredSkills.map(skill => ({
-      skillName: skill.skillName,
-      codeSkill: skill.codeSkill
-    }));
-    console.log(skillNamesAndCodes)
-    this.labelOfDataChart = [`${skillNamesAndCodes[0].skillName} ${skillNamesAndCodes[0].codeSkill}`];
-    console.log(this.labelOfDataChart);
+
+    if (filteredSkills.length > 0) {
+      const { codeSkill, skillName } = filteredSkills[0];
+      const skillAndLevel = { codeSkill, skillName };
+      this.labelOfDataChart = [skillAndLevel];
+    }
+
     const percentages: number[] = [];
   
     filteredSkills.forEach(skill => {  

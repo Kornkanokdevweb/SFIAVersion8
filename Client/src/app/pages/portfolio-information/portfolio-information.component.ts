@@ -203,7 +203,7 @@ export class PortfolioInformationComponent implements OnInit {
     },
     yaxis: {
       title: {
-        text: "DataChart of CodeSkill"
+        text: "Percentage",
       }
     },
     title: {
