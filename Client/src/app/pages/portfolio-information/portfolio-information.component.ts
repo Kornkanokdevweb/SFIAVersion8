@@ -208,7 +208,7 @@ export class PortfolioInformationComponent implements OnInit {
     },
     title: {
       text: "Job-Level",
-      offsetY: 336,
+      offsetY: 335,
       align: "center",
       style: {
         color: "#444",
